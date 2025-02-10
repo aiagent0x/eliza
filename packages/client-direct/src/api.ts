@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
-
+import { fileURLToPath } from 'url';
 import {
     type AgentRuntime,
     elizaLogger,
@@ -18,7 +18,9 @@ import type { TeeLogQuery, TeeLogService } from "@elizaos/plugin-tee-log";
 import { REST, Routes } from "discord.js";
 import type { DirectClient } from ".";
 import { validateUuid } from "@elizaos/core";
-
+import listCharactorExample from "./controllers/agentControllers/listCharactorExample";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 interface UUIDParams {
     agentId: UUID;
     roomId?: UUID;
@@ -404,38 +406,38 @@ export function createApiRouter(
         }
     );
 
-    router.post("/agent/start", async (req, res) => {
-        const { characterPath, characterJson } = req.body;
-        console.log("characterPath:", characterPath);
-        console.log("characterJson:", characterJson);
-        try {
-            let character: Character;
-            if (characterJson) {
-                character = await directClient.jsonToCharacter(
-                    characterPath,
-                    characterJson
-                );
-            } else if (characterPath) {
-                character =
-                    await directClient.loadCharacterTryPath(characterPath);
-            } else {
-                throw new Error("No character path or JSON provided");
-            }
-            await directClient.startAgent(character);
-            elizaLogger.log(`${character.name} started`);
+    // router.post("/agent/start", async (req, res) => {
+    //     const { characterPath, characterJson } = req.body;
+    //     console.log("characterPath:", characterPath);
+    //     console.log("characterJson:", characterJson);
+    //     try {
+    //         let character: Character;
+    //         if (characterJson) {
+    //             character = await directClient.jsonToCharacter(
+    //                 characterPath,
+    //                 characterJson
+    //             );
+    //         } else if (characterPath) {
+    //             character =
+    //                 await directClient.loadCharacterTryPath(characterPath);
+    //         } else {
+    //             throw new Error("No character path or JSON provided");
+    //         }
+    //         await directClient.startAgent(character);
+    //         elizaLogger.log(`${character.name} started`);
 
-            res.json({
-                id: character.id,
-                character: character,
-            });
-        } catch (e) {
-            elizaLogger.error(`Error parsing character: ${e}`);
-            res.status(400).json({
-                error: e.message,
-            });
-            return;
-        }
-    });
+    //         res.json({
+    //             id: character.id,
+    //             character: character,
+    //         });
+    //     } catch (e) {
+    //         elizaLogger.error(`Error parsing character: ${e}`);
+    //         res.status(400).json({
+    //             error: e.message,
+    //         });
+    //         return;
+    //     }
+    // });
 
     router.post("/agents/:agentId/stop", async (req, res) => {
         const agentId = req.params.agentId;
@@ -453,6 +455,151 @@ export function createApiRouter(
             res.status(404).json({ error: "Agent not found" });
         }
     });
+    router.post("/agents/new2", async (req, res) => {
 
+        const {sampleAgentId, name, adjectives, bio, lore, knowledge, style, plugins, clients, modelProvider, settings} = req.body;
+
+        const mapDataPath = path.join(__dirname, '../../../characters/samples/mapData.json');
+        let sampleAgents;
+        try {
+            const data = await fs.promises.readFile(mapDataPath, 'utf8');
+            sampleAgents = JSON.parse(data);
+        } catch (readErr) {
+            elizaLogger.info('error read file mapData.json:', readErr);
+        }
+        let sampleAgentInfo = Array.isArray(sampleAgents) ? sampleAgents.find((e) => e.id === sampleAgentId) : null;
+        const agentSamplePath = path.join(__dirname, `../../../characters/samples/${sampleAgentInfo.name}.character.json`);
+        let sampleAgentCharacterData;
+        let sampleAgentWriteFile;
+
+        const data = await fs.promises.readFile(agentSamplePath, 'utf8');
+        sampleAgentCharacterData = JSON.parse(data);
+
+        sampleAgentWriteFile = sampleAgentCharacterData
+
+        sampleAgentCharacterData.name = name;
+        sampleAgentWriteFile.name = name;
+        sampleAgentCharacterData.adjectives = adjectives;
+        sampleAgentWriteFile.adjectives = adjectives;
+        sampleAgentCharacterData.bio = bio;
+        sampleAgentWriteFile.bio = bio;
+        sampleAgentCharacterData.lore = lore;
+        sampleAgentWriteFile.lore = lore;
+        sampleAgentCharacterData.knowledge = knowledge;
+        sampleAgentWriteFile.knowledge = knowledge;
+        sampleAgentCharacterData.knowledge = style;
+        sampleAgentWriteFile.knowledge = style;
+
+
+        validateCharacterConfig(sampleAgentCharacterData);
+
+        // start it up (and register it)
+        const pathCharacter = `../../../characters/data/${Date.now()}.${sampleAgentInfo.name}.character.json`;
+        const  newCharacterPath= path.join(__dirname, pathCharacter);
+        await fs.promises.writeFile(newCharacterPath, JSON.stringify(sampleAgentWriteFile, null, 2), 'utf8');
+
+        await directClient.startAgent(sampleAgentCharacterData);
+        // elizaLogger.info('sampleAgentWriteFile:', sampleAgentWriteFile);
+        elizaLogger.info(`${sampleAgentCharacterData.name} started`);
+        const newCharacterPathWithId = path.join(__dirname, `../../../characters/data/${sampleAgentCharacterData.id}.${sampleAgentInfo.name}.character.json`);
+        await fs.promises.rename(newCharacterPath, newCharacterPathWithId);
+
+        // Update mapData.json with new character
+        sampleAgents.push({
+            id: sampleAgentCharacterData.id,
+            name: sampleAgentCharacterData.name,
+        });
+
+        const updatedSampleAgents = sampleAgents.map(agent => {
+            if (agent.id === sampleAgentId) {
+                return {
+                    ...agent,
+                    clone: [...(agent.clone || []), sampleAgentCharacterData.id]
+                };
+            }
+            return agent;
+        });
+        await fs.promises.writeFile(mapDataPath, JSON.stringify(updatedSampleAgents, null, 2), 'utf8');
+        elizaLogger.info(`mapData.json updated with new character`);
+
+        res.json({
+            id: sampleAgentCharacterData.id,
+            character: sampleAgentCharacterData,
+        });
+    });
+    router.post("/agents/plugins", async(req,res)=>{
+        const packagesPath = path.join(__dirname, '../../../packages');
+        try {
+            const packageFolders = await fs.promises.readdir(packagesPath, { withFileTypes: true });
+            const moduleNames = packageFolders
+                .filter(dirent => dirent.isDirectory())
+                .map(dirent => dirent.name)
+                .filter(name => !name.startsWith('adapter-') && !['core', 
+                    'debug-audio', 
+                    'create-eliza-app',
+                    '_examples',
+                    'content_cache',
+                    'plugin-nvidia-nim',
+                    'plugin-tee',
+                    'plugin-tee-log',
+                    'plugin-tee-marlin',
+                    'plugin-tee-verifiable-log',
+                    'plugin-node',
+                    "debug_audio",
+                    "plugin-0g",
+                    "plugin-0x",
+                    "client-auto",
+                    "client-deva",
+                    "client-direct",
+                    "client-eliza-home",
+                    "client-github",
+                    "client-lens",
+		            "client-simsai",
+                    "plugin-agentkit",
+                    "plugin-bootstrap",
+                    "plugin-asterai",
+                    ].includes(name));
+
+            res.status(200).json({ plugins: moduleNames });
+        } catch (error) {
+            console.error("Error fetching modules:", error);
+            res.status(500).json({ error: "Failed to fetch modules" });
+        }
+    })
+    router.post("/agents/start", async (req, res) =>{
+        const {agentId} = req.body;
+
+        // const mapDataPath = path.join(__dirname, `../../../characters/data/${agentId}.xxx`);
+    try {
+        const files = await fs.promises.readdir(path.join(__dirname, '../../../characters/data'));
+        const characterFile = files.find(file => file.startsWith(`${agentId}.`) && file.endsWith('.character.json'));
+
+        if (!characterFile) {
+            throw new Error("Character file not found");
+        }
+
+        const characterFilePath = path.join(__dirname, '../../../characters/data', characterFile);
+        const data = await fs.promises.readFile(characterFilePath, 'utf8');
+        const character = JSON.parse(data);
+
+        validateCharacterConfig(character);
+
+        // start it up (and register it)
+        await directClient.startAgent(character);
+        elizaLogger.info(`${character.name} started`);
+
+        res.json({
+            id: character.id,
+            character: character,
+        });
+    } catch (error) {
+        elizaLogger.error(`Error starting agent: ${error}`);
+        res.status(404).json({
+            success: false,
+            message: "Character file not found",
+        });
+    }
+    })
+    router.post("/agents/examples", listCharactorExample)
     return router;
 }

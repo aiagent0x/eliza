@@ -1151,6 +1151,38 @@ export const models: Models = {
             },
         },
     },
+    [ModelProviderName.ATOMAV2]: {
+        endpoint: settings.ATOMAV2_API_URL || "https://api.atoma.network/v1",
+        model: {
+            [ModelClass.SMALL]: {
+                name:
+                    settings.SMALL_ATOMAV2_MODEL ||
+                    "meta-llama/Llama-3.3-70B-Instruct",
+                stop: [],
+                maxInputTokens: 128000,
+                maxOutputTokens: 8192,
+                temperature: 0.7,
+            },
+            [ModelClass.MEDIUM]: {
+                name:
+                    settings.MEDIUM_ATOMAV2_MODEL ||
+                    "meta-llama/Llama-3.3-70B-Instruct",
+                stop: [],
+                maxInputTokens: 128000,
+                maxOutputTokens: 8192,
+                temperature: 0.7,
+            },
+            [ModelClass.LARGE]: {
+                name:
+                    settings.LARGE_ATOMAV2_MODEL ||
+                    "meta-llama/Llama-3.3-70B-Instruct",
+                stop: [],
+                maxInputTokens: 128000,
+                maxOutputTokens: 8192,
+                temperature: 0.7,
+            },
+        },
+    },
 };
 
 export function getModelSettings(

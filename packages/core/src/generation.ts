@@ -1049,7 +1049,7 @@ export async function generateText({
                     baseURL: endpoint,
                     fetch: runtime.fetch,
                 });
-
+                elizaLogger.info(atoma)
                 const { text: atomaResponse } = await aiGenerateText({
                     model: atoma.languageModel(model),
                     prompt: context,
@@ -1289,7 +1289,36 @@ export async function generateText({
                 );
                 break;
             }
-
+            case ModelProviderName.ATOMAV2: {
+                const atoma = createOpenAI({
+                    apiKey,
+                    baseURL: endpoint,
+                    fetch: runtime.fetch,
+                });
+               
+                const atomaResponse:any = await fetch(`https://api.atoma.network/v1/chat/completions`,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        stream: false,
+                        model: atoma.languageModel(model).modelId,
+                        messages: [{
+                            role: "user",
+			                content: context
+                        }
+                        ],
+                        max_tokens: 128,
+                    
+                    })
+                })
+                let result:any = await atomaResponse.json();
+                response = result.choices[0].message.content;
+                elizaLogger.info("Received response from Atoma model.");
+                break;
+            }
             default: {
                 const errorMessage = `Unsupported provider: ${provider}`;
                 elizaLogger.error(errorMessage);
@@ -1299,7 +1328,8 @@ export async function generateText({
 
         return response;
     } catch (error) {
-        elizaLogger.error("Error in generateText:", error);
+        
+        elizaLogger.info("Error in generateText:", error);
         throw error;
     }
 }
@@ -1591,11 +1621,11 @@ export async function generateMessageResponse({
     context: string;
     modelClass: ModelClass;
 }): Promise<Content> {
-    const modelSettings = getModelSettings(runtime.modelProvider, modelClass);
-    const max_context_length = modelSettings.maxInputTokens;
+    // const modelSettings = getModelSettings(runtime.modelProvider, modelClass);
+    // const max_context_length = modelSettings.maxInputTokens;
 
-    context = await trimTokens(context, max_context_length, runtime);
-    elizaLogger.debug("Context:", context);
+    // context = await trimTokens(context, max_context_length, runtime);
+    // elizaLogger.debug("Context:", context);
     let retryLength = 1000; // exponential backoff
     while (true) {
         try {
@@ -1606,8 +1636,9 @@ export async function generateMessageResponse({
                 context,
                 modelClass,
             });
-
+            elizaLogger.info("response:",response)
             // try parsing the response as JSON, if null then try again
+            
             const parsedContent = parseJSONObjectFromText(response) as Content;
             if (!parsedContent) {
                 elizaLogger.debug("parsedContent is null, retrying");
