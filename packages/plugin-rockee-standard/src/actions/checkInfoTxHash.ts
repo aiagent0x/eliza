@@ -84,8 +84,7 @@ export const checkTxhashOnSui: Action = {
                action:"CHECK_TXHASH_SUI_NETWORK",
                result: {
                 type: "info_txhash",
-                data: checkInfoTxHash,
-                action_hint:getActionHint()
+                data: checkInfoTxHash
 
             }
             })
@@ -94,27 +93,6 @@ export const checkTxhashOnSui: Action = {
             callback({
                 text: `Your transaction status for txhash ${content.txHash} is fail`,
                 action:"CHECK_TXHASH_SUI_NETWORK",
-                action_hint:{
-                    text: content.actionHintText,
-                    actions:[
-                        {
-                            type:"button_buy",
-                            text:"Buy ROCK",
-                            data:{
-                                type:"0xb4bc93ad1a07fe47943fc4d776fed31ce31923acb5bc9f92d2cab14d01fc06a4::ROCK::ROCK",
-                                icon_url:"https://rockee.ai/images/logo.png"
-                            }
-                        },
-                        {
-                            type:"button_buy",
-                            text:"Buy Sui",
-                            data:{
-                                type:"0xb4bc93ad1a07fe47943fc4d776fed31ce31923acb5bc9f92d2cab14d01fc06a4::ROCK::ROCK",
-                                icon_url:"https://strapi-dev.scand.app/uploads/sui_c07df05f00.png"
-                            }
-                        },
-                    ]
-                }
              })
             console.error("Error during token swap:", error);
             return false;

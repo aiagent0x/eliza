@@ -120,7 +120,6 @@ export const sendTokenBySymbol: Action = {
                result: {
                 type: "send_sui_chain",
                 data:responseData,
-                action_hint:getActionHint()
                 }
 
             })

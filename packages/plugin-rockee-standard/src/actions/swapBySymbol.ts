@@ -37,7 +37,13 @@ Extract the swap parameters from the conversation and wallet context above, foll
 
 export const executeSwap: Action = {
     name: "SUI_EXECUTE_SWAP_BY_SYMBOL",
-    similes: ["SUI_SWAP_TOKENS_BY_SYMBOL", "SUI_TOKEN_SWAP_BY_SYMBOL", "SUI_TRADE_TOKENS_BY_SYMBOL", "SUI_EXCHANGE_TOKENS_BY_SYMBOL"],
+    similes: ["SUI_SWAP_TOKENS_BY_SYMBOL", 
+        "SUI_TOKEN_SWAP_BY_SYMBOL",
+         "SUI_TRADE_TOKENS_BY_SYMBOL", 
+         "SUI_EXCHANGE_TOKENS_BY_SYMBOL",
+        "SUI_BUY_TOKENS_BY_SYMBOL",
+        "SUI_SELL_TOKENS_BY_SYMBOL",
+        ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
@@ -98,7 +104,6 @@ export const executeSwap: Action = {
                result: {
                     type: "swap",
                     data: responseData,
-                    action_hint:getActionHint()
                 }
             })
             return true;

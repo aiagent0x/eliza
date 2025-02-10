@@ -41,7 +41,8 @@ export const executeSwapByAddress: Action = {
         "SUI_TOKEN_SWAP_BY_ADDRESS",
         "SUI_TRADE_TOKENS_BY_ADDRESS",
         "SUI_EXCHANGE_TOKENS_BY_ADDRESS",
-
+        "SUI_BUY_TOKENS_BY_ADDRESS",
+        "SUI_SELL_TOKENS_BY_ADDRESS",
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         // Check if the necessary parameters are provided in the message
@@ -115,7 +116,7 @@ export const executeSwapByAddress: Action = {
                result: {
                 type: "swap",
                 data:responseData,
-                action_hint:getActionHint()
+                
 
             }
             })

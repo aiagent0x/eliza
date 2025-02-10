@@ -157,7 +157,6 @@ export const suiTokenPriceBySymbol: Action = {
                         price: info.price_usd,
                         icon_url: info.image_url,
                     },
-                    action_hint:getActionHint()
                 }
             });
         }

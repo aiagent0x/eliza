@@ -1,7 +1,7 @@
 {
     "name": "Rockee AI Agent(Standard Version)",
     "clients": ["direct"],
-    "modelProvider": "atomav2",
+    "modelProvider": "openai",
     "plugins": ["@elizaos/plugin-rockee-plus","@elizaos/plugin-rockee-standard"],
     "settings": {
         "languages": ["en", "vi", "es", "fr", "de"],
