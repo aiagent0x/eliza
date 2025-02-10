@@ -3,11 +3,7 @@
     "id": 1,
     "name": "advisor",
     "clone": [
-      1,
-      "f5bf2a75-40a7-06d4-b6e0-d2b167430679",
-      "a27e43b9-0e68-03a6-8042-c7bf2d29f87e",
-      "a27e43b9-0e68-03a6-8042-c7bf2d29f87e",
-      "1a9f87f2-d227-0e65-8705-104229b75e68"
+      
     ]
   },
   {
@@ -56,53 +52,5 @@
     "id": 10,
     "name": "trader",
     "clone": []
-  },
-  {
-    "id": "8f0bc65d-a355-06cb-984d-e9d17bfe1baa",
-    "name": "hello4"
-  },
-  {
-    "id": "8f0bc65d-a355-06cb-984d-e9d17bfe1baa",
-    "name": "hello4"
-  },
-  {
-    "id": "afee8cb6-e874-02cc-bd6b-f07e1c387cc8",
-    "name": "hello5"
-  },
-  {
-    "id": "afee8cb6-e874-02cc-bd6b-f07e1c387cc8",
-    "name": "hello5"
-  },
-  {
-    "id": "49921ef8-88da-04b5-86d7-498719fdbe50",
-    "name": "hello6"
-  },
-  {
-    "id": "b4fe8c4d-e3fb-067c-8f04-67c498e6cb58",
-    "name": "hello7"
-  },
-  {
-    "id": "42979cc2-7aad-0736-8692-756d433b08dd",
-    "name": "hello8"
-  },
-  {
-    "id": "466a9e44-5f0f-0e95-96ff-3ceeed17305f",
-    "name": "hello9"
-  },
-  {
-    "id": "f5bf2a75-40a7-06d4-b6e0-d2b167430679",
-    "name": "hello19"
-  },
-  {
-    "id": "a27e43b9-0e68-03a6-8042-c7bf2d29f87e",
-    "name": "hello21"
-  },
-  {
-    "id": "a27e43b9-0e68-03a6-8042-c7bf2d29f87e",
-    "name": "hello21"
-  },
-  {
-    "id": "1a9f87f2-d227-0e65-8705-104229b75e68",
-    "name": "hello22"
   }
 ]
