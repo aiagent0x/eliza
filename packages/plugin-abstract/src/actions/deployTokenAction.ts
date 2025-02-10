@@ -150,8 +150,8 @@ export const deployTokenAction: Action = {
 
 				hash = await abstractClient.deployContract({
 					abi: basicToken.abi,
-					bytecode: basicToken.bytecode,
-					args: [result.data.name, result.data.symbol, supply],
+					bytecode: `0x${basicToken.bytecode.replace(/^0x/, '')}`,
+					args: [result.data.name as any, result.data.symbol as any, supply],
 				});
 			} else {
 				const walletClient = useGetWalletClient();
@@ -160,8 +160,8 @@ export const deployTokenAction: Action = {
 					chain: abstractTestnet,
 					account,
 					abi: basicToken.abi,
-					bytecode: basicToken.bytecode,
-					args: [result.data.name, result.data.symbol, supply],
+					bytecode: `0x${basicToken.bytecode.replace(/^0x/, '')}`,
+					args: [result.data.name as any, result.data.symbol as any, supply],
 					kzg: undefined,
 				});
 			}
