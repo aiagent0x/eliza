@@ -44,11 +44,16 @@ export const executeSwapByAddress: Action = {
         "SUI_BUY_TOKENS_BY_ADDRESS",
         "SUI_SELL_TOKENS_BY_ADDRESS",
     ],
-    validate: async (_runtime: IAgentRuntime, _message: Memory) => {
-        // Check if the necessary parameters are provided in the message
+    validate: async (_runtime: IAgentRuntime, message: Memory) => {
+        const content = typeof message.content === 'string'
+            ? message.content
+            : message.content?.text;
 
-        // console.log("Message:", _message);
-        return true;
+        if (!content) return false;
+
+        const hasPriceKeyword = /\b(swap|buy|sell|transfer)\b/i.test(content.toLowerCase());
+        return hasPriceKeyword;
+    
     },
     description: "Perform a token swap.",
     handler: async (
@@ -141,6 +146,47 @@ export const executeSwapByAddress: Action = {
                 content: {
                     text: "Initiating swap of 10 0x2::sui::SUI for 0x4fb3c0f9e62b5d3956e2f0e284f2a5d128954750b109203a0f34c92c6ba21247::coin::USDT on SUI network...",
                     action: "SUI_EXECUTE_SWAP_BY_ADDRESS",
+                }
+            }
+        ]
+        ,
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text:"Buy 100 {TOKEN_ADDRESS}"
+                }
+            },
+            {
+                "user": "{{user2}}",
+                "content": {
+                    "text": "Initiating swap CeTUS for deep on SUI network...",
+                    "action": "SUI_EXECUTE_SWAP_BY_ADDRESS",
+                    "params": {
+                        "inputTokenSymbol": "USDC",
+                        "outputTokenSymbol": "{TOKEN_ADDRESS}",
+                        "amount": "100"
+                    }
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text:"SELL 100 {TOKEN_ADDRESS}"
+                }
+            },
+            {
+                "user": "{{user2}}",
+                "content": {
+                    "text": "Initiating swap CeTUS for deep on SUI network...",
+                    "action": "SUI_EXECUTE_SWAP_BY_SYMBOL",
+                    "params": {
+                        "inputTokenSymbol":  "{TOKEN_ADDRESS}",
+                        "outputTokenSymbol": "USDC",
+                        "amount": "100"
+                    }
                 }
             }
         ]

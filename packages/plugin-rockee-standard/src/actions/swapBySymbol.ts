@@ -44,8 +44,15 @@ export const executeSwap: Action = {
         "SUI_BUY_TOKENS_BY_SYMBOL",
         "SUI_SELL_TOKENS_BY_SYMBOL",
         ],
-    validate: async (_runtime: IAgentRuntime, _message: Memory) => {
-        return true;
+    validate: async (_runtime: IAgentRuntime, message: Memory) => {
+        const content = typeof message.content === 'string'
+            ? message.content
+            : message.content?.text;
+
+        if (!content) return false;
+
+        const hasPriceKeyword = /\b(swap|buy|sell|transfer)\b/i.test(content.toLowerCase());
+        return hasPriceKeyword;
     },
     description: "Perform a token swap.",
     handler: async (
@@ -76,15 +83,15 @@ export const executeSwap: Action = {
             });
             await runtime.cacheManager.set(msgHash, content, {expires: Date.now() + 300000});
         }
-        elizaLogger.success("content:", content)
-        const inputTokenObject = await findByVerifiedAndSymbol(content.inputTokenSymbol);
+        elizaLogger.info("content:", content)
+        const inputTokenObject = await findByVerifiedAndSymbol(content.inputTokenSymbol&&content.inputTokenSymbol!=="null"?content.inputTokenSymbol:"USDC");
         if(!inputTokenObject){
             callback({
                 text:`We do not support ${content.inputTokenSymbol} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
              })
              return false
         }
-        const outputTokenObject = await findByVerifiedAndSymbol(content.outputTokenSymbol);
+        const outputTokenObject = await findByVerifiedAndSymbol(content.outputTokenSymbol&&content.outputTokenSymbol!=="null"?content.outputTokenSymbol:"USDC");
         if(!outputTokenObject){
             callback({
                 text:`We do not support ${content.outputTokenSymbol} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address. `,
@@ -152,6 +159,47 @@ export const executeSwap: Action = {
                     }
                 }
             }
-            ]
+        ]
+        ,
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text:"Buy 100 {TOKEN_SYMBOL}"
+                }
+            },
+            {
+                "user": "{{user2}}",
+                "content": {
+                    "text": "Initiating swap CeTUS for deep on SUI network...",
+                    "action": "SUI_EXECUTE_SWAP_BY_SYMBOL",
+                    "params": {
+                        "inputTokenSymbol": "USDC",
+                        "outputTokenSymbol": "{TOKEN_SYMBOL}",
+                        "amount": "100"
+                    }
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text:"SELL 100 {TOKEN_SYMBOL}"
+                }
+            },
+            {
+                "user": "{{user2}}",
+                "content": {
+                    "text": "Initiating swap CeTUS for deep on SUI network...",
+                    "action": "SUI_EXECUTE_SWAP_BY_SYMBOL",
+                    "params": {
+                        "inputTokenSymbol":  "{TOKEN_SYMBOL}",
+                        "outputTokenSymbol": "USDC",
+                        "amount": "100"
+                    }
+                }
+            }
+        ]
     ] as ActionExample[][],
 } as Action;
