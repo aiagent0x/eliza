@@ -1,0 +1,42 @@
+[
+
+    {
+      "objectId": "0x9258181f5ceac8dbffb7030890243caed69a9599d2886d957a9cb7656af3bdb3",
+      "type": "0x2::sui::SUI",
+      "decimals": 9,
+      "symbol": "SUI",
+      "name": "Sui",
+      "iconUrl": "https://strapi-dev.scand.app/uploads/sui_c07df05f00.png",
+      "verified": true
+    },
+    {
+      "type": "0xb1f676d27ad9714a6d8f18d6efdff18ad76dade1e1883237dda93f23d9d76ed7::gta::GTA",
+      "decimals": 6,
+      "symbol": "GTA",
+      "name": "Sui Andreas",
+      "iconUrl": "https://api.movepump.com/uploads/Fighting_51_f975931b0f.png",
+      "tags": [
+        "Meme"
+      ]
+    },
+    {
+      "type": "0x1caf24366140e1b03bf480d85fee2dbd77e461cebc3d7a2db0202e056db16d49::grump::GRUMP",
+      "decimals": 6,
+      "symbol": "GRUMP",
+      "name": "SuiPuRR GRuMP",
+      "iconUrl": "https://api.movepump.com/uploads/Grump_6a42daba64.jpeg",
+      "tags": [
+        "Meme"
+      ]
+    },
+    
+    {
+
+      "type": "0xb4bc93ad1a07fe47943fc4d776fed31ce31923acb5bc9f92d2cab14d01fc06a4::ROCK::ROCK",
+      "decimals": 6,
+      "symbol": "ROCK",
+      "name": "Rockee AI",
+      "iconUrl":"https://rockee.ai/images/logo.png",
+      "verified":true
+    }
+  ]
