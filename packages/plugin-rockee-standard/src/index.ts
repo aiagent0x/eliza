@@ -7,6 +7,7 @@ import { checkTxhashOnSui } from './actions/checkInfoTxHash';
 import { projectInfo } from './actions/projectCoinOverview';
 import { topDexInfo } from './actions/topDexByNetwork';
 import { suiTokenPriceBySymbol } from './actions/suiTokenPriceBySymbol';
+import { topPotentialTokenOnSui } from './actions/topPotentialTokenOnSui';
 
 const rockeeStandardPlugin: Plugin = {
   name: "rockeeStandardPlugin",
@@ -20,6 +21,7 @@ const rockeeStandardPlugin: Plugin = {
     topDexInfo,
     suiTokenPriceBySymbol,
     suiTokenPriceByAddress,
+    topPotentialTokenOnSui
 ],
   evaluators: [],
   providers: []

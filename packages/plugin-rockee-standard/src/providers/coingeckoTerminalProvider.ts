@@ -152,7 +152,6 @@ export class GeckoTerminalProvider {
     try {
         const response = await this.api.get(url,{params: {include: "top_pools"}});
         const pools = response.data;
-        console.log(pools)
         // Flatten and map pools
         return pools;
       } catch (error) {

@@ -366,7 +366,7 @@ importers:
         version: link:../packages/plugin-twitter
       '@elizaos/plugin-zilliqa':
         specifier: workspace:*
-        version: link:../packages/plugin-zilliqa copy
+        version: link:../packages/plugin-zilliqa
       readline:
         specifier: 1.3.0
         version: 1.3.0
@@ -3422,7 +3422,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.5(@types/debug@4.1.12)(@types/node@22.13.1)(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2(encoding@0.1.13))(utf-8-validate@6.0.5))(terser@5.38.0)
 
-  packages/plugin-zilliqa copy:
+  packages/plugin-zilliqa:
     dependencies:
       '@elizaos/core':
         specifier: workspace:*
