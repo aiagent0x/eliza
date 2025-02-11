@@ -18,7 +18,7 @@ import {getPoolInfo, pool} from "navi-sdk";
 const unstakeTokenTemplate = `
 Recent messages: {{recentMessages}}
 Extract the swap parameters from the conversation and wallet context above, follows these rules:
-Recognized Pools name in NAVI: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
+Sample Pool Names in NAVI: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
     - Return only a JSON object with the specified fields in thise format:
         {
             "pool_name": string | NAVX,
@@ -90,7 +90,7 @@ export const unstakeTokenPoolsNavi: Action = {
         
         try {
             callback({
-               text: "Below is a list of stake pools:",
+               text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
                action:"UNSTAKE_TOKEN",
                result: {
                 type: "unstake_token",
@@ -111,14 +111,14 @@ export const unstakeTokenPoolsNavi: Action = {
             {
                 user: "{{user1}}",
                 content: {
-                    text: "Stake USDC",
+                    text: "UnStake USDC",
                 },
             },
             {
                 user: "{{agent}}",
                 content: {
-                    text: "Stake USDC",
-                    action: "STAKE_TOKEN",
+                    text: "UnStake USDC",
+                    action: "UNSTAKE_TOKEN",
 
                 },
             },
@@ -127,14 +127,14 @@ export const unstakeTokenPoolsNavi: Action = {
             {
                 user: "{{user1}}",
                 content: {
-                    text: "Stake {TOKEN_SYMBOL}",
+                    text: "UnStake {TOKEN_SYMBOL}",
                 },
             },
             {
                 user: "{{agent}}",
                 content: {
-                    text: "Stake {TOKEN_SYMBOL}",
-                    action: "STAKE_TOKEN",
+                    text: "UnStake {TOKEN_SYMBOL}",
+                    action: "UNSTAKE_TOKEN",
 
                 },
             },

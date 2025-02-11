@@ -18,7 +18,7 @@ import {getPoolInfo, pool} from "navi-sdk";
 const stakeTokenTemplate = `
 Recent messages: {{recentMessages}}
 Extract the swap parameters from the conversation and wallet context above, follows these rules:
-Recognized Pools name in NAVI: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
+Sample Pool Names in NAVI: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
     - Return only a JSON object with the specified fields in thise format:
         {
             "pool_name": string | NAVX,
@@ -90,7 +90,7 @@ export const stakeTokenPoolsNavi: Action = {
         
         try {
             callback({
-               text: "Below is a list of stake pools:",
+               text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
                action:"STAKE_TOKEN",
                result: {
                 type: "stake_token",

@@ -59,7 +59,9 @@ export const topNftInfos: Action = {
     ]
     ,
 
-    examples: [],
+    examples: [
+        
+    ],
 
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;

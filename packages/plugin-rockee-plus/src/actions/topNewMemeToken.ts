@@ -37,11 +37,26 @@ export const topNewMemeToken: Action = {
     description: "TOP NEW MEME TOKEN",
 
     similes: [
-
+        "TOP_NEW_MEME_TOKEN"
     ],
 
     examples: [
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Top new meme token",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Top trending token",
+                    action: "TOP_NEW_MEME_TOKEN",
 
+                },
+            },
+        ],
     ],
 
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {

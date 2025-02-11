@@ -60,7 +60,22 @@ export const trendingTokens: Action = {
     ],
 
     examples: [
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Top trending token",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Top trending token",
+                    action: "TOP_TRENDING_TOKENS",
 
+                },
+            },
+        ],
     ],
 
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {

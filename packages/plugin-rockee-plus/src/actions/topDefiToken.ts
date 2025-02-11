@@ -115,7 +115,22 @@ export const topDefi: Action = {
         }
     },
     examples: [
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Top Defi Token",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Top Defi Token",
+                    action: "TOP_DEFI",
 
+                },
+            },
+        ],
     ],
 } as Action;
 
