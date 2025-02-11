@@ -13,30 +13,31 @@ export const fetchNaviPool= async (job:any)  => {
     let index = 0;
     for (let key in pool) {
         if (pool.hasOwnProperty(key)) {
-
-        let poolInfo
+        let poolInfo;
         if (pool[key]) {
-            poolInfo = await getPoolInfo({
-                symbol: key,
-                address: pool[key].type,
-                decimal:responseData[index]
-            });
-            // elizaLogger.info(poolInfo)
-            poolInfoArray.push(poolInfo);
-            responseData[index].total_supply = poolInfo.total_supply;
-            responseData[index].total_borrow = poolInfo.total_borrow;
-            responseData[index].base_supply_rate = poolInfo.base_supply_rate;
-            responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
-            responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-            responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-        } else {
-            elizaLogger.error(`Pool information for key ${key} is undefined.`);
-        }
+        poolInfo = await getPoolInfo({
+        symbol: key,
+        address: pool[key].type,
+        decimal: responseData[index].decimal
+        });
         poolInfoArray.push(poolInfo);
+        responseData[index].total_supply = poolInfo.total_supply;
+        responseData[index].total_borrow = poolInfo.total_borrow;
+        responseData[index].base_supply_rate = poolInfo.base_supply_rate;
+        responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
+        responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
+        responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+        
+        } else {
+        elizaLogger.error(`Pool information for key ${key} is undefined.`);
+        }
         }
         index++;
     }
-    redis.setValue({ key: "TOP_DEX", value: JSON.stringify(responseData) });
+    // Sort the responseData array by total (base_supply_rate + boosted_supply_rate) in descending order
+    responseData.sort((a, b) => (parseFloat(b.base_supply_rate) + parseFloat(b.boosted_supply_rate)) - (parseFloat(a.base_supply_rate) + parseFloat(a.boosted_supply_rate)));
+       
+    redis.setValue({ key: "STAKE_POOLS", value: JSON.stringify(responseData) });
     return;
 
 }
