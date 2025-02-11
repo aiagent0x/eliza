@@ -16,6 +16,7 @@ import {findByVerifiedAndSymbol} from "../providers/searchCoinInAggre";
 
 import { hashUserMsg } from "../utils/format";
 import getActionHint from "../utils/action_hint";
+import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 
 const swapTemplate = `
 Recent messages: {{recentMessages}}
@@ -98,8 +99,16 @@ export const executeSwap: Action = {
              })
              return false
         }
+        let amount = content.amount;
+        if(!content.inputTokenSymbol||content.inputTokenSymbol==="null"){
+            const coinGecko = new GeckoTerminalProvider2(); 
+            let tokenDetail = await coinGecko.getTokenDetails('sui-network',inputTokenObject.type);
+            let number:number = parseFloat(amount)* parseFloat(tokenDetail.price_usd)
+            amount = number
+        }
+        
         const responseData = {
-            amount: content.amount,
+            amount: amount,
             fromToken: inputTokenObject,
             toToken:outputTokenObject
 

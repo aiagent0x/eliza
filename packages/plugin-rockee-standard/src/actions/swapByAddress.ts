@@ -100,8 +100,15 @@ export const executeSwapByAddress: Action = {
         const imageFrom = await coninGeckoTeminal.getTokenDetails("sui-network", content.inputTokenAddress);
         const imageTo = await coninGeckoTeminal.getTokenDetails("sui-network", content.inputTokenAddress);
         
+        let amount = content.amount;
+        if(!content.inputTokenSymbol||content.inputTokenSymbol==="null"){
+            const coinGecko = new GeckoTerminalProvider2(); 
+            let tokenDetail = await coinGecko.getTokenDetails('sui-network',content.inputTokenAddress);
+            let number:number = parseFloat(amount)* parseFloat(tokenDetail.price_usd)
+            amount = number
+        }
         const responseData = {
-            amount: content.amount,
+            amount: amount,
             fromToken: {...inputTokenObject,
                 type: content.inputTokenAddress,
                 imgUrl: imageFrom.image_url
