@@ -102,8 +102,8 @@ export const executeSwap: Action = {
         let amount = content.amount;
         if(!content.inputTokenSymbol||content.inputTokenSymbol==="null"){
             const coinGecko = new GeckoTerminalProvider2(); 
-            let tokenDetail = await coinGecko.getTokenDetails('sui-network',inputTokenObject.type);
-            let number:number = parseFloat(amount)* parseFloat(tokenDetail.price_usd)
+            let tokenDetail = await coinGecko.getTokenDetails('sui-network',outputTokenObject.type);
+            let number:number = parseFloat(amount)*parseFloat(tokenDetail.price_usd)
             amount = number
         }
         

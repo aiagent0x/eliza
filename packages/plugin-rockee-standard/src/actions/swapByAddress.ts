@@ -103,7 +103,7 @@ export const executeSwapByAddress: Action = {
         let amount = content.amount;
         if(!content.inputTokenSymbol||content.inputTokenSymbol==="null"){
             const coinGecko = new GeckoTerminalProvider2(); 
-            let tokenDetail = await coinGecko.getTokenDetails('sui-network',content.inputTokenAddress);
+            let tokenDetail = await coinGecko.getTokenDetails('sui-network',content.outputTokenAddress);
             let number:number = parseFloat(amount)* parseFloat(tokenDetail.price_usd)
             amount = number
         }
