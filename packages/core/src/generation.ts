@@ -1049,25 +1049,44 @@ export async function generateText({
                     baseURL: endpoint,
                     fetch: runtime.fetch,
                 });
+                const atomaResponse:any = await fetch(`https://api.atoma.network/v1/chat/completions`,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        stream: false,
+                        model: atoma.languageModel(model).modelId,
+                        messages: [{
+                            role: "developer",
+			                content: context
+                        }
+                        ],
+                        max_tokens: 128,
+                    
+                    })
+                })
+                let result:any = await atomaResponse.json();
+                response = result.choices[0].message.content;
+                // const { text: atomaResponse } = await aiGenerateText({
+                //     model: atoma.languageModel(model),
+                //     prompt: context,
+                //     system:
+                //         runtime.character.system ??
+                //         settings.SYSTEM_PROMPT ??
+                //         undefined,
+                //     tools: tools,
+                //     onStepFinish: onStepFinish,
+                //     maxSteps: maxSteps,
+                //     temperature: temperature,
+                //     maxTokens: max_response_length,
+                //     frequencyPenalty: frequency_penalty,
+                //     presencePenalty: presence_penalty,
+                //     experimental_telemetry: experimental_telemetry,
+                // });
 
-                const { text: atomaResponse } = await aiGenerateText({
-                    model: atoma.languageModel(model),
-                    prompt: context,
-                    system:
-                        runtime.character.system ??
-                        settings.SYSTEM_PROMPT ??
-                        undefined,
-                    tools: tools,
-                    onStepFinish: onStepFinish,
-                    maxSteps: maxSteps,
-                    temperature: temperature,
-                    maxTokens: max_response_length,
-                    frequencyPenalty: frequency_penalty,
-                    presencePenalty: presence_penalty,
-                    experimental_telemetry: experimental_telemetry,
-                });
-
-                response = atomaResponse;
+                // response = atomaResponse;
                 elizaLogger.debug("Received response from Atoma model.");
                 break;
             }
