@@ -197,8 +197,11 @@ export class DirectClient {
                 const roomId = stringToUuid(
                     req.body.roomId ?? "default-room-" + agentId
                 );
+               
                 const userId = stringToUuid(req.body.userId ?? "user");
-
+                elizaLogger.info("agentId:",agentId)
+                elizaLogger.info("roomId:",roomId)
+                elizaLogger.info("userId:",userId)
                 let runtime = this.agents.get(agentId);
 
                 // if runtime is null, look for runtime with the same name
@@ -275,7 +278,7 @@ export class DirectClient {
                     createdAt: Date.now(),
                 };
 
-                await runtime.messageManager.addEmbeddingToMemory(memory);
+                // await runtime.messageManager.addEmbeddingToMemory(memory);
                 await runtime.messageManager.createMemory(memory);
 
                 let state = await runtime.composeState(userMessage, {
@@ -290,7 +293,7 @@ export class DirectClient {
                 const response = await generateMessageResponse({
                     runtime: runtime,
                     context,
-                    modelClass: ModelClass.LARGE,
+                    modelClass: ModelClass.SMALL,
                 });
 
                 if (!response) {
