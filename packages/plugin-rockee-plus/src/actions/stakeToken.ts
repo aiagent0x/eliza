@@ -22,6 +22,7 @@ Sample Pool Names in NAVI: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBT
     - Return only a JSON object with the specified fields in thise format:
         {
             "pool_name": string | NAVX,
+            "amount":  number | 0
         }
     - Use null for any values that cannot be determined.
     - All property names must use double quotes
@@ -87,7 +88,7 @@ export const stakeTokenPoolsNavi: Action = {
         responseData.base_borrow_rate = poolInfo.base_borrow_rate;
         responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
         responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-        
+        responseData.amount = content.amount
         try {
             callback({
                text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
