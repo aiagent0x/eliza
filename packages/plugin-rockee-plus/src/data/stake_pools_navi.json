@@ -1,4 +1,14 @@
-[
+[{
+	"name": "NAVX",
+	"assetId": 7,
+	"poolId": "0xc0e02e7a245e855dd365422faf76f87d9f5b2148a26d48dda6e8253c3fe9fa60",
+	"type": "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX",
+	"reserveObjectId": "0x2e13b2f1f714c0c5fa72264f147ef7632b48ec2501f810c07df3ccb59d6fdc81",
+	"borrowBalanceParentId": "0xa5bf13075aa400cbdd4690a617c5f008e1fae0511dcd4f7121f09817df6c8d8b",
+	"supplyBalanceParentId": "0x59dedca8dc44e8df50b190f8b5fe673098c1273ac6168c0a4addf3613afcdee5",
+	"img_icon": "https://arweave.net/FNGKLRGBS7D4lXxsmz4_F-xkMQs9DIRsTQT_q0Nn-iI",
+	"decimal": 9
+},
 	{
 		"name": "SUI",
 		"assetId": 0,
@@ -63,17 +73,6 @@
 		"borrowBalanceParentId": "0x01f36898e020be6c3423e5c95d9f348868813cd4d0be39b0c8df9d8de4722b00",
 		"supplyBalanceParentId": "0x278b8e3d09c3548c60c51ed2f8eed281876ea58c392f71b7ff650cc9286d095b",
 		"img_icon": "https://assets.haedal.xyz/logos/hasui.svg",
-		"decimal": 9
-	},
-	{
-		"name": "NAVX",
-		"assetId": 7,
-		"poolId": "0xc0e02e7a245e855dd365422faf76f87d9f5b2148a26d48dda6e8253c3fe9fa60",
-		"type": "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX",
-		"reserveObjectId": "0x2e13b2f1f714c0c5fa72264f147ef7632b48ec2501f810c07df3ccb59d6fdc81",
-		"borrowBalanceParentId": "0xa5bf13075aa400cbdd4690a617c5f008e1fae0511dcd4f7121f09817df6c8d8b",
-		"supplyBalanceParentId": "0x59dedca8dc44e8df50b190f8b5fe673098c1273ac6168c0a4addf3613afcdee5",
-		"img_icon": "https://arweave.net/FNGKLRGBS7D4lXxsmz4_F-xkMQs9DIRsTQT_q0Nn-iI",
 		"decimal": 9
 	},
 	{
