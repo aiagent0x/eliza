@@ -197,8 +197,11 @@ export class DirectClient {
                 const roomId = stringToUuid(
                     req.body.roomId ?? "default-room-" + agentId
                 );
+               
                 const userId = stringToUuid(req.body.userId ?? "user");
-
+                elizaLogger.info("agentId:",agentId)
+                elizaLogger.info("roomId:",roomId)
+                elizaLogger.info("userId:",userId)
                 let runtime = this.agents.get(agentId);
 
                 // if runtime is null, look for runtime with the same name
