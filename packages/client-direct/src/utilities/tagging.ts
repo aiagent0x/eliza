@@ -90,11 +90,12 @@ export async function filterByTagging(tag: string) {
             result = await redis.getValue({key:"STAKE_POOLS"});
             responseData = {
                 text: "Below is a list of stake pools:",
-                action:"STAKE_POOLS",
+                action: "STAKE_POOLS",
                 result: {
-                 type: "stake_pools",
-                 data:JSON.parse(result),
-            }}
+                    type: "stake_pools",
+                    data: JSON.parse(result).slice(0, -2),
+                }
+            }
             break;
         default:
             responseData=null;
