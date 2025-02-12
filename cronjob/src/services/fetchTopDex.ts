@@ -21,7 +21,7 @@ export const fetchTopDexByNetwork = async (job:any)  => {
     const jsonText: string = $("pre").text().trim();
     try {
         // const jsonData: any = JSON.parse(jsonText);
-        redis.setValue({ key: "TOP_DEX", value: jsonText });
+        redis.setValue({ key: "TOP_DEX", value: jsonText, ttl: 3600 });
         return;
     } catch (error) {
         elizaLogger.info("❌ JSON:", error);

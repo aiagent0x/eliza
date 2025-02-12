@@ -71,9 +71,12 @@ export class RedisClient implements IDatabaseCacheAdapter {
     }
 
     // Hash Operations
-    async hSet(hash: string, key: string, value: string): Promise<boolean> {
+    async hSet(hash: string, key: string, value: string, ttl?: number): Promise<boolean> {
         try {
             await this.client.hset(hash, key, value);
+            if (ttl) {
+                await this.client.expire(hash, ttl);
+            }
             return true;
         } catch (err) {
             elizaLogger.error("Error setting hash value:", err);

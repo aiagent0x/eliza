@@ -37,7 +37,7 @@ export const fetchNaviPool= async (job:any)  => {
     // Sort the responseData array by total (base_supply_rate + boosted_supply_rate) in descending order
     responseData.sort((a, b) => (parseFloat(b.base_supply_rate) + parseFloat(b.boosted_supply_rate)) - (parseFloat(a.base_supply_rate) + parseFloat(a.boosted_supply_rate)));
        
-    redis.setValue({ key: "STAKE_POOLS", value: JSON.stringify(responseData) });
+    await redis.setValue({ key: "STAKE_POOLS", value: JSON.stringify(responseData), ttl: 3600 });
     return;
 
 }

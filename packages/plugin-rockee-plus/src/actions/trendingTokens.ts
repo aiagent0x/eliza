@@ -12,10 +12,14 @@ import {
     type Action,
 } from "@elizaos/core";
 import { generateObjectDeprecated } from "@elizaos/core";
-import { CoingeckoProvider } from "../providers/coingeckoProvider";
-import {  findTypesBySymbolsv2 } from "../providers/searchCoinInAggre";
+// import { CoingeckoProvider } from "../providers/coingeckoProvider";
+// import {  findTypesBySymbolsv2 } from "../providers/searchCoinInAggre";
 import getActionHint from "../utils/action_hint";
 // import { formatObjectsToText } from "../utils/format";
+
+import {RedisClient} from "@elizaos/adapter-redis";
+const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+let redis = new RedisClient(REDIS_URL)
 const trendingPromptTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
 Example response:
 \`\`\`json
@@ -90,39 +94,43 @@ export const trendingTokens: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         elizaLogger.info("[trendingTokens]");
-
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
+        let trendingCoins = await redis.hGet("coins_info","trending");
+        if(!trendingCoins){
+            
         }
-        const newsCryptoPannicContext = composeContext({
-            state,
-            template: trendingPromptTemplate,
-        });
-        // Generate transfer content
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: newsCryptoPannicContext,
-            modelClass: ModelClass.SMALL,
-        });
-        elizaLogger.info("content: ",content);
-        const coinGecko = new CoingeckoProvider();
-        let info = await coinGecko.topSuiTokens();
-        info = info.filter(token => !token.symbol.includes("USD"));
-        const symbolArray = info.map(token => token.symbol);
-        const dataOnSui = await findTypesBySymbolsv2(symbolArray);
-        info = info.map(token => {
-            const meta = dataOnSui.find(m => m.symbol === token.symbol);
-            return meta ? { ...token, ...meta } : token;
-          });
+        // if (!state) {
+        //     state = (await runtime.composeState(message)) as State;
+        // } else {
+        //     state = await runtime.updateRecentMessageState(state);
+        // }
+        // const newsCryptoPannicContext = composeContext({
+        //     state,
+        //     template: trendingPromptTemplate,
+        // });
+        // // Generate transfer content
+        // const content = await generateObjectDeprecated({
+        //     runtime,
+        //     context: newsCryptoPannicContext,
+        //     modelClass: ModelClass.SMALL,
+        // });
+        // elizaLogger.info("content: ",content);
+        // const coinGecko = new CoingeckoProvider();
+        // let info = await coinGecko.topSuiTokens();
+        // info = info.filter(token => !token.symbol.includes("USD"));
+        // const symbolArray = info.map(token => token.symbol);
+        // const dataOnSui = await findTypesBySymbolsv2(symbolArray);
+        // info = info.map(token => {
+        //     const meta = dataOnSui.find(m => m.symbol === token.symbol);
+        //     return meta ? { ...token, ...meta } : token;
+        //   });
+
         if (callback) {
             callback({
-                text: `Below are ${content.size} trending coins we have collected:`,
+                text: `Below are trending coins we have collected:`,
                 action: 'TOP_TRENDING_TOKENS',
                 result: {
                     type: "sui_trending_tokens",
-                    data:info.slice(0,content.size)
+                    data:JSON.stringify(trendingCoins)
                 },
                 action_hint:getActionHint()
             });
