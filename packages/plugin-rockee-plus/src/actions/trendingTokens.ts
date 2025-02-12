@@ -96,15 +96,19 @@ export const trendingTokens: Action = {
         elizaLogger.info("[trendingTokens]");
         let result = await redis.hGet("coins_info","trending");
         let trendingCoins = JSON.parse(result).data
+       
         let responseData = trendingCoins.map((token: any) => ({
             name: token.name,
             symbol: token.symbol.toUpperCase(),
-            price: token.current_price,
+            price: token.price,
             market_cap: token.cap,
             price_change_24h: token.change24h,
             type:token.address,
             iconUrl:token.logo
+
         }));
+       
+
         if (callback) {
             callback({
                 text: `Below are trending coins we have collected:`,
