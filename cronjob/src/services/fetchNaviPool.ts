@@ -37,7 +37,12 @@ export const fetchNaviPool= async (job:any)  => {
     // Sort the responseData array by total (base_supply_rate + boosted_supply_rate) in descending order
     responseData.sort((a, b) => (parseFloat(b.base_supply_rate) + parseFloat(b.boosted_supply_rate)) - (parseFloat(a.base_supply_rate) + parseFloat(a.boosted_supply_rate)));
        
-    await redis.setValue({ key: "STAKE_POOLS", value: JSON.stringify(responseData), ttl: 300 });
+    for (let data of responseData) {
+        const success = await redis.hSet("STAKE_POOLS", data.name, JSON.stringify(data), 300);
+        if (!success) {
+            elizaLogger.error(`Failed to set data for pool ${data.name} in Redis.`);
+        }
+    }
     return;
 
 }

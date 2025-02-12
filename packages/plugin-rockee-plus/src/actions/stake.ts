@@ -75,14 +75,19 @@ export const stakeNavi: Action = {
         if (content.type === "list") {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
-            let data = await redis.getValue({ key: "STAKE_POOLS" });
-            if (data !== undefined) {
+            let data = await redis.hGetAll("STAKE_POOLS");
+            
+            if (data && Object.keys(data).length > 0) {
+                let parsedData: { [key: string]: string }[] = [];
+                for (let key in data) {
+                    parsedData.push(JSON.parse(data[key]));
+                }
                 callback({
                     text: "Below is a list of stake pools:",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",
-                        data: JSON.parse(data).slice(0, content.amount),
+                        data: parsedData.slice(0, content.amount),
                     },
                 });
                 return true;
@@ -137,12 +142,27 @@ export const stakeNavi: Action = {
         }
 
         if (content.type === "pool_name") {
+           
             let responseData = await searchPoolInFileJson(content.pool_name);
+
             let symbolOnPoolNavi;
             for (let key in pool) {
                 if (content.pool_name.toLowerCase() === key.toLowerCase()) {
                     symbolOnPoolNavi = key;
                 }
+            }
+            let data= await redis.hGet("STAKE_POOLS",symbolOnPoolNavi);
+            
+            if (data && typeof data === "object" && data !== null) {
+                callback({
+                    text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
+                    action: "STAKE_TOKEN",
+                    result: {
+                        type: "stake_token",
+                        data: JSON.parse(data),
+                    },
+                });
+                return true;
             }
             let poolInfo = await getPoolInfo({
                 symbol: symbolOnPoolNavi,

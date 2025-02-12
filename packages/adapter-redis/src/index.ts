@@ -83,7 +83,18 @@ export class RedisClient implements IDatabaseCacheAdapter {
             return false;
         }
     }
-
+    async hSetMultiple(hash: string, keyValues: { [key: string]: string }, ttl?: number): Promise<boolean> {
+        try {
+            await this.client.hmset(hash, keyValues);
+            if (ttl) {
+                await this.client.expire(hash, ttl);
+            }
+            return true;
+        } catch (err) {
+            elizaLogger.error("Error setting multiple hash values:", err);
+            return false;
+        }
+    }
     async hGet(hash: string, key: string): Promise<string | null> {
         try {
             return await this.client.hget(hash, key);
@@ -92,7 +103,15 @@ export class RedisClient implements IDatabaseCacheAdapter {
             return null;
         }
     }
-
+    async hGetAll(hash: string): Promise<{ [key: string]: string }> {
+        try {
+            const result = await this.client.hgetall(hash);
+            return result;
+        } catch (err) {
+            elizaLogger.error("Error getting all hash values:", err);
+            return {};
+        }
+    }
     // List Operations
     async lPush(list: string, value: string): Promise<number> {
         try {
