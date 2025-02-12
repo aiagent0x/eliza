@@ -10,7 +10,7 @@ import {
     State,
     type Action,
 } from "@elizaos/core";
-import getActionHint from "../utils/action_hint";
+import { hashUserMsg } from "../utils/format";
 import { searchPoolInFileJson, listPoolsInFileJson, pool } from "../providers/searchPoolInFile";
 import { getPoolInfo } from "navi-sdk";
 import { RedisClient } from "@elizaos/adapter-redis";
@@ -59,18 +59,22 @@ export const stakeNavi: Action = {
         } else {
             state = await runtime.updateRecentMessageState(state);
         }
-
-        const stakeTokenContext = composeContext({
-            state,
-            template: stakeTokenTemplate,
-        });
-
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: stakeTokenContext,
-            modelClass: ModelClass.SMALL,
-        });
-        elizaLogger.info("content:", content);
+        const msgHash = hashUserMsg(message, "stake");
+        let content:any = await runtime.cacheManager.get(msgHash);
+        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+        if(!content){
+            const stakeContext = composeContext({
+                state,
+                template: stakeTokenTemplate,
+            });
+            content = await generateObjectDeprecated({
+                runtime,
+                context: stakeContext,
+                modelClass: ModelClass.SMALL,
+            });
+            await runtime.cacheManager.set(msgHash, content, {expires: Date.now() + 300000});
+        }
+        elizaLogger.info("content:", content)
 
         if (content.type === "list") {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
