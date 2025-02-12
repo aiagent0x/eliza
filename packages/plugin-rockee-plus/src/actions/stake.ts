@@ -25,19 +25,23 @@ Extract the staking parameters from the conversation above, following these rule
 - Return only a JSON object with the specified fields in this format:  
 
     {  
+         "type_action": "stake" | "unstake",  
          "type": "list" | "pool_name",  
-         "pool_name": string | SUI,  
+         "pool_name": string | null,  
          "amount": number | 0  
     }  
 
+- '"type_action"' is '"stake"' when the request involves staking tokens.  
+- '"type_action"' is '"unstake"' when the request involves unstaking tokens.  
 - Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools").  
-- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI").  
+- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
 - Set '"pool_name"' to null if no specific pool is mentioned.  
 - Use 'null' for any values that cannot be determined.  
 - All property names must use double quotes.  
 - Null values should not use quotes.  
 - No trailing commas allowed.  
 - No single quotes anywhere in the JSON.  
+
 `;
 
 export const stakeNavi: Action = {
@@ -151,7 +155,7 @@ export const stakeNavi: Action = {
         }
 
         if (content.type === "pool_name") {
-           
+            let type_action = content.type_action;
             let responseData = await searchPoolInFileJson(content.pool_name);
 
             let symbolOnPoolNavi;
@@ -167,8 +171,8 @@ export const stakeNavi: Action = {
                     text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
                     action: "STAKE_TOKEN",
                     result: {
-                        type: "stake_token",
-                        data: JSON.parse(data),
+                        type: type_action ==="stake"?"stake_token":"unstake_token",
+                        data: {...JSON.parse(data),...content.amount},
                     },
                 });
                 return true;
@@ -192,7 +196,7 @@ export const stakeNavi: Action = {
                     text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
                     action: "STAKE_TOKEN",
                     result: {
-                        type: "stake_token",
+                        type: type_action ==="stake"?"stake_token":"unstake_token",
                         data: responseData,
                     },
                 });
