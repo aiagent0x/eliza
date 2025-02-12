@@ -485,7 +485,9 @@ export function createApiRouter(
 
         const mapDataPath = path.join(__dirname, '../../../characters/samples/mapData.json');
         let sampleAgents;
-        const files = await fs.promises.readdir(path.join(__dirname, '../../../characters/data'));
+        const dataDir = path.join(__dirname, '../../../characters/data');
+        await fs.promises.mkdir(dataDir, { recursive: true });
+        const files = await fs.promises.readdir(dataDir);
         const existingCharacterFile = files.find(file => file.startsWith(`${stringToUuid(name)}.`) && file.endsWith('.character.json'));
         if (existingCharacterFile) {
             res.status(400).json({
