@@ -21,6 +21,7 @@ export const fetchNaviPool= async (job:any)  => {
         decimal: responseData[index].decimal
         });
         poolInfoArray.push(poolInfo);
+        responseData[index].name = poolInfo.key;
         responseData[index].total_supply = poolInfo.total_supply;
         responseData[index].total_borrow = poolInfo.total_borrow;
         responseData[index].base_supply_rate = poolInfo.base_supply_rate;
