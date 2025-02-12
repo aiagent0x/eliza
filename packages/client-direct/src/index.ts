@@ -27,7 +27,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
-
+import { hashUserMsg } from "./utilities/format.ts";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");
@@ -284,24 +284,31 @@ export class DirectClient {
                 let state = await runtime.composeState(userMessage, {
                     agentName: runtime.character.name,
                 });
-
-                const context = composeContext({
-                    state,
-                    template: messageHandlerTemplate,
-                });
-
-                const response = await generateMessageResponse({
-                    runtime: runtime,
-                    context,
-                    modelClass: ModelClass.SMALL,
-                });
-
-                if (!response) {
-                    res.status(500).send(
-                        "No response from generateMessageResponse"
-                    );
-                    return;
+                let msgHash = hashUserMsg(userMessage, "direct_client:");
+                let response: Content = await runtime.cacheManager.get(msgHash);
+                if(!response){
+                    const context = composeContext({
+                        state,
+                        template: messageHandlerTemplate,
+                    });
+    
+                    response = await generateMessageResponse({
+                        runtime: runtime,
+                        context,
+                        modelClass: ModelClass.SMALL,
+                    });
+                    if (!response) {
+                        res.status(500).send(
+                            "No response from generateMessageResponse"
+                        );
+                        return;
+                    }
                 }
+                else{
+                    elizaLogger.info("[direct-client] use cache: ", msgHash, response);
+                }
+
+                
 
                 // save response to memory
                 const responseMessage: Memory = {
