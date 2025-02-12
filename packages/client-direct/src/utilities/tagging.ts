@@ -5,12 +5,13 @@ let redis = new RedisClient(REDIS_URL)
 const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools"]
 
 export async function filterByTagging(tag: string) {
+   
     tag = tag.trim().toLowerCase();
     const text = tagging.find(t => t.replace(/\s+/g, '_') === tag.replace(/\s+/g, '_'));
     let responseData;
     let result;
     if(!text) return null;
-    
+  
     switch (text) {
         case "swap_1_sui_to_usdc":
             responseData = {
@@ -68,6 +69,7 @@ export async function filterByTagging(tag: string) {
             break;
         case "trending_tokens":
             result = await redis.hGet("coins_info", "trending");
+            console.log(result)
             responseData = {
                 "text": "Below are trending coins we have collected:",
                 "action": "TOP_TRENDING_TOKENS",

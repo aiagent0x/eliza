@@ -235,6 +235,7 @@ export class DirectClient {
                     res.json([]);
                     return;
                 }
+                
                 let dataResponse = await filterByTagging(text);
                 if(dataResponse){
                     res.json([

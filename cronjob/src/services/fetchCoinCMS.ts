@@ -14,7 +14,7 @@ const getCoinAll = async (job: any) => {
     const categories = ["all", "trending", "gainers", "losers", "defi", "ai", "meme", "new", "others"];
     await Promise.all(categories.map(category => 
       api.get(url, { params: { category } }).then(response => {
-      redis.hSet('coins_info', category, JSON.stringify(response.data), 3600);
+      redis.hSet('coins_info', category, JSON.stringify(response.data), 300);
       // redis.expire('coins_info', 3600); // Set TTL to 1 hour
       })
     ));
