@@ -80,12 +80,17 @@ export const stakeNavi: Action = {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
             let data = await redis.hGetAll("STAKE_POOLS");
-            
+            console.log(data)
             if (data && Object.keys(data).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
+                parsedData.sort((a, b) => {
+                    const aSupplyRate = parseFloat(a.base_supply_rate) + parseFloat(a.boosted_supply_rate);
+                    const bSupplyRate = parseFloat(b.base_supply_rate) + parseFloat(b.boosted_supply_rate);
+                    return bSupplyRate - aSupplyRate;
+                });
                 callback({
                     text: "Below is a list of stake pools:",
                     action: "STAKE_POOLS",

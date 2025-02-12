@@ -89,15 +89,29 @@ export async function filterByTagging(tag: string) {
             }
             break;
         case "stake_pools":
-            result = await redis.getValue({key:"STAKE_POOLS"});
-            responseData = {
-                text: "Below is a list of stake pools:",
-                action: "STAKE_POOLS",
-                result: {
-                    type: "stake_pools",
-                    data: JSON.parse(result).slice(0, 6),
+            let data = await redis.hGetAll("STAKE_POOLS");
+            console.log(data)
+            if (data && Object.keys(data).length > 0) {
+                let parsedData: { [key: string]: string }[] = [];
+                for (let key in data) {
+                    parsedData.push(JSON.parse(data[key]));
                 }
+                parsedData.sort((a, b) => {
+                    const aSupplyRate = parseFloat(a.base_supply_rate) + parseFloat(a.boosted_supply_rate);
+                    const bSupplyRate = parseFloat(b.base_supply_rate) + parseFloat(b.boosted_supply_rate);
+                    return bSupplyRate - aSupplyRate;
+                });
+                responseData= {
+                    text: "Below is a list of stake pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: parsedData.slice(0, 6),
+                    },
+                };
+                
             }
+           
             break;
         default:
             responseData=null;
