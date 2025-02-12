@@ -1,7 +1,7 @@
 import type { UUID, Character } from "@elizaos/core";
 
-const BASE_URL = `http://localhost:${import.meta.env.VITE_SERVER_PORT}`;
-// const BASE_URL = `${import.meta.env.BASE_SERVER_URL}`;
+// const BASE_URL = `http://${import.meta.env.VITE_SERVER_HOST}:${import.meta.env.VITE_SERVER_PORT}`;
+const BASE_URL = `${import.meta.env.BASE_SERVER_URL}`;
 // console.log(BASE_URL);
 const fetcher = async ({
     url,
