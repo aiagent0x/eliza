@@ -162,6 +162,7 @@ export const stakeNavi: Action = {
             }
             let data= await redis.hGet("STAKE_POOLS",symbolOnPoolNavi);
             console.log(data)
+            console.log(typeof data)
             if (data && typeof data === "object" && data !== null) {
                 callback({
                     text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
