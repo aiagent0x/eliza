@@ -101,6 +101,7 @@ export const stakePoolsNavi: Action = {
             });
 
             poolInfoArray.push(poolInfo);
+            responseData[index].name = key;
             responseData[index].total_supply = poolInfo.total_supply;
             responseData[index].total_borrow = poolInfo.total_borrow;
             responseData[index].base_supply_rate = poolInfo.base_supply_rate;
