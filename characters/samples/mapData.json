@@ -3,7 +3,9 @@
     "id": 1,
     "name": "advisor",
     "clone": [
-      
+      "c6d2f67b-ec45-0a23-add0-21d187086e82",
+      "3ebbca3f-67b7-09bc-963c-eed9c8521687",
+      "f6780e1b-f99c-0196-bbd3-c681b6d72695"
     ]
   },
   {
@@ -52,5 +54,17 @@
     "id": 10,
     "name": "trader",
     "clone": []
+  },
+  {
+    "id": "c6d2f67b-ec45-0a23-add0-21d187086e82",
+    "name": "hello222"
+  },
+  {
+    "id": "3ebbca3f-67b7-09bc-963c-eed9c8521687",
+    "name": "762b3740-0f15-4579-8a66-f8624d625a2a"
+  },
+  {
+    "id": "f6780e1b-f99c-0196-bbd3-c681b6d72695",
+    "name": "762b3740-0f15-4579-8a66-f8624d625a1a"
   }
 ]
