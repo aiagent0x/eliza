@@ -28,6 +28,7 @@ import * as path from "path";
 import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
 import { hashUserMsg } from "./utilities/format.ts";
+import { filterByTagging } from "./utilities/tagging.ts";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");
@@ -227,9 +228,18 @@ export class DirectClient {
                 );
 
                 const text = req.body.text;
+
+                
                 // if empty text, directly return
                 if (!text) {
                     res.json([]);
+                    return;
+                }
+                let dataResponse = await filterByTagging(text);
+                if(dataResponse){
+                    res.json([
+                        dataResponse
+                    ]);
                     return;
                 }
 

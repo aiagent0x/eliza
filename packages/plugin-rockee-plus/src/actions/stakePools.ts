@@ -54,9 +54,6 @@ export const stakePoolsNavi: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         // composeState
-
-        
-
         if (!state) {
             state = (await runtime.composeState(message)) as State;
         } else {
