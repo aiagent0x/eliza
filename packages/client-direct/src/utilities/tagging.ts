@@ -93,7 +93,7 @@ export async function filterByTagging(tag: string) {
                 action: "STAKE_POOLS",
                 result: {
                     type: "stake_pools",
-                    data: JSON.parse(result).slice(0, -2),
+                    data: JSON.parse(result).slice(0, 6),
                 }
             }
             break;
