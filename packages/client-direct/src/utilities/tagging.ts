@@ -2,17 +2,17 @@ import {RedisClient} from "@elizaos/adapter-redis";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 
-const tagging = ["swap token", "send token", "trending tokens", "staking pools"]
+const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools"]
 
 export async function filterByTagging(tag: string) {
     tag = tag.trim().toLowerCase();
-    const text = tagging.find(t => t === tag);
+    const text = tagging.find(t => t.replace(/\s+/g, '_') === tag.replace(/\s+/g, '_'));
     let responseData;
     let result;
     if(!text) return null;
     
     switch (text) {
-        case "swap token":
+        case "swap_1_sui_to_usdc":
             responseData = {
                 "text": "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 "result": {
@@ -45,7 +45,7 @@ export async function filterByTagging(tag: string) {
                 }
             }
             break;
-        case "send token":
+        case "send_1_sui_to_address":
             responseData = {
                 "text": "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 "result": {
@@ -66,7 +66,7 @@ export async function filterByTagging(tag: string) {
                 }
             }
             break;
-        case "trending tokens":
+        case "trending_tokens":
             result = await redis.hGet("coins_info", "trending");
             responseData = {
                 "text": "Below are trending coins we have collected:",
@@ -86,7 +86,7 @@ export async function filterByTagging(tag: string) {
                 }
             }
             break;
-        case "staking pools":
+        case "stake_pools":
             result = await redis.getValue({key:"STAKE_POOLS"});
             responseData = {
                 text: "Below is a list of stake pools:",
