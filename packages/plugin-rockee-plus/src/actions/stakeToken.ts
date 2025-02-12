@@ -68,8 +68,10 @@ export const stakeTokenPoolsNavi: Action = {
         let responseData = await searchPoolInFileJson(content.pool_name);
         elizaLogger.info(responseData)
         let symbolOnPoolNavi;
+        
         for (let key in pool) {
             if (content.pool_name.toLowerCase() === key.toLowerCase()) {
+                
                 symbolOnPoolNavi = key;
             }
 
@@ -81,7 +83,7 @@ export const stakeTokenPoolsNavi: Action = {
             decimal:responseData.decimal
         });
         // elizaLogger.info(poolInfo)
-    
+        responseData.name = symbolOnPoolNavi;
         responseData.total_supply = poolInfo.total_supply;
         responseData.total_borrow = poolInfo.total_borrow;
         responseData.base_supply_rate = poolInfo.base_supply_rate;

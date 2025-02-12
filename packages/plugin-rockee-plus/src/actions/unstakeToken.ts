@@ -38,7 +38,7 @@ export const unstakeTokenPoolsNavi: Action = {
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
-    description: "Stake by token",
+    description: "unStake by token",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -48,63 +48,64 @@ export const unstakeTokenPoolsNavi: Action = {
     ): Promise<boolean> => {
         // composeState
         if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
-        }
-
-        const stakeTokenContext = composeContext({
-            state,
-            template: unstakeTokenTemplate,
-        });
-
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: stakeTokenContext,
-            modelClass: ModelClass.SMALL,
-        });
-        elizaLogger.info("content:",content)
-        let responseData = await searchPoolInFileJson(content.pool_name);
-        elizaLogger.info(responseData)
-        let symbolOnPoolNavi;
-        for (let key in pool) {
-            if (content.pool_name.toLowerCase() === key.toLowerCase()) {
-                symbolOnPoolNavi = key;
-            }
-
-        }
-        elizaLogger.info(symbolOnPoolNavi)
-        let poolInfo = await getPoolInfo({
-            symbol: symbolOnPoolNavi,
-            address: responseData.type,
-            decimal:responseData.decimal
-        });
-        // elizaLogger.info(poolInfo)
-    
-        responseData.total_supply = poolInfo.total_supply;
-        responseData.total_borrow = poolInfo.total_borrow;
-        responseData.base_supply_rate = poolInfo.base_supply_rate;
-        responseData.base_borrow_rate = poolInfo.base_borrow_rate;
-        responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
-        responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                    state = (await runtime.composeState(message)) as State;
+                } else {
+                    state = await runtime.updateRecentMessageState(state);
+                }
         
-        try {
-            callback({
-               text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
-               action:"UNSTAKE_TOKEN",
-               result: {
-                type: "unstake_token",
-                data:responseData,
-                action_hint:getActionHint()
-
-            }
-            })
-
-            return true;
-        } catch (error) {
-            console.error("Error during token swap:", error);
-            return false;
-        }
+                const stakeTokenContext = composeContext({
+                    state,
+                    template: unstakeTokenTemplate,
+                });
+        
+                const content = await generateObjectDeprecated({
+                    runtime,
+                    context: stakeTokenContext,
+                    modelClass: ModelClass.SMALL,
+                });
+                elizaLogger.info("content:",content)
+                if(content.pool_name ==="null" || content.pool_name) content.pool_name = "SUI";
+                let responseData = await searchPoolInFileJson(content.pool_name);
+                elizaLogger.info(responseData)
+                let symbolOnPoolNavi;
+                
+                for (let key in pool) {
+                    if (content.pool_name.toLowerCase() === key.toLowerCase()) {
+                        
+                        symbolOnPoolNavi = key;
+                    }
+        
+                }
+                elizaLogger.info(symbolOnPoolNavi)
+                let poolInfo = await getPoolInfo({
+                    symbol: symbolOnPoolNavi,
+                    address: responseData.type,
+                    decimal:responseData.decimal
+                });
+                // elizaLogger.info(poolInfo)
+                responseData.name = symbolOnPoolNavi;
+                responseData.total_supply = poolInfo.total_supply;
+                responseData.total_borrow = poolInfo.total_borrow;
+                responseData.base_supply_rate = poolInfo.base_supply_rate;
+                responseData.base_borrow_rate = poolInfo.base_borrow_rate;
+                responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
+                responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                responseData.amount = content.amount
+                try {
+                    callback({
+                       text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
+                       action:"UNSTAKE_TOKEN",
+                       result: {
+                        type: "unstake_token",
+                        data:responseData,
+                    }
+                    })
+        
+                    return true;
+                } catch (error) {
+                    console.error("Error during token swap:", error);
+                    return false;
+                }
     },
     examples: [
         [

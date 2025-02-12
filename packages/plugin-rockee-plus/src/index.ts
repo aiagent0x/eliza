@@ -7,19 +7,23 @@ import { topNftInfos } from './actions/topNft';
 import { stakePoolsNavi } from './actions/stakePools';
 import { stakeTokenPoolsNavi } from './actions/stakeToken';
 import { unstakeTokenPoolsNavi } from './actions/unstakeToken';
+import { stakeNavi } from './actions/stake';
 
 const rockeePlusPlugin: Plugin = {
   name: "rockeePlusPlugin",
   description: "Everything about rockee plus",
   actions: [
+    
     topMeme,
     topDefi,
     trendingTokens,
     topNewMemeToken,
     topNftInfos,
-    stakePoolsNavi,
-    stakeTokenPoolsNavi,
-    unstakeTokenPoolsNavi
+    // stakePoolsNavi,
+    // stakeTokenPoolsNavi,
+    stakeNavi,
+    unstakeTokenPoolsNavi,
+    
 ],
   evaluators: [],
   providers: []
