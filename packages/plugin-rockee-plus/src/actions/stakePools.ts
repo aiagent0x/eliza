@@ -86,8 +86,6 @@ export const stakePoolsNavi: Action = {
              return true;
         }
         let responseData = await listPoolsInFileJson();
-        // let getPools = await getPoolInfo(pool);
-        let poolInfoArray = [];
         let index = 0;
 
         for (let key in pool) {
@@ -99,8 +97,6 @@ export const stakePoolsNavi: Action = {
             address: pool[key].type,
             decimal: responseData[index].decimal
             });
-
-            poolInfoArray.push(poolInfo);
             responseData[index].name = key;
             responseData[index].total_supply = poolInfo.total_supply;
             responseData[index].total_borrow = poolInfo.total_borrow;
@@ -109,17 +105,16 @@ export const stakePoolsNavi: Action = {
             responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
             responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
 
-            
+            console.log(responseData[index])
             } else {
             elizaLogger.error(`Pool information for key ${key} is undefined.`);
             }
             }
             index++;
         }
-
+    
         // Sort the responseData array by total (base_supply_rate + boosted_supply_rate) in descending order
         responseData.sort((a, b) => (parseFloat(b.base_supply_rate) + parseFloat(b.boosted_supply_rate)) - (parseFloat(a.base_supply_rate) + parseFloat(a.boosted_supply_rate)));
-       
 
         try {
             callback({

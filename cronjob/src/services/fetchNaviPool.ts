@@ -9,7 +9,7 @@ export const fetchNaviPool= async (job:any)  => {
 
     let responseData = await listPoolsInFileJson();
     // let getPools = await getPoolInfo(pool);
-    let poolInfoArray = [];
+    
     let index = 0;
     for (let key in pool) {
         if (pool.hasOwnProperty(key)) {
@@ -20,8 +20,7 @@ export const fetchNaviPool= async (job:any)  => {
         address: pool[key].type,
         decimal: responseData[index].decimal
         });
-        poolInfoArray.push(poolInfo);
-        responseData[index].name = poolInfo.key;
+        responseData[index].name = key;
         responseData[index].total_supply = poolInfo.total_supply;
         responseData[index].total_borrow = poolInfo.total_borrow;
         responseData[index].base_supply_rate = poolInfo.base_supply_rate;
