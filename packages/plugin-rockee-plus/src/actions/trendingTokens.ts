@@ -12,8 +12,8 @@ import {
     type Action,
 } from "@elizaos/core";
 import { generateObjectDeprecated } from "@elizaos/core";
-// import { CoingeckoProvider } from "../providers/coingeckoProvider";
-// import {  findTypesBySymbolsv2 } from "../providers/searchCoinInAggre";
+import { CoingeckoProvider } from "../providers/coingeckoProvider";
+import {  findTypesBySymbolsv2 } from "../providers/searchCoinInAggre";
 import getActionHint from "../utils/action_hint";
 // import { formatObjectsToText } from "../utils/format";
 
@@ -94,45 +94,25 @@ export const trendingTokens: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         elizaLogger.info("[trendingTokens]");
-        let trendingCoins = await redis.hGet("coins_info","trending");
-        if(!trendingCoins){
-            
-        }
-        // if (!state) {
-        //     state = (await runtime.composeState(message)) as State;
-        // } else {
-        //     state = await runtime.updateRecentMessageState(state);
-        // }
-        // const newsCryptoPannicContext = composeContext({
-        //     state,
-        //     template: trendingPromptTemplate,
-        // });
-        // // Generate transfer content
-        // const content = await generateObjectDeprecated({
-        //     runtime,
-        //     context: newsCryptoPannicContext,
-        //     modelClass: ModelClass.SMALL,
-        // });
-        // elizaLogger.info("content: ",content);
-        // const coinGecko = new CoingeckoProvider();
-        // let info = await coinGecko.topSuiTokens();
-        // info = info.filter(token => !token.symbol.includes("USD"));
-        // const symbolArray = info.map(token => token.symbol);
-        // const dataOnSui = await findTypesBySymbolsv2(symbolArray);
-        // info = info.map(token => {
-        //     const meta = dataOnSui.find(m => m.symbol === token.symbol);
-        //     return meta ? { ...token, ...meta } : token;
-        //   });
-
+        let result = await redis.hGet("coins_info","trending");
+        let trendingCoins = JSON.parse(result).data
+        let responseData = trendingCoins.map((token: any) => ({
+            name: token.name,
+            symbol: token.symbol.toUpperCase(),
+            price: token.current_price,
+            market_cap: token.cap,
+            price_change_24h: token.change24h,
+            type:token.address,
+            iconUrl:token.logo
+        }));
         if (callback) {
             callback({
                 text: `Below are trending coins we have collected:`,
                 action: 'TOP_TRENDING_TOKENS',
                 result: {
                     type: "sui_trending_tokens",
-                    data:JSON.stringify(trendingCoins)
-                },
-                action_hint:getActionHint()
+                    data:responseData
+                }
             });
         }
 
