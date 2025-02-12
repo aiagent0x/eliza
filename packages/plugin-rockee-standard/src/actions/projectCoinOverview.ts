@@ -59,7 +59,9 @@ export const projectInfo: Action = {
         "{INPUT}_info",
         "{INPUT}_information",
         "{INPUT}_IN4",
-        "IN4_{INPUT}"
+        "IN4_{INPUT}", 
+        "MORE_INFO_{INPUT}",
+        
     ],
 
     examples: [
