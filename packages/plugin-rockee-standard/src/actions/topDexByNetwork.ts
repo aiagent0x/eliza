@@ -115,7 +115,7 @@ export const topDexInfo: Action = {
                 url: dex.attributes.url,
                 // analytics_pool_page_url: dex.attributes.analytics_pool_page_url,
                 // analytics_token_page_url: dex.attributes.analytics_token_page_url,
-                // img_icon: dex.attributes.image_url,
+                img_icon: dex.attributes.image_url,
                 // website: project?.website || null,
                 // discord: project?.discord || null,
                 // twitter: project?.twitter || null,
