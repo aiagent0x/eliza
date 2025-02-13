@@ -241,7 +241,7 @@ export class DirectClient {
                     return;
                 }
                 
-                let dataResponse = await filterByTagging(text);
+                let dataResponse = await filterByTagging(text,await runtime.character.name);
                 if(dataResponse){
                     res.json([
                         dataResponse

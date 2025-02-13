@@ -4,7 +4,7 @@ let redis = new RedisClient(REDIS_URL)
 
 const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools"]
 
-export async function filterByTagging(tag: string) {
+export async function filterByTagging(tag: string,agentName:string) {
    
     tag = tag.trim().toLowerCase();
     const text = tagging.find(t => t.replace(/\s+/g, '_') === tag.replace(/\s+/g, '_'));
@@ -15,6 +15,7 @@ export async function filterByTagging(tag: string) {
     switch (text) {
         case "swap_1_sui_to_usdc":
             responseData = {
+                user:agentName,
                 "text": "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 "result": {
                     "type": "swap",
@@ -48,6 +49,7 @@ export async function filterByTagging(tag: string) {
             break;
         case "send_1_sui_to_address":
             responseData = {
+                user:agentName,
                 "text": "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 "result": {
                     "type": "send_sui_chain",
@@ -69,8 +71,9 @@ export async function filterByTagging(tag: string) {
             break;
         case "trending_tokens":
             result = await redis.hGet("coins_info", "trending");
-            console.log(result)
+          
             responseData = {
+                "user":agentName,
                 "text": "Below are trending coins we have collected:",
                 "action": "TOP_TRENDING_TOKENS",
                 "result": {
@@ -102,6 +105,7 @@ export async function filterByTagging(tag: string) {
                     return bSupplyRate - aSupplyRate;
                 });
                 responseData= {
+                    user:agentName,
                     text: "Below is a list of stake pools:",
                     action: "STAKE_POOLS",
                     result: {
