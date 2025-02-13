@@ -240,8 +240,10 @@ export class DirectClient {
                     res.json([]);
                     return;
                 }
-                
+                console.log(text)
+                console.log(await runtime.character.name)
                 let dataResponse = await filterByTagging(text,await runtime.character.name);
+                console.log("dataResponse:", dataResponse)
                 if(dataResponse){
                     res.json([
                         dataResponse

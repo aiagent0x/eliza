@@ -5,11 +5,12 @@ let redis = new RedisClient(REDIS_URL)
 const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools"]
 
 export async function filterByTagging(tag: string,agentName:string) {
-   
+    console.log(agentName)
     tag = tag.trim().toLowerCase();
     const text = tagging.find(t => t.replace(/\s+/g, '_') === tag.replace(/\s+/g, '_'));
     let responseData;
     let result;
+    console.log(text)
     if(!text) return null;
   
     switch (text) {

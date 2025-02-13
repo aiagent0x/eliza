@@ -14,10 +14,10 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 const jobQueue = new JobQueue(QUEUE_NAME, REDIS_URL);
 
 const scheduledJobs = [
-    { jobName: "fetchSuiDex", data: {}, cron: "*/15 * * * *" }, // run every 15 minutes
-    { jobName: "fetchNaviPool", data: {}, cron: "*/15 * * * *" }, // run every 15 minutes
-    { jobName: "fetchCoinCMS", data: {}, cron: "*/15 * * * *" },  // run every 15 minutes
-    { jobName: "fetchLiquidityPoolsCetus", data: {}, cron: "*/15 * * * *" },  // run every 15 minutes
+    { jobName: "fetchSuiDex", data: {}, cron: "*/5 * * * *" }, // run every 15 minutes
+    { jobName: "fetchNaviPool", data: {}, cron: "*/5 * * * *" }, // run every 15 minutes
+    { jobName: "fetchCoinCMS", data: {}, cron: "*/5 * * * *" },  // run every 15 minutes
+    { jobName: "fetchLiquidityPoolsCetus", data: {}, cron: "*/5 * * * *" },  // run every 15 minutes
     // { jobName: "fetchTopDexOnSuiVision", data: {}, cron: "*/15 * * * *" },  // run every 15 minutes
 ];
 
