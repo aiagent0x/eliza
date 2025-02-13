@@ -4703,7 +4703,6 @@
       "symbol": "wUSDC",
       "name": "USD Coin (Portal from ETH)",
       "iconUrl": "https://klrhtty4kphjcsrez2eaeh6r27tbaayw3odjadigbrek544f3i2a.arweave.net/UuJ5zxxTzpFKJM6IAh_R1-YQAxbbhpANBgxIrvOF2jQ",
-      "verified": true,
       "bridgeProject": "Wormhole",
       "tags": [
         "Bridged"
@@ -5103,7 +5102,6 @@
       "symbol": "USDC",
       "name": "USD Coin (Portal from BSC)",
       "iconUrl": "https://co3xbx3vz2ww7tcs2tp4p36hdnkz677tuvqt6wgyfyoeefj6or6a.arweave.net/E7dw33XOrW_MUtTfx-_HG1Wff_OlYT9Y2C4cQhU-dHw",
-      "verified": true,
       "bridgeProject": "Wormhole",
       "tags": [
         "Bridged"
@@ -8034,7 +8032,6 @@
       "symbol": "USDC",
       "name": "USD Coin (Protal from Solana)",
       "iconUrl": "https://ln5rjzkrzlcrgctsbxebvz7gjhbngu7eqk5orymuktocmbgwn5oa.arweave.net/W3sU5VHKxRMKcg3IGufmScLTU-SCuujhlFTcJgTWb1w",
-      "verified": true,
       "bridgeProject": "Wormhole",
       "tags": [
         "Bridged"
@@ -8635,7 +8632,6 @@
       "symbol": "USDC",
       "name": "USDC Coin (Celer)",
       "iconUrl": "https://strapi-dev.scand.app/uploads/usdc_019d7ef24b.png",
-      "verified": true,
       "bridgeProject": "Celer Network",
       "tags": [
         "Bridged"
@@ -9775,7 +9771,6 @@
       "symbol": "USDC",
       "name": "USD Coin (Protal from Arbitrum)",
       "iconUrl": "https://boqgq74qfqr7gfo4x7tpesefwkzawnbe4e3anop54gwsh3ctfdoa.arweave.net/C6Bof5AsI_MV3L_m8kiFsrILNCThNga5_eGtI-xTKNw",
-      "verified": true,
       "bridgeProject": "Wormhole",
       "tags": [
         "Bridged"

@@ -71,7 +71,6 @@ export async function filterByTagging(tag: string,agentName:string) {
             break;
         case "trending_tokens":
             result = await redis.hGet("coins_info", "trending");
-          
             responseData = {
                 "user":agentName,
                 "text": "Below are trending coins we have collected:",
@@ -93,7 +92,6 @@ export async function filterByTagging(tag: string,agentName:string) {
             break;
         case "stake_pools":
             let data = await redis.hGetAll("STAKE_POOLS");
-            console.log(data)
             if (data && Object.keys(data).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
