@@ -11,11 +11,11 @@ import {
     State,
     type Action,
 } from "@elizaos/core";
-import getActionHint from "../utils/action_hint";
-import { listPoolsInFileJson,pool } from "../providers/searchPoolInFile";
-// // import { RedisClient } from "@elizaos/adapter-redis";
-// import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
-import {getPoolInfo} from "navi-sdk";
+
+import { RedisClient } from "@elizaos/adapter-redis";
+
+const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+const redis = new RedisClient(REDIS_URL);
 import { CetusProvider } from "../providers/fetchCetus/fetchListLiquidityPools";
 const topLiquidityPoolTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
 Example response:
@@ -68,24 +68,35 @@ export const liquidityPoolsCetus: Action = {
             context: topLiquidityPoolContext,
             modelClass: ModelClass.SMALL,
         });
-        elizaLogger.info("content:",content);
-        // let responseData = await listPoolsInFileJson();
-        // let getPools = await getPoolInfo(pool);
+        elizaLogger.info("content:", content);
+        let responseData = await redis.getValue({ key: "liquidity_pools" })
+        if (responseData !== undefined) {
+            callback({
+                user: await runtime.character.name,
+                text: "Below is a list of liquidity pools:",
+                action: "LIQUIDITY_POOLS",
+                result: {
+                    type: "liquidity_pools",
+                    data: responseData.slice(0, content.size),
+
+                }
+            })
+            return true;
+        }
         let cetusProvider = new CetusProvider();
-        let result:any  = await cetusProvider.fetchLiquidityPools();
-        // console.log(responseData);
-        // let responseData = 
+        let result: any = await cetusProvider.fetchLiquidityPools();
+
         try {
             callback({
                 user: await runtime.character.name,
-               text: "Below is a list of liquidity pools:",
-               action:"LIQUIDITY_POOLS",
-               result: {
-                type: "liquidity_pools",
-                data:result.data.lp_list.slice(0,content.size),
-                // poolInfoArray:poolInfoArray,
-                // action_hint:getActionHint()
-            }
+                text: "Below is a list of liquidity pools:",
+                action: "LIQUIDITY_POOLS",
+                result: {
+                    type: "liquidity_pools",
+                    data: result.data.lp_list.slice(0, content.size),
+                    // poolInfoArray:poolInfoArray,
+                    // action_hint:getActionHint()
+                }
             })
 
             return true;
