@@ -60,7 +60,7 @@ export const sendTokenBySymbol: Action = {
         // console.log("Message:", message);
         return true;
     },
-    description: "Perform a token swap.",
+    description: "send token",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -101,17 +101,17 @@ export const sendTokenBySymbol: Action = {
         }
         // const checkSuiAddress = await checkSuiAddressExists(content.destinationAddress)
 
-        const checkSuiAddress = await isValidSuiAddress(content.destinationAddress)
+        // const checkSuiAddress = await isValidSuiAddress(content.destinationAddress)
 
-        if (!checkSuiAddress) {
-            callback({
-                user: await runtime.character.name,
-                text: `This wallet address ${content.destinationAddress} does not exist. Please enter a valid one.`,
-                action: "SUI_SEND_TOKEN_BY_SYMBOL",
+        // if (!checkSuiAddress) {
+        //     callback({
+        //         user: await runtime.character.name,
+        //         text: `This wallet address ${content.destinationAddress} does not exist. Please enter a valid one.`,
+        //         action: "SUI_SEND_TOKEN_BY_SYMBOL",
 
-            })
-            return false;
-        }
+        //     })
+        //     return false;
+        // }
         const responseData = {
             amount: content.amount,
             token_info: tokenObject,
@@ -146,7 +146,22 @@ export const sendTokenBySymbol: Action = {
             {
                 user: "{{user2}}",
                 content: {
-                    text: "Initiating swap of 10 0x2::sui::SUI for 0x4fb3c0f9e62b5d3956e2f0e284f2a5d128954750b109203a0f34c92c6ba21247::coin::USDT on SUI network...",
+                    text: "send token",
+                    action: "SUI_SEND_TOKEN_BY_SYMBOL",
+                }
+            }
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Send token"
+                }
+            },
+            {
+                user: "{{user2}}",
+                content: {
+                    text: "Send token",
                     action: "SUI_SEND_TOKEN_BY_SYMBOL",
                 }
             }
