@@ -6,14 +6,13 @@ import {
     IAgentRuntime,
     Memory,
     ModelClass,
-    // settings,
+    elizaLogger,
     State,
     type Action,
 } from "@elizaos/core";
 import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
-// import { checkSuiAddressExists } from "../providers/checkSuiAddress";
+import { hashUserMsg } from "../utils/format";
 import { isValidSuiAddress } from "@mysten/sui/utils";
-import getActionHint from "../utils/action_hint";
 const sendTokenTemplate = `Please extract the following swap details for SUI network:
 {
     "amount": number | 0,               // Amount of tokens to transfer
@@ -76,16 +75,21 @@ export const sendTokenBySymbol: Action = {
             state = await runtime.updateRecentMessageState(state);
         }
 
-        const sendTokenContext = composeContext({
-            state,
-            template: sendTokenTemplate,
-        });
-
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: sendTokenContext,
-            modelClass: ModelClass.SMALL,
-        });
+        const msgHash = hashUserMsg(message, "send-token");
+        let content: any = await runtime.cacheManager.get(msgHash);
+        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+        if (!content) {
+            const suiTokenInfoContext = composeContext({
+                state,
+                template: sendTokenTemplate,
+            });
+            content = await generateObjectDeprecated({
+                runtime,
+                context: suiTokenInfoContext,
+                modelClass: ModelClass.SMALL,
+            });
+            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+        }
         console.log("content:", content);
 
         const tokenObject = await findByVerifiedAndSymbol(content.tokenSymbol);

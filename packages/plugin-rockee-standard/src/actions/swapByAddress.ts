@@ -9,10 +9,10 @@ import {
     // settings,
     State,
     type Action,
+    elizaLogger
 } from "@elizaos/core";
 import getInfoTokenOnSui from "../providers/coinMetaDataSui";
-import { getTokenOnSuiScan } from "../providers/getInfoCoinOnSuiScan";
-import getActionHint from "../utils/action_hint";
+import { hashUserMsg } from "../utils/format";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 // import { RedisClient } from "@elizaos/adapter-redis";
 const swapTemplate = `Please extract the following swap details for SUI network:
@@ -70,16 +70,21 @@ export const executeSwapByAddress: Action = {
             state = await runtime.updateRecentMessageState(state);
         }
 
-        const swapContext = composeContext({
-            state,
-            template: swapTemplate,
-        });
-
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: swapContext,
-            modelClass: ModelClass.SMALL,
-        });
+        const msgHash = hashUserMsg(message, "swap_address");
+        let content: any = await runtime.cacheManager.get(msgHash);
+        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+        if (!content) {
+            const checkTxHashContext = composeContext({
+                state,
+                template: swapTemplate,
+            });
+            content = await generateObjectDeprecated({
+                runtime,
+                context: checkTxHashContext,
+                modelClass: ModelClass.SMALL,
+            });
+            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+        }
         console.log("content:", content);
         const inputTokenObject = await getInfoTokenOnSui(content.inputTokenAddress);
 

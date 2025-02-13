@@ -16,8 +16,7 @@ import {
 
 // import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
-import { getTokenOnSuiScan } from "../providers/getInfoCoinOnSuiScan";
-import getActionHint from "../utils/action_hint";
+import { hashUserMsg } from "../utils/format";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 
 const promptSuiTokenInfoTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
@@ -126,20 +125,24 @@ export const suiTokenPriceBySymbol: Action = {
         } else {
             state = await runtime.updateRecentMessageState(state);
         }
-        const searchSuiTokenSymbolPromptTemplateContext = composeContext({
-            state,
-            template: promptSuiTokenInfoTemplate,
-        });
-        // Generate transfer content
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: searchSuiTokenSymbolPromptTemplateContext,
-            modelClass: ModelClass.SMALL,
-        })
+        const msgHash = hashUserMsg(message, "token-price");
+        let content: any = await runtime.cacheManager.get(msgHash);
+        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+        if (!content) {
+            const suiTokenInfoContext = composeContext({
+                state,
+                template: promptSuiTokenInfoTemplate,
+            });
+            content = await generateObjectDeprecated({
+                runtime,
+                context: suiTokenInfoContext,
+                modelClass: ModelClass.SMALL,
+            });
+            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+        }
         elizaLogger.info("content: ", content);
 
         const tokenInfo = await findByVerifiedAndSymbol(content.token_symbol);
-        elizaLogger.info("content: ", tokenInfo);
 
         const coninGeckoTeminal = new GeckoTerminalProvider2()
         const info = await coninGeckoTeminal.getTokenDetails("sui-network", tokenInfo.type);

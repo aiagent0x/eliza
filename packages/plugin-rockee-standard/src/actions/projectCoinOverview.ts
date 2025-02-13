@@ -16,7 +16,6 @@ import { CoingeckoProvider } from "../providers/coingeckoProvider";
 import { searchCoinInFileJsonProvider, searchCoinInFileJsonProvider2 } from "../providers/searchCoinIdInFileJson";
 import { findByVerifiedAndName } from "../providers/searchCoinInAggre";
 import { searchProjectInFileJson } from "../providers/searchProjectInFileJson";
-import { getTokenOnSuiScan } from "../providers/getInfoCoinOnSuiScan";
 import { hashUserMsg } from "../utils/format";
 import getActionHint from "../utils/action_hint";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
@@ -163,10 +162,6 @@ export const projectInfo: Action = {
             state = await runtime.updateRecentMessageState(state);
         }
         console.log("state:->>", state.recentMessages)
-        // const projectPromptTemplateContext = composeContext({
-        //     state,
-        //     template: projectInfoTemplate,
-        // });
         const msgHash = hashUserMsg(message, "project_overview");
         let content: any = await runtime.cacheManager.get(msgHash)
         elizaLogger.info("---- cache info: ", msgHash, "--->", content)
@@ -183,13 +178,6 @@ export const projectInfo: Action = {
             })
             await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
-
-        // Generate transfer content
-        // content = await generateObjectDeprecated({
-        //     runtime,
-        //     context: projectPromptTemplateContext,
-        //     modelClass: ModelClass.SMALL,
-        // })
         elizaLogger.info("content:", content)
         const projectObj = await searchProjectInFileJson(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
         const tokenObject = await findByVerifiedAndName(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);

@@ -13,9 +13,8 @@ import {
 } from "@elizaos/core";
 import { fetchTopDexByNetwork } from "../providers/topDex";
 import { hashUserMsg } from "../utils/format";
-import { getTopDexOnSuiScan } from "../providers/getTopDexOnSuiScan";
 import { RedisClient } from "@elizaos/adapter-redis"
-import getActionHint from "../utils/action_hint";
+
 export interface InfoContent extends Content {
     coin_symbol: string;
     coin_name: string;
