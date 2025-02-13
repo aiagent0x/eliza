@@ -9,9 +9,10 @@ import {
     // settings,
     State,
     type Action,
+    elizaLogger
 } from "@elizaos/core";
 import getTransactionInfo from "../providers/checkTxHash";
-import getActionHint from "../utils/action_hint";
+import { hashUserMsg } from "../utils/format";
 const checkTxHashTemplate = `Please extract the following swap details for SUI network:
 {
     "txHash": string  | null,                // txHash is transaction block on sui network
@@ -23,12 +24,7 @@ All string values must use double quotes
 null values should not use quotes
 No trailing commas allowed
 No single quotes anywhere in the JSON
-
-
 `;
-
-
-
 export const checkTxhashOnSui: Action = {
     name: "CHECK_TXHASH_SUI_NETWORK",
     similes: [
@@ -57,26 +53,28 @@ export const checkTxhashOnSui: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         // composeState
+
         if (!state) {
             state = (await runtime.composeState(message)) as State;
         } else {
             state = await runtime.updateRecentMessageState(state);
         }
-
-        const checkTxHashContext = composeContext({
-            state,
-            template: checkTxHashTemplate,
-        });
-
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: checkTxHashContext,
-            modelClass: ModelClass.SMALL,
-        });
+        const msgHash = hashUserMsg(message, "check_info_txhash");
+        let content: any = await runtime.cacheManager.get(msgHash);
+        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+        if (!content) {
+            const checkTxHashContext = composeContext({
+                state,
+                template: checkTxHashTemplate,
+            });
+            content = await generateObjectDeprecated({
+                runtime,
+                context: checkTxHashContext,
+                modelClass: ModelClass.SMALL,
+            });
+            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+        }
         console.log("content:", content);
-
-
-
         try {
             const checkInfoTxHash = await getTransactionInfo(content.txHash);
             callback({

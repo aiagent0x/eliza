@@ -13,9 +13,7 @@ import {
     type Action,
 } from "@elizaos/core";
 import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
-
 import { hashUserMsg } from "../utils/format";
-import getActionHint from "../utils/action_hint";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 
 const swapTemplate = `
