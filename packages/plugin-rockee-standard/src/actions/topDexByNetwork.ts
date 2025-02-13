@@ -91,7 +91,7 @@ export const topDexInfo: Action = {
         console.log("content", content);
         // const topDexOnSuiScan = await getTopDexOnSuiScan()
         let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX" });
-        console.log(topDexOnCoinGecko)
+        // console.log(topDexOnCoinGecko)
         if (topDexOnCoinGecko) {
             topDexOnCoinGecko = JSON.parse(topDexOnCoinGecko);
         } else {
@@ -99,6 +99,7 @@ export const topDexInfo: Action = {
         }
 
         const responseData = topDexOnCoinGecko.data.map(dex => {
+            elizaLogger.info(dex)
             const dexMetricId = dex.relationships.dex_metric.data.id;
             const metric = topDexOnCoinGecko.included.find(item => item.id === dexMetricId);
             // const project = topDexOnSuiScan.find(item =>

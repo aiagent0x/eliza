@@ -72,7 +72,8 @@
       "website": "https://fantv.world/",
       "x_website": "https://x.com/FanTV_official",
       "verified": "No",
-      "congecko_link": "x"
+      "congecko_link": "x",
+      "slogan": "Create. Consume. Earn. Democratizing Creativity with AI."
     },
     {
       "id": 7,
@@ -82,7 +83,8 @@
       "website": "https://waveonsui.com/",
       "x_website": "https://x.com/WaveOnSui",
       "verified": "No",
-      "congecko_link": "x"
+      "congecko_link": "x",
+      "slogan":"Wave Wallet is a Telegram-based wallet offering simplicity, security, and limitless earning potential within the SUI ecosystem."
     },
     {
       "id": 8,
@@ -93,7 +95,7 @@
       "x_website": "https://x.com/7k_ag_",
       "verified": "No",
       "congecko_link": "x",
-      "slogan":"FlowX Finance is an ecosystem-focused decentralized exchange built on the Sui blockchain, designed to offer a seamless, user-friendly trading experience for the entire ecosystem."
+      "slogan":"As the first dynamic trading route aggregator on Sui, 7K Aggregator optimizes your trading strategies."
     },
     {
       "id": 9,
@@ -607,5 +609,48 @@
         "x_website": "https://x.com/bucket_protocol",
         "verified": "Yes",
         "congecko_link": "https://www.coingecko.com/en/coins/bucket-token"
+    },
+    {
+        "id": 57,
+        "name": "Sui wallet",
+        "symbol": "N/A",
+        "categories": ["Wallet"],
+        "website": "https://suiwallet.com/",
+        "x_website": "",
+        "verified": "Yes",
+        "congecko_link": "https://www.coingecko.com/en/coins/bucket-token"
+    },
+    {
+        "id": 58,
+        "name": "Wormhole",
+        "symbol": "W",
+        "categories": ["Bridge"],
+        "website": "https://wormhole.com/",
+        "x_website": "",
+        "verified": "Yes",
+        "congecko_link": "https://www.coingecko.com/en/coins/bucket-token",
+        "slogan":"Wormhole is a cross-chain protocol that connects multiple blockchains, enabling seamless asset and data transfers across networks like Ethereum, Solana, and Sui."
+    },
+    {
+        "id": 59,
+        "name": "Pyth",
+        "symbol": "PYTH",
+        "categories": ["Oracle"],
+        "website": "",
+        "x_website": "",
+        "verified": "Yes",
+        "congecko_link": "",
+        "slogan":"Pyth Network is an oracle connecting market data providers to blockchain apps, securing over 350 protocols on 55+ blockchains with data from 100+ top publishers."
+    },
+    {
+        "id": 60,
+        "name": "SuiVision",
+        "symbol": "N/A",
+        "categories": ["Explorer"],
+        "website": "",
+        "x_website": "",
+        "verified": "Yes",
+        "congecko_link": "",
+        "slogan":"SuiVision is a Sui explorer for Sui Network, where you can discover transactions, wallets, staking, validators, and dive into immersive Sui data."
     }
   ]
