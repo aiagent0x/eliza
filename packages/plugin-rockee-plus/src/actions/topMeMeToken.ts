@@ -71,11 +71,11 @@ export const topMeme: Action = {
         });
         console.log("content:", content);
         let dataResponse;
-        if(content.sortBy!=="HOLDERS"){
+        if (content.sortBy !== "HOLDERS") {
             const projectInfos = await searchCategoriesInFileJson("Meme");
             const projectType = await findTypesBySymbols(projectInfos);
             const GeckoTerminal = new GeckoTerminalProvider();
-            const tokenInfo = await GeckoTerminal.fetchMultipleTokenOnNetwork("sui-network",projectType);
+            const tokenInfo = await GeckoTerminal.fetchMultipleTokenOnNetwork("sui-network", projectType);
             dataResponse = tokenInfo.data.map((data) => ({
                 volume_usd: data.attributes.volume_usd?.h24 || 0,
                 symbol: data.attributes.symbol,
@@ -97,13 +97,14 @@ export const topMeme: Action = {
             try {
 
                 callback({
-                   text:`Here are the top Meme tokens:`,
-                   action:"TOP_MEME",
-                   result: {
-                    type: "top_token",
-                    data:dataResponse.slice(0,5),
-                    action_hint:getActionHint()
-                }
+                    user: await runtime.character.name,
+                    text: `Here are the top Meme tokens:`,
+                    action: "TOP_MEME",
+                    result: {
+                        type: "top_token",
+                        data: dataResponse.slice(0, 5),
+                        action_hint: getActionHint()
+                    }
                 })
 
                 return true;
@@ -112,20 +113,21 @@ export const topMeme: Action = {
                 return false;
             }
         }
-        else{
+        else {
             try {
                 const projectInfos = await searchCategoriesInFileJson("Meme");
                 const projectType = await findTypesBySymbols(projectInfos);
                 const suiOnChainProvider = new SuiOnChainProvider()
-                const dataResponse = await suiOnChainProvider.fetchHolders(projectType.slice(0,content.size));
+                const dataResponse = await suiOnChainProvider.fetchHolders(projectType.slice(0, content.size));
                 callback({
-                   text:`Here are the top Meme tokens by holders:`,
-                   action:"TOP_MEME_BY_HOLDERS",
-                   result: {
-                    type: "top_token_meme_by_holders",
-                    data:dataResponse.slice(0,content.size),
-                    action_hint:getActionHint()
-                }
+                    user: await runtime.character.name,
+                    text: `Here are the top Meme tokens by holders:`,
+                    action: "TOP_MEME_BY_HOLDERS",
+                    result: {
+                        type: "top_token_meme_by_holders",
+                        data: dataResponse.slice(0, content.size),
+                        action_hint: getActionHint()
+                    }
                 })
                 return true;
             }
@@ -149,7 +151,7 @@ export const topMeme: Action = {
                     text: "Top meme token",
                     action: "TOP_MEME",
                     content: {
-                        "size": 5 ,  // Number of records
+                        "size": 5,  // Number of records
                         "sortBy": "HOLDERS"
                     },
                 },

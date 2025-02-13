@@ -34,7 +34,7 @@ No single quotes anywhere in the JSON
 
 
 export const sendTokenBySymbol: Action = {
-    name:  "SUI_SEND_TOKEN_BY_SYMBOL",
+    name: "SUI_SEND_TOKEN_BY_SYMBOL",
     similes: [
         "SUI_TRANSFER_TOKENS_BY_SYMBOL",
         "SUI_TOKENS_SEND_BY_SYMBOL",
@@ -55,7 +55,7 @@ export const sendTokenBySymbol: Action = {
         "SUI_ASSETS_DELIVER_BY_SYMBOL",
 
 
-],
+    ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         // Check if the necessary parameters are provided in the message
         // console.log("Message:", message);
@@ -89,23 +89,24 @@ export const sendTokenBySymbol: Action = {
         console.log("content:", content);
 
         const tokenObject = await findByVerifiedAndSymbol(content.tokenSymbol);
-        if(!tokenObject){
+        if (!tokenObject) {
             callback({
-                text:`We do not support ${content.inputTokenSymbol} token in SUI network yet. However, if your token is supported, we can proceed with sending tokens using the token's address `,
-             })
-             return false
+                text: `We do not support ${content.inputTokenSymbol} token in SUI network yet. However, if your token is supported, we can proceed with sending tokens using the token's address `,
+            })
+            return false
         }
         // const checkSuiAddress = await checkSuiAddressExists(content.destinationAddress)
 
         const checkSuiAddress = await isValidSuiAddress(content.destinationAddress)
 
-        if(!checkSuiAddress){
+        if (!checkSuiAddress) {
             callback({
-                text:`This wallet address ${content.destinationAddress} does not exist. Please enter a valid one.`,
-                action:"SUI_SEND_TOKEN_BY_SYMBOL",
+                user: await runtime.character.name,
+                text: `This wallet address ${content.destinationAddress} does not exist. Please enter a valid one.`,
+                action: "SUI_SEND_TOKEN_BY_SYMBOL",
 
-             })
-             return false;
+            })
+            return false;
         }
         const responseData = {
             amount: content.amount,
@@ -115,11 +116,12 @@ export const sendTokenBySymbol: Action = {
         try {
 
             callback({
-               text:`Please ensure all details are correct before proceeding with the swap to prevent any losses.`,
-               action:"SUI_SEND_TOKEN_BY_SYMBOL",
-               result: {
-                type: "send_sui_chain",
-                data:responseData,
+                user: await runtime.character.name,
+                text: `Please ensure all details are correct before proceeding with the swap to prevent any losses.`,
+                action: "SUI_SEND_TOKEN_BY_SYMBOL",
+                result: {
+                    type: "send_sui_chain",
+                    data: responseData,
                 }
 
             })
@@ -134,7 +136,7 @@ export const sendTokenBySymbol: Action = {
             {
                 user: "{{user1}}",
                 content: {
-                    text:"Send 10 UNI to 0xa3b1c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0"
+                    text: "Send 10 UNI to 0xa3b1c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0"
                 }
             },
             {

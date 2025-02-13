@@ -53,7 +53,7 @@ export const executeSwapByAddress: Action = {
 
         const hasPriceKeyword = /\b(swap|buy|sell|transfer)\b/i.test(content.toLowerCase());
         return hasPriceKeyword;
-    
+
     },
     description: "Perform a token swap.",
     handler: async (
@@ -83,38 +83,42 @@ export const executeSwapByAddress: Action = {
         console.log("content:", content);
         const inputTokenObject = await getInfoTokenOnSui(content.inputTokenAddress);
 
-        if(inputTokenObject=== "ADDRESS_NOT_EXIST"){
+        if (inputTokenObject === "ADDRESS_NOT_EXIST") {
             callback({
-                text:`We do not support ${content.inputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
-             })
-             return false
+                user: await runtime.character.name,
+                text: `We do not support ${content.inputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
+            })
+            return false
         }
         const outputTokenObject = await getInfoTokenOnSui(content.outputTokenAddress);
-        if(outputTokenObject ==="ADDRESS_NOT_EXIST"){
+        if (outputTokenObject === "ADDRESS_NOT_EXIST") {
             callback({
-                text:`We do not support ${content.outputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
-             })
-             return false
+                user: await runtime.character.name,
+                text: `We do not support ${content.outputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
+            })
+            return false
         }
         const coninGeckoTeminal = new GeckoTerminalProvider2()
         const imageFrom = await coninGeckoTeminal.getTokenDetails("sui-network", content.inputTokenAddress);
         const imageTo = await coninGeckoTeminal.getTokenDetails("sui-network", content.inputTokenAddress);
-        
+
         let amount = content.amount;
-        if(!content.inputTokenSymbol||content.inputTokenSymbol==="null"){
-            const coinGecko = new GeckoTerminalProvider2(); 
-            let tokenDetail = await coinGecko.getTokenDetails('sui-network',content.outputTokenAddress);
-            let number:number = parseFloat(amount)* parseFloat(tokenDetail.price_usd)
+        if (!content.inputTokenSymbol || content.inputTokenSymbol === "null") {
+            const coinGecko = new GeckoTerminalProvider2();
+            let tokenDetail = await coinGecko.getTokenDetails('sui-network', content.outputTokenAddress);
+            let number: number = parseFloat(amount) * parseFloat(tokenDetail.price_usd)
             amount = number
         }
         const responseData = {
             amount: amount,
-            fromToken: {...inputTokenObject,
+            fromToken: {
+                ...inputTokenObject,
                 type: content.inputTokenAddress,
                 imgUrl: imageFrom.image_url
             },
-            toToken:{...outputTokenObject,
-                type:content.outputTokenAddress,
+            toToken: {
+                ...outputTokenObject,
+                type: content.outputTokenAddress,
                 imgUrl: imageTo.image_url
             }
 
@@ -123,14 +127,15 @@ export const executeSwapByAddress: Action = {
         try {
 
             callback({
-               text: "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
-               action:"SUI_EXECUTE_SWAP_BY_ADDRESS",
-               result: {
-                type: "swap",
-                data:responseData,
-                
+                user: await runtime.character.name,
+                text: "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
+                action: "SUI_EXECUTE_SWAP_BY_ADDRESS",
+                result: {
+                    type: "swap",
+                    data: responseData,
 
-            }
+
+                }
             })
 
             return true;
@@ -145,7 +150,7 @@ export const executeSwapByAddress: Action = {
             {
                 user: "{{user1}}",
                 content: {
-                    text:"Swap 10 0x2::sui::SUI to 0x4fb3c0f9e62b5d3956e2f0e284f2a5d128954750b109203a0f34c92c6ba21247::coin::USDT"
+                    text: "Swap 10 0x2::sui::SUI to 0x4fb3c0f9e62b5d3956e2f0e284f2a5d128954750b109203a0f34c92c6ba21247::coin::USDT"
                 }
             },
             {
@@ -161,7 +166,7 @@ export const executeSwapByAddress: Action = {
             {
                 "user": "{{user1}}",
                 "content": {
-                    text:"Buy 100 {TOKEN_ADDRESS}"
+                    text: "Buy 100 {TOKEN_ADDRESS}"
                 }
             },
             {
@@ -181,7 +186,7 @@ export const executeSwapByAddress: Action = {
             {
                 "user": "{{user1}}",
                 "content": {
-                    text:"SELL 100 {TOKEN_ADDRESS}"
+                    text: "SELL 100 {TOKEN_ADDRESS}"
                 }
             },
             {
@@ -190,7 +195,7 @@ export const executeSwapByAddress: Action = {
                     "text": "Initiating swap CeTUS for deep on SUI network...",
                     "action": "SUI_EXECUTE_SWAP_BY_SYMBOL",
                     "params": {
-                        "inputTokenSymbol":  "{TOKEN_ADDRESS}",
+                        "inputTokenSymbol": "{TOKEN_ADDRESS}",
                         "outputTokenSymbol": "USDC",
                         "amount": "100"
                     }

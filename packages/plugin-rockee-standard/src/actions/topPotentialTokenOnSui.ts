@@ -18,11 +18,11 @@ export const topPotentialTokenOnSui: Action = {
     name: "TOP_POTENTIAL_TOKEN",
     description: "Top potential token on Sui",
     similes: [
-       "TOP_POTENTIAL_TOKEN",
+        "TOP_POTENTIAL_TOKEN",
     ],
 
     examples: [
-      
+
     ],
 
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
@@ -46,7 +46,7 @@ export const topPotentialTokenOnSui: Action = {
             "0xb4bc93ad1a07fe47943fc4d776fed31ce31923acb5bc9f92d2cab14d01fc06a4::ROCK::ROCK"
         ];
         const coinGeckoProvider = new GeckoTerminalProvider()
-        const responseData =  await coinGeckoProvider.fetchMultipleTokenOnNetwork("sui-network",tokens)
+        const responseData = await coinGeckoProvider.fetchMultipleTokenOnNetwork("sui-network", tokens)
 
         const tokenData = responseData.data.map((token: any, index: number) => {
             return {
@@ -59,13 +59,14 @@ export const topPotentialTokenOnSui: Action = {
             };
         });
         callback({
-                    text: `Top potential token on Sui`,
-                    action:"TOP_POTENTIAL_TOKEN",
-                        result: {
-                        type: "top_potential_token",
-                        data:tokenData,
-                    },
-                });
+            user: await runtime.character.name,
+            text: `Top potential token on Sui`,
+            action: "TOP_POTENTIAL_TOKEN",
+            result: {
+                type: "top_potential_token",
+                data: tokenData,
+            },
+        });
 
 
         return true;

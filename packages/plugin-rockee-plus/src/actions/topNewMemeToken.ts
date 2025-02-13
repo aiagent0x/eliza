@@ -87,20 +87,20 @@ export const topNewMemeToken: Action = {
             context: newsCryptoPannicContext,
             modelClass: ModelClass.SMALL,
         });
-        elizaLogger.info("content: ",content);
+        elizaLogger.info("content: ", content);
         const coinGecko = new CoingeckoProvider();
         const info = await coinGecko.topNewMeMeCoin();
-        
+
 
         if (callback) {
             callback({
+                user: await runtime.character.name,
                 text: `Below are ${content.size} trending coins we have collected:`,
                 action: 'TOP_TRENDING_TOKENS',
                 result: {
                     type: "sui_new_meme_coin",
-                    data:info.slice(0,content.size)
-                },
-                action_hint:getActionHint()
+                    data: info.slice(0, content.size)
+                }
             });
         }
 

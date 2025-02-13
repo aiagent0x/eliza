@@ -77,7 +77,7 @@ export const topDefi: Action = {
         const projectType = await findTypesBySymbols(projectInfos);
         const GeckoTerminal = new GeckoTerminalProvider();
 
-        const tokenInfo = await GeckoTerminal.fetchMultipleTokenOnNetwork("sui-network",projectType);
+        const tokenInfo = await GeckoTerminal.fetchMultipleTokenOnNetwork("sui-network", projectType);
         let dataResponse = tokenInfo.data.map((data) => ({
             volume_usd: data.attributes.volume_usd?.h24 || 0,
             symbol: data.attributes.symbol,
@@ -99,13 +99,13 @@ export const topDefi: Action = {
         try {
 
             callback({
-               text:`Here are the top DeFi tokens:`,
-               action:"TOP_DEFI",
-               result: {
-                type: "top_token",
-                data: dataResponse.slice(0, content.size),
-                action_hint:getActionHint()
-            }
+                user: await runtime.character.name,
+                text: `Here are the top DeFi tokens:`,
+                action: "TOP_DEFI",
+                result: {
+                    type: "top_token",
+                    data: dataResponse.slice(0, content.size)
+                }
             })
 
             return true;

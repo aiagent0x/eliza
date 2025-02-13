@@ -13,11 +13,11 @@ import {
 } from "@elizaos/core";
 import { generateObjectDeprecated } from "@elizaos/core";
 import { CoingeckoProvider } from "../providers/coingeckoProvider";
-import {  findTypesBySymbolsv2 } from "../providers/searchCoinInAggre";
+import { findTypesBySymbolsv2 } from "../providers/searchCoinInAggre";
 import getActionHint from "../utils/action_hint";
 // import { formatObjectsToText } from "../utils/format";
 
-import {RedisClient} from "@elizaos/adapter-redis";
+import { RedisClient } from "@elizaos/adapter-redis";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 const trendingPromptTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
@@ -94,28 +94,29 @@ export const trendingTokens: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         elizaLogger.info("[trendingTokens]");
-        let result = await redis.hGet("coins_info","trending");
+        let result = await redis.hGet("coins_info", "trending");
         let trendingCoins = JSON.parse(result).data
-       
+
         let responseData = trendingCoins.map((token: any) => ({
             name: token.name,
             symbol: token.symbol.toUpperCase(),
             price: token.price,
             market_cap: token.cap,
             price_change_24h: token.change24h,
-            type:token.address,
-            iconUrl:token.logo
+            type: token.address,
+            iconUrl: token.logo
 
         }));
-       
+
 
         if (callback) {
             callback({
+                user: await runtime.character.name,
                 text: `Below are trending coins we have collected:`,
                 action: 'TOP_TRENDING_TOKENS',
                 result: {
                     type: "sui_trending_tokens",
-                    data:responseData
+                    data: responseData
                 }
             });
         }

@@ -14,7 +14,7 @@ import {
 import { CoingeckoProvider } from "../providers/coingeckoProvider";
 // import { formatObjectToText } from "../utils/format";
 import { searchCoinInFileJsonProvider, searchCoinInFileJsonProvider2 } from "../providers/searchCoinIdInFileJson";
-import {findByVerifiedAndName} from "../providers/searchCoinInAggre";
+import { findByVerifiedAndName } from "../providers/searchCoinInAggre";
 import { searchProjectInFileJson } from "../providers/searchProjectInFileJson";
 import { getTokenOnSuiScan } from "../providers/getInfoCoinOnSuiScan";
 import { hashUserMsg } from "../utils/format";
@@ -46,7 +46,7 @@ VALIDATION RULES:
 export const projectInfo: Action = {
     name: "PROJECT_OVERVIEW",
     similes: [
-       "PROJECT_SUMMARY_{INPUT}",
+        "PROJECT_SUMMARY_{INPUT}",
         "PROJECT_DESCRIPTION_{INPUT}",
         "OVERVIEW_{INPUT}",
         "{INPUT}_OVERVIEW",
@@ -59,7 +59,7 @@ export const projectInfo: Action = {
         "{INPUT}_info",
         "{INPUT}_information",
         "{INPUT}_IN4",
-        "IN4_{INPUT}", 
+        "IN4_{INPUT}",
         "MORE_INFO_{INPUT}",
         "MORE_INFO",
         "MORE_INFORMATION"
@@ -162,26 +162,26 @@ export const projectInfo: Action = {
         } else {
             state = await runtime.updateRecentMessageState(state);
         }
-        console.log("state:->>",state.recentMessages)
+        console.log("state:->>", state.recentMessages)
         // const projectPromptTemplateContext = composeContext({
         //     state,
         //     template: projectInfoTemplate,
         // });
         const msgHash = hashUserMsg(message, "project_overview");
-        let content:any = await runtime.cacheManager.get(msgHash)
+        let content: any = await runtime.cacheManager.get(msgHash)
         elizaLogger.info("---- cache info: ", msgHash, "--->", content)
-        if(!content){
+        if (!content) {
             const projectInfoContext = composeContext({
                 state,
                 template: projectInfoTemplate,
             })
-            elizaLogger.info("projectInfoContext: ",projectInfoContext);
+            elizaLogger.info("projectInfoContext: ", projectInfoContext);
             content = await generateObjectDeprecated({
                 runtime,
                 context: projectInfoContext,
                 modelClass: ModelClass.SMALL,
             })
-            await runtime.cacheManager.set(msgHash, content, {expires: Date.now() + 300000});
+            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
 
         // Generate transfer content
@@ -191,72 +191,74 @@ export const projectInfo: Action = {
         //     modelClass: ModelClass.SMALL,
         // })
         elizaLogger.info("content:", content)
-        const projectObj = await searchProjectInFileJson(content.project_name && content.project_name!=="null" ?content.project_name:content.token_symbol);
-        const tokenObject = await findByVerifiedAndName(content.project_name && content.project_name!=="null" ?content.project_name:content.token_symbol);
+        const projectObj = await searchProjectInFileJson(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
+        const tokenObject = await findByVerifiedAndName(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
 
-        if(!projectObj){
+        if (!projectObj) {
             callback({
-                text:`We do not support ${content.project_name} token in SUI network yet. However, if your token is supported, we can proceed with sending tokens using the token's address `,
-             })
-             return false
+                user: await runtime.character.name,
+                text: `We do not support ${content.project_name} token in SUI network yet. However, if your token is supported, we can proceed with sending tokens using the token's address `,
+            })
+            return false
         }
         const responseText = `Name:${projectObj.name} ($${projectObj.symbol})`
         let tokenSuiInfo, coinObject;
-        let infoPrice,infoDetail;
-        if(tokenObject){
+        let infoPrice, infoDetail;
+        if (tokenObject) {
             const coninGeckoTeminal = new GeckoTerminalProvider2()
-            
+
             tokenSuiInfo = await coninGeckoTeminal.getTokenDetails("sui-network", tokenObject.type);
             // tokenSuiInfo = await getTokenOnSuiScan(tokenObject.type);
-            elizaLogger.info("tokenSuiInfo",tokenSuiInfo)
-            if(tokenSuiInfo.symbol!=="ROCK"){
+            elizaLogger.info("tokenSuiInfo", tokenSuiInfo)
+            if (tokenSuiInfo.symbol !== "ROCK") {
 
-                coinObject= await searchCoinInFileJsonProvider2(tokenObject.symbol, tokenObject.name);
-                if(coinObject === null){
-                    coinObject= await searchCoinInFileJsonProvider(tokenObject.symbol)
+                coinObject = await searchCoinInFileJsonProvider2(tokenObject.symbol, tokenObject.name);
+                if (coinObject === null) {
+                    coinObject = await searchCoinInFileJsonProvider(tokenObject.symbol)
                 }
             }
 
-            infoPrice = {market_cap_rank:"N/A", price_change_24h:"N/A", price:tokenSuiInfo.tokenPrice, market_cap:tokenSuiInfo.marketCap};
-            infoDetail= {market_cap_rank:"N/A", tickers:[]};
+            infoPrice = { market_cap_rank: "N/A", price_change_24h: "N/A", price: tokenSuiInfo.tokenPrice, market_cap: tokenSuiInfo.marketCap };
+            infoDetail = { market_cap_rank: "N/A", tickers: [] };
         }
         const coinGecko = new CoingeckoProvider();
         let getToken, getDetail;
-        if(coinObject){
+        if (coinObject) {
             getToken = await coinGecko.getToken(coinObject.id);
             getDetail = await coinGecko.getCoinDataById(coinObject.id);
-            if(getToken){
+            if (getToken) {
                 infoPrice = getToken;
             }
-            if(getDetail){
+            if (getDetail) {
                 infoDetail = getDetail;
             }
         }
 
         callback({
+            user: await runtime.character.name,
             text: responseText,
             action: 'project_overview',
             result: {
-                type:"project_overview",
-                data:{
+                type: "project_overview",
+                data: {
                     name: projectObj.name,
                     symbol: projectObj.symbol,
                     slogan: projectObj.slogan,
                     websites: projectObj.website,
                     x_url: projectObj.x_website,
-                    coin_gecko_url: projectObj.congecko_link==="x"? null: projectObj.congecko_link,
-                    market_cap_rank: infoDetail && infoDetail.market_cap_rank? infoDetail.market_cap_rank: 0,
-                    markets: `${infoDetail && infoDetail.tickers?infoDetail.tickers.filter(item => item.target === "USDT")
-                            .sort((a, b) => (a.market.name === "Binance" ? -1 : 1) - (b.market.name === "Binance" ? -1 : 1))
-                            .slice(0, 5)
-                            .map(item => item.market.name)
-                            .join(","):""},...`,
+                    coin_gecko_url: projectObj.congecko_link === "x" ? null : projectObj.congecko_link,
+                    market_cap_rank: infoDetail && infoDetail.market_cap_rank ? infoDetail.market_cap_rank : 0,
+                    markets: `${infoDetail && infoDetail.tickers ? infoDetail.tickers.filter(item => item.target === "USDT")
+                        .sort((a, b) => (a.market.name === "Binance" ? -1 : 1) - (b.market.name === "Binance" ? -1 : 1))
+                        .slice(0, 5)
+                        .map(item => item.market.name)
+                        .join(",") : ""},...`,
                     categories: projectObj.categories.join(", "),
-                    imgUrl: tokenSuiInfo&&tokenSuiInfo.image_url? tokenSuiInfo.image_url: "",
-                    contract_address: tokenSuiInfo&&tokenSuiInfo.address?tokenSuiInfo.address:"",
+                    imgUrl: tokenSuiInfo && tokenSuiInfo.image_url ? tokenSuiInfo.image_url : "",
+                    contract_address: tokenSuiInfo && tokenSuiInfo.address ? tokenSuiInfo.address : "",
                     ...infoPrice
                 },
-                action_hint:getActionHint(
+                action_hint: getActionHint(
                     "Do you need any further assistance? Please let me know!",
                     projectObj.symbol,
                     tokenSuiInfo.address,

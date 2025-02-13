@@ -203,7 +203,8 @@ export class DirectClient {
                     req.body.roomId ?? "default-room-" + agentId
                 );
                
-                const userId = stringToUuid(req.body.userId ?? "user");
+                // const userId = stringToUuid(req.body.userId ?? "user");
+                const userId = req.body.userId;
                 elizaLogger.info("agentId:",agentId)
                 elizaLogger.info("roomId:",roomId)
                 elizaLogger.info("userId:",userId)

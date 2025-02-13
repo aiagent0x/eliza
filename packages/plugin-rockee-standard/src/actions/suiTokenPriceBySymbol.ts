@@ -15,7 +15,7 @@ import {
 // import {  formatObjectToText } from "../utils/format";
 
 // import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
-import {findByVerifiedAndSymbol} from "../providers/searchCoinInAggre";
+import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
 import { getTokenOnSuiScan } from "../providers/getInfoCoinOnSuiScan";
 import getActionHint from "../utils/action_hint";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
@@ -67,14 +67,14 @@ export const suiTokenPriceBySymbol: Action = {
         "WHAT_ABOUT_{INPUT}_RATE",
         "{INPUT}_WORTH",
 
-      ],
+    ],
 
     examples: [
         [
             {
                 "user": "{{user1}}",
                 "content": {
-                    text:"SUI price"
+                    text: "SUI price"
                 }
             },
             {
@@ -92,7 +92,7 @@ export const suiTokenPriceBySymbol: Action = {
             {
                 "user": "{{user1}}",
                 "content": {
-                    text:"price SUI"
+                    text: "price SUI"
                 }
             },
             {
@@ -136,24 +136,25 @@ export const suiTokenPriceBySymbol: Action = {
             context: searchSuiTokenSymbolPromptTemplateContext,
             modelClass: ModelClass.SMALL,
         })
-        elizaLogger.info("content: ",content);
+        elizaLogger.info("content: ", content);
 
         const tokenInfo = await findByVerifiedAndSymbol(content.token_symbol);
-        elizaLogger.info("content: ",tokenInfo);
+        elizaLogger.info("content: ", tokenInfo);
 
         const coninGeckoTeminal = new GeckoTerminalProvider2()
         const info = await coninGeckoTeminal.getTokenDetails("sui-network", tokenInfo.type);
 
         if (callback) {
             callback({
+                user: await runtime.character.name,
                 text: `Here are the token prices:`,
                 action: 'TOKEN_PRICE_INFO_BY_SYMBOL',
                 result: {
                     type: "token_price",
-                    data:{
+                    data: {
                         symbol: info.symbol,
                         name: info.name,
-                        market_cap:  info.market_cap_usd,
+                        market_cap: info.market_cap_usd,
                         price: info.price_usd,
                         icon_url: info.image_url,
                     },

@@ -61,7 +61,7 @@ export const suiTokenPriceByAddress: Action = {
         "CAN_YOU_TELL_ME_{INPUT}_PRICE",
         "WHAT_ABOUT_{INPUT}_RATE",
         "{INPUT}_WORTH",
-      ],
+    ],
 
     examples: [
         [
@@ -132,20 +132,21 @@ export const suiTokenPriceByAddress: Action = {
             context: tokenPricePromptTemplateContext,
             modelClass: ModelClass.SMALL,
         })
-        elizaLogger.info("content: ",content);
+        elizaLogger.info("content: ", content);
         const coninGeckoTeminal = new GeckoTerminalProvider2()
         const info = await coninGeckoTeminal.getTokenDetails("sui-network", content.token_address);
 
         if (callback) {
             callback({
+                user: await runtime.character.name,
                 text: `Here are the token prices:`,
                 action: 'TOKEN_PRICE_INFO_BY_ADDRESS',
                 result: {
                     type: "token_price",
-                    data:{
+                    data: {
                         symbol: info.symbol,
                         name: info.name,
-                        market_cap:  info.market_cap_usd,
+                        market_cap: info.market_cap_usd,
                         price: info.price_usd,
                         icon_url: info.image_url,
                     },

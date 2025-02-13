@@ -35,7 +35,7 @@ VALIDATION RULES:
     No trailing commas allowed
     No single quotes anywhere in the JSON
 Respond with a JSON markdown block containing only the extracted values.`;
-export const liquidityPoolsNavi: Action = {
+export const liquidityPoolsCetus: Action = {
     name: "LIQUIDITY_POOLS",
     similes: [
         "POOLS_LIQUIDITY"
@@ -72,17 +72,19 @@ export const liquidityPoolsNavi: Action = {
         // let responseData = await listPoolsInFileJson();
         // let getPools = await getPoolInfo(pool);
         let cetusProvider = new CetusProvider();
-        let responseData:any  = cetusProvider.fetchLiquidityPools();
-
+        let result:any  = await cetusProvider.fetchLiquidityPools();
+        // console.log(responseData);
+        // let responseData = 
         try {
             callback({
+                user: await runtime.character.name,
                text: "Below is a list of liquidity pools:",
                action:"LIQUIDITY_POOLS",
                result: {
                 type: "liquidity_pools",
-                data:responseData.lp_list.slice(0,content.size),
+                data:result.data.lp_list.slice(0,content.size),
                 // poolInfoArray:poolInfoArray,
-                action_hint:getActionHint()
+                // action_hint:getActionHint()
             }
             })
 

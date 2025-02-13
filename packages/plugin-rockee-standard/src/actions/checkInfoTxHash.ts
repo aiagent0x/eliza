@@ -80,20 +80,22 @@ export const checkTxhashOnSui: Action = {
         try {
             const checkInfoTxHash = await getTransactionInfo(content.txHash);
             callback({
-               text:`Your transaction status for txhash ${content.txHash} is ${checkInfoTxHash.effects.status.status}.`,
-               action:"CHECK_TXHASH_SUI_NETWORK",
-               result: {
-                type: "info_txhash",
-                data: checkInfoTxHash
+                user: await runtime.character.name,
+                text: `Your transaction status for txhash ${content.txHash} is ${checkInfoTxHash.effects.status.status}.`,
+                action: "CHECK_TXHASH_SUI_NETWORK",
+                result: {
+                    type: "info_txhash",
+                    data: checkInfoTxHash
 
-            }
+                }
             })
             return true;
         } catch (error) {
             callback({
+                user: await runtime.character.name,
                 text: `Your transaction status for txhash ${content.txHash} is fail`,
-                action:"CHECK_TXHASH_SUI_NETWORK",
-             })
+                action: "CHECK_TXHASH_SUI_NETWORK",
+            })
             console.error("Error during token swap:", error);
             return false;
         }

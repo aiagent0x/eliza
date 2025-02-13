@@ -15,7 +15,7 @@ export class CetusProvider {
     has_mining:boolean = true,
     has_farming:boolean = true,
     no_incentives:boolean = true,
-    order_by:string = "-vol",
+    order_by:string = "-tvl",
     limit: number = 30,
     offset: number = 0
 ) {

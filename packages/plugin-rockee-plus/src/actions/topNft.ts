@@ -60,7 +60,7 @@ export const topNftInfos: Action = {
     ,
 
     examples: [
-        
+
     ],
 
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
@@ -98,14 +98,15 @@ export const topNftInfos: Action = {
         const nft = new SuiOnChainProvider()
         const responseData = await nft.fetchCollectionNft()
         callback({
-                    text: `The top DEX on ${content.network_blockchain}`,
-                    action:"TOP_NFT",
-                        result: {
-                        type: "top_nft",
-                        data:responseData.content,
-                    },
-                    action_hint:getActionHint()
-                });
+            user: await runtime.character.name,
+            text: `The top DEX on ${content.network_blockchain}`,
+            action: "TOP_NFT",
+            result: {
+                type: "top_nft",
+                data: responseData.content,
+            },
+            action_hint: getActionHint()
+        });
 
 
         return true;

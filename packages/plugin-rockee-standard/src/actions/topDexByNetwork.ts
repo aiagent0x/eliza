@@ -14,7 +14,7 @@ import {
 import { fetchTopDexByNetwork } from "../providers/topDex";
 import { hashUserMsg } from "../utils/format";
 import { getTopDexOnSuiScan } from "../providers/getTopDexOnSuiScan";
-import {RedisClient} from "@elizaos/adapter-redis"
+import { RedisClient } from "@elizaos/adapter-redis"
 import getActionHint from "../utils/action_hint";
 export interface InfoContent extends Content {
     coin_symbol: string;
@@ -43,7 +43,7 @@ export const topDexInfo: Action = {
     name: "SHOW_TOP_DECENTRALIZED_EXCHANGES",
     description: "Get top dex by network.",
     similes: [
-       "FIND_TOP_DEX",
+        "FIND_TOP_DEX",
         "SHOW_TOP_DEX",
         "GET_TOP_DEX",
         "TOP_DEX_BY_NETWORK",
@@ -75,23 +75,23 @@ export const topDexInfo: Action = {
             template: topDexTemplate,
         });
         const msgHash = hashUserMsg(message, "top_dex");
-        let content:any = await runtime.cacheManager.get(msgHash);
+        let content: any = await runtime.cacheManager.get(msgHash);
 
-        if(!content){
-           const swapContext = composeContext({
-               state,
-               template: _context,
-           })
-           content = await generateObjectDeprecated({
-               runtime,
-               context: swapContext,
-               modelClass: ModelClass.SMALL,
-           })
-           await runtime.cacheManager.set(msgHash, content, {expires: Date.now() + 300000});
+        if (!content) {
+            const swapContext = composeContext({
+                state,
+                template: _context,
+            })
+            content = await generateObjectDeprecated({
+                runtime,
+                context: swapContext,
+                modelClass: ModelClass.SMALL,
+            })
+            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
-        console.log("content",content);
+        console.log("content", content);
         // const topDexOnSuiScan = await getTopDexOnSuiScan()
-        let topDexOnCoinGecko:any = await redis.getValue({ key: "TOP_DEX" });
+        let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX" });
         console.log(topDexOnCoinGecko)
         if (topDexOnCoinGecko) {
             topDexOnCoinGecko = JSON.parse(topDexOnCoinGecko);
@@ -132,13 +132,14 @@ export const topDexInfo: Action = {
 
         // console.log(mappedData);
         callback({
-                    text: `The top DEX on ${content.network_blockchain}`,
-                    action:"TOP_DEX",
-                        result: {
-                        type: "top_dex",
-                        data:responseData,
-                    },
-                });
+            user: await runtime.character.name,
+            text: `The top DEX on ${content.network_blockchain}`,
+            action: "TOP_DEX",
+            result: {
+                type: "top_dex",
+                data: responseData,
+            },
+        });
 
 
         return true;

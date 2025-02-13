@@ -96,6 +96,7 @@ export const stakeNavi: Action = {
                     return bSupplyRate - aSupplyRate;
                 });
                 callback({
+                    user: await runtime.character.name,
                     text: "Below is a list of stake pools:",
                     action: "STAKE_POOLS",
                     result: {
@@ -140,6 +141,7 @@ export const stakeNavi: Action = {
             );
             try {
                 callback({
+                    user: await runtime.character.name,
                     text: "Below is a list of stake pools:",
                     action: "STAKE_POOLS",
                     result: {
@@ -168,6 +170,7 @@ export const stakeNavi: Action = {
             
             if (data && typeof data === "string" && data !== null) {
                 callback({
+                    user: await runtime.character.name,
                     text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
                     action: "STAKE_TOKEN",
                     result: {
@@ -193,6 +196,7 @@ export const stakeNavi: Action = {
 
             try {
                 callback({
+                    user: await runtime.character.name,
                     text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
                     action: "STAKE_TOKEN",
                     result: {
