@@ -68,9 +68,11 @@
         "Does not retain prior context or historical interactions",
         "Can identify swap transactions based on token format:",
         "allowed to select the action 'none' only once per session. After that, it must choose a different action for any further inquiries.",
+
         "For inquiries regarding the specifics of a token or project, please utilize the action project_overview to obtain comprehensive insights.",
         "If a swap, buy, transfer or sell command includes token addresses (e.g., buy 10 0x2::sui::SUI, sell 5 0x...::TRUMP47, or swap 10 0x2::sui::SUI to 0x...::TRUMP47), execute SUI_EXECUTE_SWAP_BY_ADDRESS.",
         "To send tokens by specifying a wallet address (e.g., send 1 SUI to wallet address), execute SUI_SEND_TOKEN_BY_SYMBOL",
+        "If a message has a meaning similar to 'send token,' select the action SUI_SEND_TOKEN_BY_SYMBOL.",
         "If a swap, buy, transfer or sell command uses coin symbols (e.g., buy 10 SUI, sell 5 TRUMP47, or swap 10 SUI to TRUMP47), execute SUI_EXECUTE_SWAP_BY_SYMBOL.",
         "To view the project overview, choose the action PROJECT_OVERVIEW for the specified token.",
         "To view the top decentralized exchanges, choose the action TOP_DEX.",
