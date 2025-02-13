@@ -87,6 +87,10 @@ export async function trimTokens(
     if (!context) return "";
     if (maxTokens <= 0) throw new Error("maxTokens must be positive");
 
+    elizaLogger.debug(
+        `Trimming context to max length of ${maxTokens} tokens: ${context} ...`
+    );
+
     const tokenizerModel = runtime.getSetting("TOKENIZER_MODEL");
     const tokenizerType = runtime.getSetting("TOKENIZER_TYPE");
 
@@ -511,11 +515,9 @@ export async function generateText({
     const apiKey = runtime.token;
 
     try {
-        elizaLogger.debug(
-            `Trimming context to max length of ${max_context_length} tokens.`
-        );
-
-        context = await trimTokens(context, max_context_length, runtime);
+        if(runtime.getSetting("TOKENIZER_CORE_ENABLED") === "true"){
+            context = await trimTokens(context, max_context_length, runtime);
+        }
 
         let response: string;
 
@@ -2157,6 +2159,11 @@ export const generateObject = async ({
     const apiKey = runtime.token;
 
     try {
+        
+        if(runtime.getSetting("TOKENIZER_OBJECT_ENABLED") === "true"){
+            context = await trimTokens(context, max_context_length, runtime);
+        }
+
         context = await trimTokens(context, max_context_length, runtime);
 
         const modelOptions: ModelSettings = {
