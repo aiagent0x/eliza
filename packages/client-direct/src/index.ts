@@ -194,7 +194,11 @@ export class DirectClient {
             "/:agentId/message",
             upload.single("file"),
             async (req: express.Request, res: express.Response) => {
+
                 const agentId = req.params.agentId;
+                elizaLogger.info("agentId:",req.params.agentId)
+                elizaLogger.info("roomId:",req.body.roomId)
+                elizaLogger.info("userId:",req.body.userId)
                 const roomId = stringToUuid(
                     req.body.roomId ?? "default-room-" + agentId
                 );
