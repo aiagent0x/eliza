@@ -5,8 +5,8 @@
     ],
     "modelProvider": "openai",
     "plugins": [
-        "@elizaos/plugin-rockee-plus",
-        "@elizaos/plugin-rockee-standard"
+        "@elizaos/plugin-bird",
+        "@elizaos/plugin-bird-plus"
     ],
     "settings": {
         "languages": [

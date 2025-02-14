@@ -99,6 +99,8 @@
         "@elizaos/plugin-rockee-pro": "workspace:*",
         "@elizaos/plugin-rockee-standard": "workspace:*",
         "@elizaos/plugin-di": "workspace:*",
+        "@elizaos/plugin-bird": "workspace:*",
+        "@elizaos/plugin-bird-plus": "workspace:*",
         "readline": "1.3.0",
         "ws": "8.18.0",
         "yargs": "17.7.2"
