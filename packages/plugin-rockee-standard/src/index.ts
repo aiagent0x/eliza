@@ -8,13 +8,15 @@ import { projectInfo } from './actions/projectCoinOverview';
 import { topDexInfo } from './actions/topDexByNetwork';
 import { suiTokenPriceBySymbol } from './actions/suiTokenPriceBySymbol';
 import { topPotentialTokenOnSui } from './actions/topPotentialTokenOnSui';
+import { swapSui } from './actions/swap';
 
 const rockeeStandardPlugin: Plugin = {
   name: "rockeeStandardPlugin",
   description: "Everything about rockee standard",
   actions: [
-    executeSwap,
-    executeSwapByAddress,
+    swapSui,
+    // executeSwap,
+    // executeSwapByAddress,
     sendTokenBySymbol,
     checkTxhashOnSui,
     projectInfo,
@@ -28,4 +30,4 @@ const rockeeStandardPlugin: Plugin = {
 };
 
 export default rockeeStandardPlugin;
-// export {suimarketPlugin as suimarketPlugin };
+

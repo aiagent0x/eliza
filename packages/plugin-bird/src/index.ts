@@ -9,9 +9,9 @@ import { topDexInfo } from './actions/topDexByNetwork';
 import { suiTokenPriceBySymbol } from './actions/suiTokenPriceBySymbol';
 import { topPotentialTokenOnSui } from './actions/topPotentialTokenOnSui';
 
-const rockeeStandardPlugin: Plugin = {
-  name: "rockeeStandardPlugin",
-  description: "Everything about rockee standard",
+const birdPlugin: Plugin = {
+  name: "birdPlugin",
+  description: "Everything about bird",
   actions: [
     executeSwap,
     executeSwapByAddress,
@@ -27,5 +27,5 @@ const rockeeStandardPlugin: Plugin = {
   providers: []
 };
 
-export default rockeeStandardPlugin;
+export default birdPlugin;
 // export {suimarketPlugin as suimarketPlugin };

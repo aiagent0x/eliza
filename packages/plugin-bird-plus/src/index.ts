@@ -10,9 +10,9 @@ import { unstakeTokenPoolsNavi } from './actions/unstakeToken';
 import { stakeNavi } from './actions/stake';
 import { liquidityCetus } from './actions/liquidityCetus';
 
-const rockeePlusPlugin: Plugin = {
-  name: "rockeePlusPlugin",
-  description: "Everything about rockee plus",
+const birdPlusPlugin: Plugin = {
+  name: "birdPlusPlugin",
+  description: "Everything about bird Plus",
   actions: [
     topMeme,
     topDefi,
@@ -30,5 +30,5 @@ const rockeePlusPlugin: Plugin = {
   providers: []
 };
 
-export default rockeePlusPlugin;
+export default birdPlusPlugin;
 // export {suimarketPlugin as suimarketPlugin };
