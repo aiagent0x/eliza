@@ -8,7 +8,7 @@ const file = path.join(__dirname, "../src/coin-info-sui.json")
 const data = JSON.parse(fs.readFileSync(file, 'utf8'));
 
 // Function to find items based on verified status and symbol
-export async function findByVerifiedAndSymbol( symbol) {
+export async function findByVerifiedAndSymbol(symbol) {
     const matchingItems = data.filter(item => item.symbol.toLowerCase() === symbol.toLowerCase());
 
     if (matchingItems.length === 0) {

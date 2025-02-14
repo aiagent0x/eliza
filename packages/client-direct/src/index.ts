@@ -231,10 +231,7 @@ export class DirectClient {
                     req.body.name,
                     "direct"
                 );
-
                 const text = req.body.text;
-
-                
                 // if empty text, directly return
                 if (!text) {
                     res.json([]);

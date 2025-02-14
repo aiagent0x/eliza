@@ -8,7 +8,7 @@ import { stakePoolsNavi } from './actions/stakePools';
 import { stakeTokenPoolsNavi } from './actions/stakeToken';
 import { unstakeTokenPoolsNavi } from './actions/unstakeToken';
 import { stakeNavi } from './actions/stake';
-import { liquidityPoolsCetus } from './actions/liquidityPools';
+import { liquidityCetus } from './actions/liquidityCetus';
 
 const rockeePlusPlugin: Plugin = {
   name: "rockeePlusPlugin",
@@ -23,7 +23,7 @@ const rockeePlusPlugin: Plugin = {
     // stakeTokenPoolsNavi,
     // unstakeTokenPoolsNavi,
     stakeNavi,
-    liquidityPoolsCetus
+    liquidityCetus
 
   ],
   evaluators: [],

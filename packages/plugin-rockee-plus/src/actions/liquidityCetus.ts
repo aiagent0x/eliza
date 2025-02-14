@@ -1,0 +1,184 @@
+import {
+    ActionExample,
+    composeContext,
+    elizaLogger,
+    generateObjectDeprecated,
+    HandlerCallback,
+    IAgentRuntime,
+    Memory,
+    ModelClass,
+    // settings,
+    State,
+    type Action,
+} from "@elizaos/core";
+
+import { RedisClient } from "@elizaos/adapter-redis";
+
+const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+const redis = new RedisClient(REDIS_URL);
+import { CetusProvider } from "../providers/fetchCetus/fetchListLiquidityPools";
+import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
+const topLiquidityPoolTemplate = `Recent messages: {{recentMessages}}  
+Extract the liquidity pool parameters from the conversation above, following these rules:  
+
+- Sample Pair Names: SUI-USDC, USDT-WETH, CETUS-SUI, NAVX-ETH, BTC-USDY, etc.  
+- Return only a JSON object with the specified fields in this format:  
+
+    {  
+        "type_action": "show_list" | "add",  
+        "pair_name": string | SUI-USDC,  
+        "amount_token_a": number | 0,  //is size list or amount token a
+        "amount_token_b": number | 0, 
+    }  
+
+- Use '"type_action": "show_list"' when the request is about listing liquidity pools (e.g., "liquidity pools", "top 5 liquidity pools").  
+- Use '"type_action": "add"' when the request specifies adding liquidity (e.g., "add liquidity SUI-USDC").  
+- Set '"pair_name"' to null if no specific pair is mentioned.  
+- If a specific token and amount are provided, assign it to the corresponding field ('amount_token_a' or 'amount_token_b').  
+- If both tokens have amounts, only assign 'amount_token_a' and set 'amount_token_b' to '0'.  
+- Use 'null' for any values that cannot be determined.  
+- All property names must use double quotes.  
+- Null values should not use quotes.  
+- No trailing commas allowed.  
+- No single quotes anywhere in the JSON.  
+`;
+export const liquidityCetus: Action = {
+    name: "LIQUIDITY_OF_CETUS",
+    similes: [
+        "POOLS_LIQUIDITY",
+        "ADD_LIQUIDITY",
+        "FARM_LIQUIDITY",
+        "FARM_{PAIR_NAME}"
+    ],
+    validate: async (_runtime: IAgentRuntime, _message: Memory) => {
+        return true;
+    },
+    description: "liquidity cetus",
+    handler: async (
+        runtime: IAgentRuntime,
+        message: Memory,
+        state: State,
+        _options: { [key: string]: unknown },
+        callback?: HandlerCallback
+    ): Promise<boolean> => {
+        // composeState
+        if (!state) {
+            state = (await runtime.composeState(message)) as State;
+        } else {
+            state = await runtime.updateRecentMessageState(state);
+        }
+
+        const topLiquidityPoolContext = composeContext({
+            state,
+            template: topLiquidityPoolTemplate,
+        });
+
+        const content = await generateObjectDeprecated({
+            runtime,
+            context: topLiquidityPoolContext,
+            modelClass: ModelClass.SMALL,
+        });
+        elizaLogger.info("content:", content);
+
+        if (content.type_action === "show_list") {
+            if(parseInt(content.amount_token_a) === 0)content.amount_token_a = 5;
+            let responseData = await redis.getValue({ key: "liquidity_pools" })
+            if (responseData !== undefined) {
+                callback({
+                    user: await runtime.character.name,
+                    text: "Below is a list of liquidity pools:",
+                    action: "LIQUIDITY_POOLS",
+                    result: {
+                        type: "liquidity_pools",
+                        data: responseData.slice(0, parseInt(content.amount_token_a )),
+
+                    }
+                })
+                return true;
+            }
+            let cetusProvider = new CetusProvider();
+            let result: any = await cetusProvider.fetchLiquidityPools();
+
+            try {
+                callback({
+                    user: await runtime.character.name,
+                    text: "Below is a list of liquidity pools:",
+                    action: "LIQUIDITY_POOLS",
+                    result: {
+                        type: "liquidity_pools",
+                        data: result.data.lp_list.slice(0, content.size),
+                        // poolInfoArray:poolInfoArray,
+                        // action_hint:getActionHint()
+                    }
+                })
+
+                return true;
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
+        }
+        if (content.type_action === "add") {
+            
+            let cetusProvider = new CetusProvider();
+            console.log(content.pair_name)
+            let coinA = content.pair_name.split("-")[0];
+            let coinB = content.pair_name.split("-")[1];
+            let coinInfoA = await findByVerifiedAndSymbol(coinA);
+            let coinInfoB = await findByVerifiedAndSymbol(coinB);
+            let result = await cetusProvider.fetchLiquidityPoolsByCoinType(`${coinInfoA.type},${coinInfoB.type}`);
+            result.data.lp_list[0].amount = content.amount_token_a;
+            try {
+                callback({
+                    user: await runtime.character.name,
+                    text: "Below is a list of liquidity pools:",
+                    action: "LIQUIDITY_POOLS",
+                    result: {
+                        type: "add_liquidity",
+                        data: result.data.lp_list[0],
+                    }
+                })
+                return true;
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
+        }
+    },
+    examples: [
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Liquidity pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Liquidity pools",
+                    action: "LIQUIDITY_OF_CETUS",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "add liquidity",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "add liquidity",
+                    action: "LIQUIDITY_OF_CETUS",
+
+                },
+            },
+        ],
+    ] as ActionExample[][],
+} as Action;
+
+
