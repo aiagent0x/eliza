@@ -26,6 +26,7 @@ const topDexTemplate = `"Please extract the following swap details for SUI netwo
 {
     "network_blockchain": string | null,      //Network blockchain (e.g. sui-network, ethereum, binance-smart-chain, solana, etc.)
     "network_blockchain_name": string | null,      //Name Network blockchain (e.g. sui network, ethereum, binance-smart-chain, solana, etc.)
+    "responseMessage": string            // Confirmation message in the user's language  
 }
 Recent messages: {{recentMessages}}
 \`\`\`

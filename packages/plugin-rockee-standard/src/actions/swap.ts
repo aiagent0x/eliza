@@ -1,6 +1,8 @@
 import {
     ActionExample,
+    // CacheOptions,
     composeContext,
+    elizaLogger,
     generateObjectDeprecated,
     HandlerCallback,
     IAgentRuntime,
@@ -9,41 +11,37 @@ import {
     // settings,
     State,
     type Action,
-    elizaLogger
 } from "@elizaos/core";
-import getInfoTokenOnSui from "../providers/coinMetaDataSui";
+import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
 import { hashUserMsg } from "../utils/format";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
-// import { RedisClient } from "@elizaos/adapter-redis";
-const swapTemplate = `Please extract the following swap details for SUI network:
-{
-    "inputTokenAddress": string | null,     // Token being sold (e.g. "0xb6a9f896fd6c0f777699b9aa2b1bb745caa5eb1f3978173c1ddffd4bdd3994e9::uni::UNI")
-    "outputTokenAddress": string | null,    // Token being bought
-    "amount": number | 0,               // Amount to swap
-    "responseMessage": string            // Confirmation message in the user's language  
 
-}
+const swapTemplate = `
 Recent messages: {{recentMessages}}
-\`\`\`
-VALIDATION RULES:
-            All property names must use double quotes
-            All string values must use double quotes
-            null values should not use quotes
-            No trailing commas allowed
-            No single quotes anywhere in the JSON
+Extract the swap parameters from the conversation and wallet context above, follows these rules:
+    - Return only a JSON object with the specified fields in thise format:
+        {
+            "inputTokenSymbol": string | null,     // Token being sold (e.g. "SUI")
+            "outputTokenSymbol": string | null,    // Token being bought
+            "amount": number | 0,               // Amount to swap
+
+        }
+    - Use null for any values that cannot be determined.
+    - All property names must use double quotes
+    - Null values should not use quotes
+    - No trailing commas allowed
+    - No single quotes anywhere in the JSON
+    - Ensure that all token symbols are converted to uppercase.
 `;
 
-
-
-export const executeSwapByAddress: Action = {
-    name: "SUI_EXECUTE_SWAP_BY_ADDRESS",
-    similes: [
-        "SUI_SWAP_TOKENS_BY_ADDRESS",
-        "SUI_TOKEN_SWAP_BY_ADDRESS",
-        "SUI_TRADE_TOKENS_BY_ADDRESS",
-        "SUI_EXCHANGE_TOKENS_BY_ADDRESS",
-        "SUI_BUY_TOKENS_BY_ADDRESS",
-        "SUI_SELL_TOKENS_BY_ADDRESS",
+export const executeSwap: Action = {
+    name: "SUI_EXECUTE_SWAP_BY_SYMBOL",
+    similes: ["SUI_SWAP_TOKENS_BY_SYMBOL",
+        "SUI_TOKEN_SWAP_BY_SYMBOL",
+        "SUI_TRADE_TOKENS_BY_SYMBOL",
+        "SUI_EXCHANGE_TOKENS_BY_SYMBOL",
+        "SUI_BUY_TOKENS_BY_SYMBOL",
+        "SUI_SELL_TOKENS_BY_SYMBOL",
     ],
     validate: async (_runtime: IAgentRuntime, message: Memory) => {
         const content = typeof message.content === 'string'
@@ -54,7 +52,6 @@ export const executeSwapByAddress: Action = {
 
         const hasPriceKeyword = /\b(swap|buy|sell|transfer)\b/i.test(content.toLowerCase());
         return hasPriceKeyword;
-
     },
     description: "Perform a token swap.",
     handler: async (
@@ -64,86 +61,68 @@ export const executeSwapByAddress: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ): Promise<boolean> => {
-        // composeState
+        elizaLogger.info("compose history...");
         if (!state) {
             state = (await runtime.composeState(message)) as State;
         } else {
             state = await runtime.updateRecentMessageState(state);
         }
-
-        const msgHash = hashUserMsg(message, "swap_address");
+        const msgHash = hashUserMsg(message, "swap_symbol");
         let content: any = await runtime.cacheManager.get(msgHash);
         elizaLogger.info("---- cache info: ", msgHash, "--->", content);
         if (!content) {
-            const checkTxHashContext = composeContext({
+            const swapContext = composeContext({
                 state,
                 template: swapTemplate,
             });
             content = await generateObjectDeprecated({
                 runtime,
-                context: checkTxHashContext,
+                context: swapContext,
                 modelClass: ModelClass.SMALL,
             });
             await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
-        console.log("content:", content);
-        const inputTokenObject = await getInfoTokenOnSui(content.inputTokenAddress);
-
-        if (inputTokenObject === "ADDRESS_NOT_EXIST") {
+        elizaLogger.info("content:", content)
+        const inputTokenObject = await findByVerifiedAndSymbol(content.inputTokenSymbol && content.inputTokenSymbol !== "null" ? content.inputTokenSymbol : "USDC");
+        if (!inputTokenObject) {
             callback({
                 user: await runtime.character.name,
-                text: `We do not support ${content.inputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
+                text: `We do not support ${content.inputTokenSymbol} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
             })
             return false
         }
-        const outputTokenObject = await getInfoTokenOnSui(content.outputTokenAddress);
-        if (outputTokenObject === "ADDRESS_NOT_EXIST") {
+        const outputTokenObject = await findByVerifiedAndSymbol(content.outputTokenSymbol && content.outputTokenSymbol !== "null" ? content.outputTokenSymbol : "USDC");
+        if (!outputTokenObject) {
             callback({
                 user: await runtime.character.name,
-                text: `We do not support ${content.outputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
+                text: `We do not support ${content.outputTokenSymbol} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address. `,
             })
             return false
         }
-        const coninGeckoTeminal = new GeckoTerminalProvider2()
-        const imageFrom = await coninGeckoTeminal.getTokenDetails("sui-network", content.inputTokenAddress);
-        const imageTo = await coninGeckoTeminal.getTokenDetails("sui-network", content.inputTokenAddress);
-
         let amount = content.amount;
         if (!content.inputTokenSymbol || content.inputTokenSymbol === "null") {
             const coinGecko = new GeckoTerminalProvider2();
-            let tokenDetail = await coinGecko.getTokenDetails('sui-network', content.outputTokenAddress);
+            let tokenDetail = await coinGecko.getTokenDetails('sui-network', outputTokenObject.type);
             let number: number = parseFloat(amount) * parseFloat(tokenDetail.price_usd)
             amount = number
         }
+
         const responseData = {
             amount: amount,
-            fromToken: {
-                ...inputTokenObject,
-                type: content.inputTokenAddress,
-                imgUrl: imageFrom.image_url
-            },
-            toToken: {
-                ...outputTokenObject,
-                type: content.outputTokenAddress,
-                imgUrl: imageTo.image_url
-            }
+            fromToken: inputTokenObject,
+            toToken: outputTokenObject
 
         }
-
         try {
-
-            callback({
+            await callback({
                 user: await runtime.character.name,
-                text: content.responseMessage,
-                action: "SUI_EXECUTE_SWAP_BY_ADDRESS",
+                text: `Please ensure all details are correct before proceeding with the swap to prevent any losses.`,
+                action: "SUI_EXECUTE_SWAP_BY_SYMBOL",
                 result: {
                     type: "swap",
                     data: responseData,
-
-
                 }
             })
-
             return true;
         } catch (error) {
             console.error("Error during token swap:", error);
@@ -151,19 +130,43 @@ export const executeSwapByAddress: Action = {
         }
     },
     examples: [
-
         [
             {
                 user: "{{user1}}",
                 content: {
-                    text: "Swap 10 0x2::sui::SUI to 0x4fb3c0f9e62b5d3956e2f0e284f2a5d128954750b109203a0f34c92c6ba21247::coin::USDT"
+                    text: "Swap 10 SUI to USDC"
                 }
             },
             {
                 user: "{{user2}}",
                 content: {
-                    text: "Initiating swap of 10 0x2::sui::SUI for 0x4fb3c0f9e62b5d3956e2f0e284f2a5d128954750b109203a0f34c92c6ba21247::coin::USDT on SUI network...",
-                    action: "SUI_EXECUTE_SWAP_BY_ADDRESS",
+                    text: "Initiating swap of 10 SUI for USDT on SUI network...",
+                    action: "SUI_EXECUTE_SWAP_BY_SYMBOL",
+                    params: {
+                        inputTokenSymbol: "SUI",
+                        outputTokenSymbol: "USDT",
+                        amount: "10"
+                    }
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text: "Swap SUI to USDC"
+                }
+            },
+            {
+                "user": "{{user2}}",
+                "content": {
+                    "text": "Initiating swap CeTUS for deep on SUI network...",
+                    "action": "SUI_EXECUTE_SWAP_BY_SYMBOL",
+                    "params": {
+                        "inputTokenSymbol": "SUI",
+                        "outputTokenSymbol": "USDC",
+                        "amount": "0"
+                    }
                 }
             }
         ]
@@ -172,17 +175,17 @@ export const executeSwapByAddress: Action = {
             {
                 "user": "{{user1}}",
                 "content": {
-                    text: "Buy 100 {TOKEN_ADDRESS}"
+                    text: "Buy 100 {TOKEN_SYMBOL}"
                 }
             },
             {
                 "user": "{{user2}}",
                 "content": {
                     "text": "Initiating swap CeTUS for deep on SUI network...",
-                    "action": "SUI_EXECUTE_SWAP_BY_ADDRESS",
+                    "action": "SUI_EXECUTE_SWAP_BY_SYMBOL",
                     "params": {
                         "inputTokenSymbol": "USDC",
-                        "outputTokenSymbol": "{TOKEN_ADDRESS}",
+                        "outputTokenSymbol": "{TOKEN_SYMBOL}",
                         "amount": "100"
                     }
                 }
@@ -192,7 +195,7 @@ export const executeSwapByAddress: Action = {
             {
                 "user": "{{user1}}",
                 "content": {
-                    text: "SELL 100 {TOKEN_ADDRESS}"
+                    text: "SELL 100 {TOKEN_SYMBOL}"
                 }
             },
             {
@@ -201,7 +204,7 @@ export const executeSwapByAddress: Action = {
                     "text": "Initiating swap CeTUS for deep on SUI network...",
                     "action": "SUI_EXECUTE_SWAP_BY_SYMBOL",
                     "params": {
-                        "inputTokenSymbol": "{TOKEN_ADDRESS}",
+                        "inputTokenSymbol": "{TOKEN_SYMBOL}",
                         "outputTokenSymbol": "USDC",
                         "amount": "100"
                     }

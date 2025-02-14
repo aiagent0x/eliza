@@ -16,6 +16,7 @@ import { hashUserMsg } from "../utils/format";
 const checkTxHashTemplate = `Please extract the following swap details for SUI network:
 {
     "txHash": string  | null,                // txHash is transaction block on sui network
+    
 }
 Recent messages: {{recentMessages}}
 Retrieve and return the transaction details using the given txHash. The response should be a JSON object with the specified field. If the txHash is unavailable or invalid, return null.

@@ -24,6 +24,7 @@ Extract the swap parameters from the conversation and wallet context above, foll
             "inputTokenSymbol": string | null,     // Token being sold (e.g. "SUI")
             "outputTokenSymbol": string | null,    // Token being bought
             "amount": number | 0,               // Amount to swap
+            "responseMessage": string            // Confirmation message in the user's language  
 
         }
     - Use null for any values that cannot be determined.
@@ -116,7 +117,7 @@ export const executeSwap: Action = {
         try {
             await callback({
                 user: await runtime.character.name,
-                text: `Please ensure all details are correct before proceeding with the swap to prevent any losses.`,
+                text: content.responseMessage,
                 action: "SUI_EXECUTE_SWAP_BY_SYMBOL",
                 result: {
                     type: "swap",

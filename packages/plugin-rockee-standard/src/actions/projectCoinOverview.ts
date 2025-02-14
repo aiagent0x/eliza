@@ -26,6 +26,7 @@ Example response:
     {
     "project_name": "Sui" | null, // Project crypto  currency name
     "token_symbol": "sui" | null, // token symbol of crypto currency
+    "responseMessage": string            // Confirmation message in the user's language  
 }
     \`\`\`
 Recent messages:  {{recentMessages}}

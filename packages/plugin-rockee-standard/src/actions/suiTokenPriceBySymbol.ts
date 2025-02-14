@@ -25,6 +25,7 @@ Example response:
     \`\`\`json
     {
         "token_symbol": "CRAFT",
+        "responseMessage": string            // Confirmation message in the user's language  
     }
     \`\`\`
 {{recentMessages}}
