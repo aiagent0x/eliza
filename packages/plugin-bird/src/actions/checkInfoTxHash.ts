@@ -80,7 +80,7 @@ export const checkTxhashOnSui: Action = {
             const checkInfoTxHash = await getTransactionInfo(content.txHash);
             callback({
                 user: await runtime.character.name,
-                text: `🦅 Your transaction with hash ${content.txHash} is currently ${checkInfoTxHash.effects.status.status}. Stay soaring high! 🚀💸`,
+                text: `Your transaction with hash ${content.txHash} is currently ${checkInfoTxHash.effects.status.status}. Stay soaring high! `,
                 action: "CHECK_TXHASH_SUI_NETWORK",
                 result: {
                     type: "info_txhash",

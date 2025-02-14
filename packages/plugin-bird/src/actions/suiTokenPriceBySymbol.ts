@@ -150,7 +150,7 @@ export const suiTokenPriceBySymbol: Action = {
         if (callback) {
             callback({
                 user: await runtime.character.name,
-                text: `💹 Here are the token prices—let’s lock in the best deal! 💸🔥`,
+                text: `Here are the token prices—let’s lock in the best deal! `,
                 action: 'TOKEN_PRICE_INFO_BY_SYMBOL',
                 result: {
                     type: "token_price",
