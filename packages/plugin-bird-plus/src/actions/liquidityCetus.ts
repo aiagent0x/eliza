@@ -91,14 +91,12 @@ export const liquidityCetus: Action = {
                     result: {
                         type: "liquidity_pools",
                         data: responseData.slice(0, parseInt(content.amount_token_a )),
-
                     }
                 })
                 return true;
             }
             let cetusProvider = new CetusProvider();
             let result: any = await cetusProvider.fetchLiquidityPools();
-
             try {
                 callback({
                     user: await runtime.character.name,
@@ -107,18 +105,15 @@ export const liquidityCetus: Action = {
                     result: {
                         type: "liquidity_pools",
                         data: result.data.lp_list.slice(0, content.size),
-                        // poolInfoArray:poolInfoArray,
-                        // action_hint:getActionHint()
                     }
                 })
-
                 return true;
             } catch (error) {
                 console.error("Error during token swap:", error);
                 return false;
             }
         }
-        if (content.type_action === "add") {
+        else{
             
             let cetusProvider = new CetusProvider();
             console.log(content.pair_name)
