@@ -18,7 +18,6 @@ const sendTokenTemplate = `Please extract the following swap details for SUI net
     "amount": number | 0,               // Amount of tokens to transfer
     "tokenSymbol": string | SUI,          // Token symbol on the SUI network (e.g., "SUI", "UNI")
     "destinationAddress": string | null,    // Recipient's wallet address
-    "responseMessage": string            // Confirmation message in the user's language  
 
 
 }
@@ -122,7 +121,7 @@ export const sendTokenBySymbol: Action = {
 
             callback({
                 user: await runtime.character.name,
-                text: content.responseMessage,
+                text: "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 action: "SUI_SEND_TOKEN_BY_SYMBOL",
                 result: {
                     type: "send_sui_chain",

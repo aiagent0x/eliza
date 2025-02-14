@@ -24,8 +24,7 @@ const promptSuiTokenInfoTemplate = `Respond with a JSON markdown block containin
 Example response:
     \`\`\`json
     {
-        "token_symbol": "CRAFT",
-        "responseMessage": string            // Confirmation message in the user's language  
+        "token_symbol": "CRAFT"
     }
     \`\`\`
 {{recentMessages}}
@@ -151,7 +150,7 @@ export const suiTokenPriceBySymbol: Action = {
         if (callback) {
             callback({
                 user: await runtime.character.name,
-                text: `Here are the token prices:`,
+                text: `💹 Here are the token prices—let’s lock in the best deal! 💸🔥`,
                 action: 'TOKEN_PRICE_INFO_BY_SYMBOL',
                 result: {
                     type: "token_price",

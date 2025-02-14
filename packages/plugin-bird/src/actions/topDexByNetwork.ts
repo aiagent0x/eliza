@@ -134,7 +134,7 @@ export const topDexInfo: Action = {
         // console.log(mappedData);
         callback({
             user: await runtime.character.name,
-            text: `The top DEX on ${content.network_blockchain}`,
+            text: `🦅 The top DEX on ${content.network_blockchain} is leading the pack! 🚀💸 Ready to make some moves?`,
             action: "TOP_DEX",
             result: {
                 type: "top_dex",

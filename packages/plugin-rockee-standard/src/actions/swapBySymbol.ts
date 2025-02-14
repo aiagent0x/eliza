@@ -129,7 +129,7 @@ export const executeSwap: Action = {
         try {
             await callback({
                 user: await runtime.character.name,
-                text: content.responseMessage,
+                text: "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 action: "SUI_EXECUTE_SWAP_BY_SYMBOL",
                 result: {
                     type: "swap",

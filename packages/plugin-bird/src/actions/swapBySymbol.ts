@@ -17,33 +17,20 @@ import { hashUserMsg } from "../utils/format";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 
 const swapTemplate = `
-Recent messages: {{recentMessages}}  
-Detect the user's language and extract swap parameters:  
-
-- Return a JSON object:  
-  {  
-      "inputTokenSymbol": string | null,  
-      "outputTokenSymbol": string | null,  
-      "amount": number | 0,  
-      "responseMessage": string  
-  }  
-
-  - Convert token symbols to uppercase.  
-  - Detect the user's language and return '"responseMessage"' in the same language.  
-  - '"responseMessage"' **must** convey:  
-  **"Please ensure all details are correct before proceeding with the swap to prevent any losses."**  
-  - Use **variations** in wording while keeping the same meaning.  
-  - Examples:  
-    - "Make sure all details are correct before confirming the swap to avoid losses."  
-    - "Please verify all details before proceeding to prevent any mistakes."  
-    - "Double-check everything before swapping to avoid potential losses."  
-  - **Must always match the user's language**.  
-  - Do **not** auto-translate if the input is already in English.  
-
-### Formatting Rules:  
-- Use double quotes for property names.  
-- Null values must not be quoted.  
-- No trailing commas or single quotes.  
+Recent messages: {{recentMessages}}
+Extract the swap parameters from the conversation and wallet context above, follows these rules:
+    - Return only a JSON object with the specified fields in thise format:
+        {
+            "inputTokenSymbol": string | null,     // Token being sold (e.g. "SUI")
+            "outputTokenSymbol": string | null,    // Token being bought
+            "amount": number | 0,               // Amount to swap
+        }
+    - Use null for any values that cannot be determined.
+    - All property names must use double quotes
+    - Null values should not use quotes
+    - No trailing commas allowed
+    - No single quotes anywhere in the JSON
+    - Ensure that all token symbols are converted to uppercase.
 
 `;
 
@@ -129,7 +116,7 @@ export const executeSwap: Action = {
         try {
             await callback({
                 user: await runtime.character.name,
-                text: content.responseMessage,
+                text: `🦅 Double-check all the details before takeoff to dodge any turbulence! 🚀✅`,
                 action: "SUI_EXECUTE_SWAP_BY_SYMBOL",
                 result: {
                     type: "swap",

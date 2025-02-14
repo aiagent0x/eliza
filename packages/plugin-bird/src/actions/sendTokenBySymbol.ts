@@ -18,9 +18,6 @@ const sendTokenTemplate = `Please extract the following swap details for SUI net
     "amount": number | 0,               // Amount of tokens to transfer
     "tokenSymbol": string | SUI,          // Token symbol on the SUI network (e.g., "SUI", "UNI")
     "destinationAddress": string | null,    // Recipient's wallet address
-    "responseMessage": string            // Confirmation message in the user's language  
-
-
 }
 Recent messages: {{recentMessages}}
 Extract the token transfer parameters from the conversation and wallet context above. Return only a JSON object with the specified fields. Use null for any values that cannot be determined.

@@ -21,7 +21,6 @@ Example response:
     \`\`\`json
     {
         "token_address": "0x7123ef5ec546c363f270ef770472dfad231eeb86469a2d1fba566d6fd74cb9e1::craft::CRAFT",
-        "responseMessage": string            // Confirmation message in the user's language  
     }
     \`\`\`
 {{recentMessages}}

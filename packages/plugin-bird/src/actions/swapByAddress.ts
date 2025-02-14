@@ -20,21 +20,15 @@ const swapTemplate = `Please extract the following swap details for SUI network:
     "inputTokenAddress": string | null,     // Token being sold (e.g. "0xb6a9f896fd6c0f777699b9aa2b1bb745caa5eb1f3978173c1ddffd4bdd3994e9::uni::UNI")
     "outputTokenAddress": string | null,    // Token being bought
     "amount": number | 0,               // Amount to swap
-    "responseMessage": string            // Confirmation message in the user's language  
-
 }
 Recent messages: {{recentMessages}}
 \`\`\`
 VALIDATION RULES:
-    - Use null for any values that cannot be determined.  
-    - Ensure all token symbols are converted to uppercase.  
-    - The '"responseMessage"' field should contain a message with a similar meaning to:  
-      '"Please verify all details carefully before proceeding with the swap to avoid any potential losses."'  
-      translated into the language used by the user.  
-    - All property names must use double quotes.  
-    - Null values should not use quotes.  
-    - No trailing commas allowed.  
-    - No single quotes anywhere in the JSON.  
+            All property names must use double quotes
+            All string values must use double quotes
+            null values should not use quotes
+            No trailing commas allowed
+            No single quotes anywhere in the JSON 
 `;
 
 
@@ -138,7 +132,7 @@ export const executeSwapByAddress: Action = {
 
             callback({
                 user: await runtime.character.name,
-                text: content.responseMessage,
+                text: `🦅 Double-check all the details before takeoff to dodge any turbulence! 🚀✅`,
                 action: "SUI_EXECUTE_SWAP_BY_ADDRESS",
                 result: {
                     type: "swap",
