@@ -8,13 +8,15 @@ import { projectInfo } from './actions/projectCoinOverview';
 import { topDexInfo } from './actions/topDexByNetwork';
 import { suiTokenPriceBySymbol } from './actions/suiTokenPriceBySymbol';
 import { topPotentialTokenOnSui } from './actions/topPotentialTokenOnSui';
+import { swapSui } from './actions/swap';
 
 const birdPlugin: Plugin = {
   name: "birdPlugin",
   description: "Everything about bird",
   actions: [
-    executeSwap,
-    executeSwapByAddress,
+    // executeSwap,
+    // executeSwapByAddress,
+    swapSui,
     sendTokenBySymbol,
     checkTxhashOnSui,
     projectInfo,
