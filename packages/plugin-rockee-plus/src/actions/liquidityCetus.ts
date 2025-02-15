@@ -43,7 +43,7 @@ Extract the liquidity pool parameters from the conversation above, following the
 - No single quotes anywhere in the JSON.  
 `;
 export const liquidityCetus: Action = {
-    name: "LIQUIDITY_OF_CETUS",
+    name: "LIQUIDITY",
     similes: [
         "POOLS_LIQUIDITY",
         "ADD_LIQUIDITY",
@@ -157,7 +157,7 @@ export const liquidityCetus: Action = {
                 user: "{{agent}}",
                 content: {
                     text: "Liquidity pools",
-                    action: "LIQUIDITY_OF_CETUS",
+                    action: "LIQUIDITY",
 
                 },
             },
@@ -173,7 +173,7 @@ export const liquidityCetus: Action = {
                 user: "{{agent}}",
                 content: {
                     text: "add liquidity",
-                    action: "LIQUIDITY_OF_CETUS",
+                    action: "LIQUIDITY",
 
                 },
             },
