@@ -43,7 +43,15 @@ Respond with a JSON markdown block containing only the extracted values.
 
 export const swapSui: Action = {
     name: "SWAP_TOKEN",
-    similes: ["SWAP_TOKENS", "SWAP_SUI"],
+    similes: [
+        "SWAP_TOKENS",
+         "SWAP_SUI",
+        "SWAP_TOKENS",
+        "TRADE_TOKENS",
+        "EXCHANGE_TOKENS",
+        "BUY_{TOKEN_NAME}",
+        "SELL_{TOKEN_NAME}"
+        ],
     validate: async (_runtime: IAgentRuntime, message: Memory) => {
         const content = typeof message.content === 'string'
             ? message.content
