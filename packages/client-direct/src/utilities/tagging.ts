@@ -17,7 +17,7 @@ export async function filterByTagging(tag: string,agentName:string) {
         case "swap_1_sui_to_usdc":
             responseData = {
                 user:agentName,
-                "text": "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
+                "text": agentName==="BIRDS DEFAI Platfrom"?"Double-check all the details before takeoff to dodge any turbulence!":"Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 "result": {
                     "type": "swap",
                     "data": {
@@ -51,7 +51,7 @@ export async function filterByTagging(tag: string,agentName:string) {
         case "send_1_sui_to_address":
             responseData = {
                 user:agentName,
-                "text": "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
+                "text": agentName==="BIRDS DEFAI Platfrom"?"Double-check all the details before takeoff to dodge any turbulence!":"Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 "result": {
                     "type": "send_sui_chain",
                     "data": {

@@ -179,7 +179,7 @@ export const swapSui: Action = {
         try {
             await callback({
                 user: await runtime.character.name,
-                text: `Please ensure all details are correct before proceeding with the swap to prevent any losses.`,
+                text: `Double-check all the details before takeoff to dodge any turbulence!`,
                 action: "SWAP_TOKEN",
                 result: {
                     type: "swap",

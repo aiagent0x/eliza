@@ -60,7 +60,7 @@ export const topPotentialTokenOnSui: Action = {
         });
         callback({
             user: await runtime.character.name,
-            text: `🦅 Scouting the skies for top potential tokens on Sui! 🚀🔥 Stay tuned for the next big mover! 💸`,
+            text: `Scouting the skies for top potential tokens on Sui! Stay tuned for the next big mover! `,
             action: "TOP_POTENTIAL_TOKEN",
             result: {
                 type: "top_potential_token",

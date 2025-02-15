@@ -171,7 +171,7 @@ export const stakeNavi: Action = {
             if (data && typeof data === "string" && data !== null) {
                 callback({
                     user: await runtime.character.name,
-                    text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
+                    text: "Double-check all the details before takeoff to dodge any turbulence!",
                     action: "STAKE_TOKEN",
                     result: {
                         type: type_action ==="stake"?"stake_token":"unstake_token",
@@ -197,7 +197,7 @@ export const stakeNavi: Action = {
             try {
                 callback({
                     user: await runtime.character.name,
-                    text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
+                    text: "Double-check all the details before takeoff to dodge any turbulence!",
                     action: "STAKE_TOKEN",
                     result: {
                         type: type_action ==="stake"?"stake_token":"unstake_token",
