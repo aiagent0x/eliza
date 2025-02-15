@@ -182,7 +182,6 @@ export const projectInfo: Action = {
         elizaLogger.info("content:", content)
         const projectObj = await searchProjectInFileJson(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
         const tokenObject = await findByVerifiedAndName(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
-        elizaLogger.info("tokenObject", tokenObject)
         if (!projectObj) {
             callback({
                 user: await runtime.character.name,
