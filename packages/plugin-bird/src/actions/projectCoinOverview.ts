@@ -25,8 +25,7 @@ Example response:
     \`\`\`json
     {
     "project_name": "Sui" | null, // Project crypto  currency name
-    "token_symbol": "sui" | null, // token symbol of crypto currency
-    "responseMessage": string            // Confirmation message in the user's language  
+    "token_symbol": "sui" | null, // token symbol of crypto currency  
 }
     \`\`\`
 Recent messages:  {{recentMessages}}
@@ -62,7 +61,8 @@ export const projectInfo: Action = {
         "IN4_{INPUT}",
         "MORE_INFO_{INPUT}",
         "MORE_INFO",
-        "MORE_INFORMATION"
+        "MORE_INFORMATION",
+        "KNOW_{INPUT}"
     ],
 
     examples: [
@@ -182,7 +182,7 @@ export const projectInfo: Action = {
         elizaLogger.info("content:", content)
         const projectObj = await searchProjectInFileJson(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
         const tokenObject = await findByVerifiedAndName(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
-
+        elizaLogger.info("tokenObject", tokenObject)
         if (!projectObj) {
             callback({
                 user: await runtime.character.name,
@@ -197,31 +197,20 @@ export const projectInfo: Action = {
             const coninGeckoTeminal = new GeckoTerminalProvider2()
 
             tokenSuiInfo = await coninGeckoTeminal.getTokenDetails("sui-network", tokenObject.type);
-            // tokenSuiInfo = await getTokenOnSuiScan(tokenObject.type);
-            elizaLogger.info("tokenSuiInfo", tokenSuiInfo)
-            if (tokenSuiInfo.symbol !== "ROCK") {
-
-                coinObject = await searchCoinInFileJsonProvider2(tokenObject.symbol, tokenObject.name);
-                if (coinObject === null) {
-                    coinObject = await searchCoinInFileJsonProvider(tokenObject.symbol)
-                }
-            }
 
             infoPrice = { market_cap_rank: "N/A", price_change_24h: "N/A", price: tokenSuiInfo.tokenPrice, market_cap: tokenSuiInfo.marketCap };
             infoDetail = { market_cap_rank: "N/A", tickers: [] };
         }
         const coinGecko = new CoingeckoProvider();
-        let getToken, getDetail;
-        if (coinObject) {
-            getToken = await coinGecko.getToken(coinObject.id);
-            getDetail = await coinGecko.getCoinDataById(coinObject.id);
-            if (getToken) {
-                infoPrice = getToken;
-            }
-            if (getDetail) {
-                infoDetail = getDetail;
-            }
+        let getToken = await coinGecko.getToken(tokenObject.coinGeckoId);
+        let getDetail = await coinGecko.getCoinDataById(tokenObject.coinGeckoId);
+        if (getToken) {
+            infoPrice = getToken;
         }
+        if (getDetail) {
+            infoDetail = getDetail;
+        }
+        
 
         callback({
             user: await runtime.character.name,
