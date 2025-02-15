@@ -93,7 +93,7 @@ export const topDexInfo: Action = {
         }
         console.log("content", content);
         const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
-        const topDexOnSuiScan =  await blockBerryProvider.fetchDex()
+        const topDexOnSuiScan =  await blockBerryProvider.fetchDex(0,20,"CURRENT_TVL","DESC","DAY")
         let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX" });
         
         if (topDexOnCoinGecko) {

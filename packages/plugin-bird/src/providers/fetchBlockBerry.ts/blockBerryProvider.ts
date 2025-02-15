@@ -16,9 +16,9 @@ export class BlockBerryProvider {
   async fetchDex(
     page: number = 0,
     size: number = 10,
-    sortBy: "VOLUME" | "HOLDER" | "AGE" | "ITEMS" | "NAME" = "VOLUME",
-    orderBy: "DESC" | "ASC" = "DESC",
-    period: "DAY" | "WEEK" | "MONTH" = "DAY"
+    sortBy:string ,
+    orderBy: string,
+    period: string 
   ) {
     try {
       const response: any = await this.axiosInstance.post(
@@ -27,7 +27,7 @@ export class BlockBerryProvider {
           withTvlOnly: false,
         }
       );
-      return response.content;
+      return response.data.content;
     } catch (error) {
       console.error("Error fetching market data:", error);
       throw new Error("Failed to fetch market data");
