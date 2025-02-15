@@ -91,7 +91,7 @@ export const topDexInfo: Action = {
             await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
         console.log("content", content);
-        const topDexOnSuiScan = await getTopDexOnSuiScan()
+        // const topDexOnSuiScan = await getTopDexOnSuiScan()
         let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX" });
         // console.log(topDexOnCoinGecko)
         if (topDexOnCoinGecko) {
@@ -104,10 +104,10 @@ export const topDexInfo: Action = {
             elizaLogger.info(dex)
             const dexMetricId = dex.relationships.dex_metric.data.id;
             const metric = topDexOnCoinGecko.included.find(item => item.id === dexMetricId);
-            const project = topDexOnSuiScan.find(item =>
-                dex.attributes.name.toLowerCase().includes(item.projectName.toLowerCase().trim())
-            );
-            if (!project) return null;
+            // const project = topDexOnSuiScan.find(item =>
+            //     dex.attributes.name.toLowerCase().includes(item.projectName.toLowerCase().trim())
+            // );
+            // if (!project) return null;
             return {
                 swap_volume_usd_24h: metric?.attributes.swap_volume_usd_24h || null,
                 swap_count_24h: metric?.attributes.swap_count_24h || null,
@@ -119,19 +119,19 @@ export const topDexInfo: Action = {
                 analytics_pool_page_url: dex.attributes.analytics_pool_page_url,
                 analytics_token_page_url: dex.attributes.analytics_token_page_url,
                 img_icon: dex.attributes.image_url,
-                website: project?.website || null,
-                discord: project?.discord || null,
-                twitter: project?.twitter || null,
-                telegram: project?.telegram || null,
-                currentTvl: project?.currentTvl || null,
-                volume: project?.volume || null,
-                volumeChange: project?.volumeChange || null,
-                txBlocks: project?.txBlocks || null,
-                pools: project?.pools || null,
-                packages: project?.packages || []
+                // website: project?.website || null,
+                // discord: project?.discord || null,
+                // twitter: project?.twitter || null,
+                // telegram: project?.telegram || null,
+                // currentTvl: project?.currentTvl || null,
+                // volume: project?.volume || null,
+                // volumeChange: project?.volumeChange || null,
+                // txBlocks: project?.txBlocks || null,
+                // pools: project?.pools || null,
+                // packages: project?.packages || []
             };
         });
-
+        const filteredResponseData = responseData.filter(dex => dex !== null);
         // console.log(mappedData);
         callback({
             user: await runtime.character.name,
@@ -139,7 +139,7 @@ export const topDexInfo: Action = {
             action: "TOP_DEX",
             result: {
                 type: "top_dex",
-                data: responseData,
+                data: filteredResponseData,
             },
         });
 
