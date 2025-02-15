@@ -54,7 +54,7 @@ export const projectInfo: Action = {
         "{INPUT}_project",
         "{INPUT}_infor",
         "{INPUT}_overview",
-        "what_is__{INPUT}?",
+        "what_is_{INPUT}?",
         "{INPUT}_info",
         "{INPUT}_information",
         "{INPUT}_IN4",
@@ -62,7 +62,9 @@ export const projectInfo: Action = {
         "MORE_INFO_{INPUT}",
         "MORE_INFO",
         "MORE_INFORMATION",
-        "KNOW_{INPUT}"
+        "KNOW_{INPUT}",
+        "INFO_{TOKEN_SYMBOL}",
+        "INFO_{PROJECT_NAME}",
     ],
 
     examples: [
