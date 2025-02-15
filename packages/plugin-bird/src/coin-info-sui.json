@@ -10750,6 +10750,8 @@
     "decimals": 6,
     "symbol": "ROCK",
     "name": "Rockee AI",
+    "website":"https://rockee.ai/",
+    "coingeckoUrl":"https://www.coingecko.com/coins/rockee-ai",
     "iconUrl":"https://rockee.ai/images/logo.png",
     "verified":true,
     "coinGeckoId":"rockee-ai"
