@@ -64,7 +64,7 @@ export const projectInfo: Action = {
         "MORE_INFORMATION",
         "KNOW_{INPUT}",
         "INFO_{TOKEN_SYMBOL}",
-        "INFO_{PROJECT_NAME}",
+        "INFO_{PROJECT_NAME}",  
     ],
 
     examples: [
@@ -205,8 +205,8 @@ export const projectInfo: Action = {
             infoDetail = { market_cap_rank: "N/A", tickers: [] };
         }
         const coinGecko = new CoingeckoProvider();
-        let getToken = await coinGecko.getToken(tokenObject.coinGeckoId);
-        let getDetail = await coinGecko.getCoinDataById(tokenObject.coinGeckoId);
+        let getToken = await coinGecko.getToken(tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
+        let getDetail = await coinGecko.getCoinDataById(tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
         if (getToken) {
             infoPrice = getToken;
         }

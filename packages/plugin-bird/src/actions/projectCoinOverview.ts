@@ -54,7 +54,7 @@ export const projectInfo: Action = {
         "{INPUT}_project",
         "{INPUT}_infor",
         "{INPUT}_overview",
-        "what_is_{INPUT}?",
+        "what_is__{INPUT}?",
         "{INPUT}_info",
         "{INPUT}_information",
         "{INPUT}_IN4",
@@ -64,7 +64,7 @@ export const projectInfo: Action = {
         "MORE_INFORMATION",
         "KNOW_{INPUT}",
         "INFO_{TOKEN_SYMBOL}",
-        "INFO_{PROJECT_NAME}",
+        "INFO_{PROJECT_NAME}",  
     ],
 
     examples: [
@@ -184,6 +184,7 @@ export const projectInfo: Action = {
         elizaLogger.info("content:", content)
         const projectObj = await searchProjectInFileJson(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
         const tokenObject = await findByVerifiedAndName(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
+        elizaLogger.info("tokenObject", tokenObject)
         if (!projectObj) {
             callback({
                 user: await runtime.character.name,
@@ -198,13 +199,14 @@ export const projectInfo: Action = {
             const coninGeckoTeminal = new GeckoTerminalProvider2()
 
             tokenSuiInfo = await coninGeckoTeminal.getTokenDetails("sui-network", tokenObject.type);
+            elizaLogger.info("tokenSuiInfo", tokenSuiInfo)
 
             infoPrice = { market_cap_rank: "N/A", price_change_24h: "N/A", price: tokenSuiInfo.tokenPrice, market_cap: tokenSuiInfo.marketCap };
             infoDetail = { market_cap_rank: "N/A", tickers: [] };
         }
         const coinGecko = new CoingeckoProvider();
-        let getToken = await coinGecko.getToken(tokenObject.coinGeckoId);
-        let getDetail = await coinGecko.getCoinDataById(tokenObject.coinGeckoId);
+        let getToken = await coinGecko.getToken(tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
+        let getDetail = await coinGecko.getCoinDataById(tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
         if (getToken) {
             infoPrice = getToken;
         }
