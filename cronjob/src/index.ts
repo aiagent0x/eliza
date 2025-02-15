@@ -6,6 +6,7 @@ import { fetchNaviPool } from "./services/fetchNaviPool";
 import { getCoinAll } from "./services/fetchCoinCMS";
 import { fetchLiquidityPools } from "./services/fetchCetus";
 import { fetchTopDexOnSuiVision } from "./services/fetchTopDexOnSuiVision";
+import { fetchDex } from "./services/fetchDexOnBlockBerry";
 dotenv.config();
 
 const QUEUE_NAME = process.env.QUEUE_NAME || "cronjob";
@@ -14,7 +15,16 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 const jobQueue = new JobQueue(QUEUE_NAME, REDIS_URL);
 
 const scheduledJobs = [
-    { jobName: "fetchSuiDex", data: {}, cron: "*/5 * * * *" }, // run every 15 minutes
+    {
+        jobName: "fetchSuiDex", data: {
+            page: 0,
+            size: 20,
+            sortBy: "CURRENT_TVL",
+            orderBy: "DESC",
+            period: "DAY"
+        },
+        cron: "*/5 * * * *"
+    }, // run every 15 minutes
     { jobName: "fetchNaviPool", data: {}, cron: "*/5 * * * *" }, // run every 15 minutes
     { jobName: "fetchCoinCMS", data: {}, cron: "*/5 * * * *" },  // run every 15 minutes
     { jobName: "fetchLiquidityPoolsCetus", data: {}, cron: "*/5 * * * *" },  // run every 15 minutes
@@ -30,7 +40,7 @@ const scheduledJobs = [
 const startWorker = () => {
     const worker = new JobWorker(QUEUE_NAME, REDIS_URL);
 
-    worker.registerJob("fetchSuiDex", fetchTopDexByNetwork);
+    worker.registerJob("fetchSuiDex", fetchDex);
     worker.registerJob("fetchNaviPool", fetchNaviPool);
     worker.registerJob("fetchCoinCMS", getCoinAll);
     worker.registerJob("fetchLiquidityPoolsCetus", fetchLiquidityPools);
