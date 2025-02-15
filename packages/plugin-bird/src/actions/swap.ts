@@ -171,7 +171,7 @@ export const swapSui: Action = {
         }
 
         const responseData = {
-            amount: amount,
+            amount: amount==="null"?0:parseFloat(amount),
             fromToken: inputTokenObject,
             toToken: outputTokenObject
 
