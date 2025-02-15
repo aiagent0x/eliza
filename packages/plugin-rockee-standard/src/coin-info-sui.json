@@ -535,8 +535,7 @@
     "decimals": 9,
     "symbol": "kSUI",
     "name": "Kriya Staked SUI",
-    "iconUrl": "https://suilend-assets.s3.us-east-2.amazonaws.com/springsui/ksui.png",
-    "verified": true
+    "iconUrl": "https://suilend-assets.s3.us-east-2.amazonaws.com/springsui/ksui.png"
   },
   {
     "objectId": "0x1d0975ab0726f2e52384b6ea0f2c94c2dbdad8b004ee6b5ee552a3c789c044f0",

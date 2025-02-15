@@ -40,7 +40,7 @@ VALIDATION RULES:
 
 
 export const topDexInfo: Action = {
-    name: "SHOW_TOP_DECENTRALIZED_EXCHANGES",
+    name: "TOP_DECENTRALIZED_EXCHANGES",
     description: "Get top dex by network.",
     similes: [
        "FIND_TOP_DEX",
