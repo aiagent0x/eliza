@@ -78,6 +78,7 @@
         "To view the project overview, choose the action PROJECT_OVERVIEW for the specified token.",
         "To view the top decentralized exchanges, choose the action TOP_DEX.",
         "To view the top trending tokens, just choose the action TOP_TRENDING_TOKENS.",
+        "When the user enters a phrase meaning 'sell {token}' (e.g., 'sell SUI', 'bán USDT', 'swap 10 SUI to USDC'), always select the action SWAP_AND_BUY_AND_SELL_AND_TRANSFER_TOKEN or SWAP_AND_BUY_AND_SELL_AND_TRANSFER_TOKEN if a token address is provided. Do not select the action SUI_SEND_TOKEN_BY_SYMBOL in this case.",
         "DECENTRALIZED EXCHANGES = DEX",
         "To view the top meme, choose the action TOP_MEME.",
         "If a message contains the word 'stake' in any form, except for 'unstake', select the action STAKE_TOKEN.",
