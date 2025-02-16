@@ -205,8 +205,8 @@ export const projectInfo: Action = {
             infoDetail = { market_cap_rank: "N/A", tickers: [] };
         }
         const coinGecko = new CoingeckoProvider();
-        let getToken = await coinGecko.getToken(tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
-        let getDetail = await coinGecko.getCoinDataById(tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
+        let getToken = await coinGecko.getToken(tokenSuiInfo&&tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
+        let getDetail = await coinGecko.getCoinDataById(tokenSuiInfo&&tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
         if (getToken) {
             infoPrice = getToken;
         }
