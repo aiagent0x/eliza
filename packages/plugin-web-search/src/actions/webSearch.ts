@@ -73,7 +73,7 @@ export const webSearch: Action = {
         const searchResponse = await webSearchService.search(
             webSearchPrompt,
         );
-
+        
         if (searchResponse && searchResponse.results.length) {
             const responseList = searchResponse.answer
                 ? `${searchResponse.answer}${
@@ -97,106 +97,32 @@ export const webSearch: Action = {
         }
     },
     examples: [
+        
         [
             {
-                user: "{{user1}}",
-                content: {
-                    text: "Find the latest news about SpaceX launches.",
-                },
+                "user": "{{user1}}",
+                "content": { "text": "Tell me about Elon Musk" }
             },
             {
-                user: "{{agentName}}",
-                content: {
-                    text: "Here is the latest news about SpaceX launches:",
-                    action: "WEB_SEARCH",
-                },
-            },
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "Here is the latest information about Elon Musk:",
+                    "action": "WEB_SEARCH"
+                }
+            }
         ],
         [
             {
-                user: "{{user1}}",
-                content: {
-                    text: "Can you find details about the iPhone 16 release?",
-                },
+                "user": "{{user1}}",
+                "content": { "text": "Who is Taylor Swift?" }
             },
             {
-                user: "{{agentName}}",
-                content: {
-                    text: "Here are the details I found about the iPhone 16 release:",
-                    action: "WEB_SEARCH",
-                },
-            },
-        ],
-        [
-            {
-                user: "{{user1}}",
-                content: {
-                    text: "What is the schedule for the next FIFA World Cup?",
-                },
-            },
-            {
-                user: "{{agentName}}",
-                content: {
-                    text: "Here is the schedule for the next FIFA World Cup:",
-                    action: "WEB_SEARCH",
-                },
-            },
-        ],
-        [
-            {
-                user: "{{user1}}",
-                content: { text: "Check the latest stock price of Tesla." },
-            },
-            {
-                user: "{{agentName}}",
-                content: {
-                    text: "Here is the latest stock price of Tesla I found:",
-                    action: "WEB_SEARCH",
-                },
-            },
-        ],
-        [
-            {
-                user: "{{user1}}",
-                content: {
-                    text: "What are the current trending movies in the US?",
-                },
-            },
-            {
-                user: "{{agentName}}",
-                content: {
-                    text: "Here are the current trending movies in the US:",
-                    action: "WEB_SEARCH",
-                },
-            },
-        ],
-        [
-            {
-                user: "{{user1}}",
-                content: {
-                    text: "What is the latest score in the NBA finals?",
-                },
-            },
-            {
-                user: "{{agentName}}",
-                content: {
-                    text: "Here is the latest score from the NBA finals:",
-                    action: "WEB_SEARCH",
-                },
-            },
-        ],
-        [
-            {
-                user: "{{user1}}",
-                content: { text: "When is the next Apple keynote event?" },
-            },
-            {
-                user: "{{agentName}}",
-                content: {
-                    text: "Here is the information about the next Apple keynote event:",
-                    action: "WEB_SEARCH",
-                },
-            },
-        ],
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "Here is the latest information about Taylor Swift:",
+                    "action": "WEB_SEARCH"
+                }
+            }
+        ]
     ],
 } as Action;
