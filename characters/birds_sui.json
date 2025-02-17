@@ -20,7 +20,7 @@
         "defaultLanguage": "en",
         "imageGeneration": false,
         "modelConfig": {
-            "temperature": 0.3
+            "temperature": 1
         },
         "ragKnowledge": true
     },
