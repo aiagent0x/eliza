@@ -20,8 +20,7 @@
         "imageGeneration": false,
         "modelConfig": {
             "temperature": 1
-        },
-        "ragKnowledge": true
+        }
     },
     "adjectives": [
         "friendly",
