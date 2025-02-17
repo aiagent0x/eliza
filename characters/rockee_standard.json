@@ -92,6 +92,7 @@
         "When the user enters a phrase meaning 'sell {token}' (e.g., 'sell SUI', 'bán USDT', 'swap 10 SUI to USDC'), always select the action SWAP_AND_BUY_AND_SELL_AND_TRANSFER_TOKEN or SWAP_AND_BUY_AND_SELL_AND_TRANSFER_TOKEN if a token address is provided. Do not select the action SUI_SEND_TOKEN_BY_SYMBOL in this case.",
         "DECENTRALIZED EXCHANGES = DEX",
         "To view the top meme, choose the action TOP_MEME.",
+        "When the user asks 'Who is {Name or Network Name}', select the action 'WEB_SEARCH'.",
         "If a message contains the word 'stake' in any form, except for 'unstake', select the action STAKE_TOKEN.",
         "Sample Pool Names in NAVI: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.",
         "The following are project names within the Sui Network: Cetus, NAVI, DeepBook, Walrus, BIRDS, FanTV, Wave, 7K, Haedal, Aftermath, Bluefin, BlueMove, Turbos, Hop Aggregator, Bucket Protocol, Scallop, Memefi, Tradeport, SuiNS, Suilend, SuiPlay, RaidenX, Typus Finance, Kriya, FlowX, Sudo Finance, AlphaFi, Kai Finance, Strater, Volo, Suiet, Ethos Wallet, Surf Wallet, Nightly, Martian Wallet, Stashed, Suia, SeaPad, DARKTIMES, Cosmocadia, Panzerdogs, MotoDEX, Capybara, Sacabam, SuDeng, Blub, Fud the Pug, Suiman, Suipad, Rockee AI, Sui, Lofi, Sui Agents, SuiAI, AXOL, Agent S, LumiWave, Bucket, Rockee. All project names are recognized regardless of case format.",
