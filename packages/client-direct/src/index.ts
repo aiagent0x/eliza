@@ -326,9 +326,6 @@ export class DirectClient {
                 else {
                     elizaLogger.info("[direct-client] use cache: ", msgHash, response);
                 }
-
-
-
                 // save response to memory
                 const responseMessage: Memory = {
                     id: stringToUuid(messageId + "-" + runtime.agentId),

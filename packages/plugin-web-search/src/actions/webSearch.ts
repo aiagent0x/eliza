@@ -9,7 +9,8 @@ import {
 import { encodingForModel, type TiktokenModel } from "js-tiktoken";
 import { WebSearchService } from "../services/webSearchService";
 import type { SearchResult } from "../types";
-
+import { RedisClient } from "@elizaos/adapter-redis"
+const redis = new RedisClient(process.env.REDIS_URL)
 const DEFAULT_MAX_WEB_SEARCH_TOKENS = 4000;
 const DEFAULT_MODEL_ENCODING = "gpt-3.5-turbo";
 
@@ -61,11 +62,18 @@ export const webSearch: Action = {
         callback: HandlerCallback
     ) => {
         elizaLogger.log("Composing state for message:", message);
+
         state = (await runtime.composeState(message)) as State;
         const userId = runtime.agentId;
         elizaLogger.log("User ID:", userId);
 
         const webSearchPrompt = message.content.text;
+        let result = await redis.getValue({ key: `web_search_${webSearchPrompt}` });
+        if (result) {
+            callback({
+                text: JSON.parse(result)
+            });
+        }
         elizaLogger.log("web search prompt received:", webSearchPrompt);
 
         const webSearchService = new WebSearchService();
@@ -73,22 +81,21 @@ export const webSearch: Action = {
         const searchResponse = await webSearchService.search(
             webSearchPrompt,
         );
-        
+
         if (searchResponse && searchResponse.results.length) {
             const responseList = searchResponse.answer
-                ? `${searchResponse.answer}${
-                      Array.isArray(searchResponse.results) &&
-                      searchResponse.results.length > 0
-                          ? `\n\nFor more details, you can check out these resources:\n${searchResponse.results
-                                .map(
-                                    (result: SearchResult, index: number) =>
-                                        `${index + 1}. [${result.title}](${result.url})`
-                                )
-                                .join("\n")}`
-                          : ""
-                  }`
+                ? `${searchResponse.answer}${Array.isArray(searchResponse.results) &&
+                    searchResponse.results.length > 0
+                    ? `\n\nFor more details, you can check out these resources:\n${searchResponse.results
+                        .map(
+                            (result: SearchResult, index: number) =>
+                                `${index + 1}. [${result.title}](${result.url})`
+                        )
+                        .join("\n")}`
+                    : ""
+                }`
                 : "";
-
+            await redis.setValue({ key: `web_search_${webSearchPrompt}`, value: JSON.stringify(MaxTokens(responseList, DEFAULT_MAX_WEB_SEARCH_TOKENS)), ttl: 86400 });
             callback({
                 text: MaxTokens(responseList, DEFAULT_MAX_WEB_SEARCH_TOKENS),
             });
@@ -97,7 +104,7 @@ export const webSearch: Action = {
         }
     },
     examples: [
-        
+
         [
             {
                 "user": "{{user1}}",
