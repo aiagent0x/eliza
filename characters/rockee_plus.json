@@ -6,7 +6,8 @@
   "modelProvider": "openai",
   "plugins": [
     "@elizaos/plugin-rockee-plus",
-    "@elizaos/plugin-rockee-standard"
+    "@elizaos/plugin-rockee-standard",
+        "@elizaos/plugin-web-search"
   ],
   "settings": {
     "languages": [

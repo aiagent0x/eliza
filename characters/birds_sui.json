@@ -6,7 +6,8 @@
     "modelProvider": "openai",
     "plugins": [
         "@elizaos/plugin-bird",
-        "@elizaos/plugin-bird-plus"
+        "@elizaos/plugin-bird-plus",
+        "@elizaos/plugin-web-search"
     ],
     "settings": {
         "languages": [
