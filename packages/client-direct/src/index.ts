@@ -196,18 +196,18 @@ export class DirectClient {
             async (req: express.Request, res: express.Response) => {
 
                 const agentId = req.params.agentId;
-                elizaLogger.info("agentId:",req.params.agentId)
-                elizaLogger.info("roomId:",req.body.roomId)
-                elizaLogger.info("userId:",req.body.userId)
+                elizaLogger.info("agentId:", req.params.agentId)
+                elizaLogger.info("roomId:", req.body.roomId)
+                elizaLogger.info("userId:", req.body.userId)
                 const roomId = stringToUuid(
                     req.body.roomId ?? "default-room-" + agentId
                 );
-               
+
                 // const userId = stringToUuid(req.body.userId ?? "user");
                 const userId = req.body.userId;
-                elizaLogger.info("agentId:",agentId)
-                elizaLogger.info("roomId:",roomId)
-                elizaLogger.info("userId:",userId)
+                elizaLogger.info("agentId:", agentId)
+                elizaLogger.info("roomId:", roomId)
+                elizaLogger.info("userId:", userId)
                 let runtime = this.agents.get(agentId);
 
                 // if runtime is null, look for runtime with the same name
@@ -237,11 +237,11 @@ export class DirectClient {
                     res.json([]);
                     return;
                 }
-                elizaLogger.log("text",text)
+                elizaLogger.log("text", text)
                 elizaLogger.log("agentNAme", await runtime.character.name)
-                let dataResponse = await filterByTagging(text,await runtime.character.name);
+                let dataResponse = await filterByTagging(text, await runtime.character.name);
                 elizaLogger.log("dataResponse:", dataResponse)
-                if(dataResponse){
+                if (dataResponse) {
                     res.json([
                         dataResponse
                     ]);
@@ -301,12 +301,14 @@ export class DirectClient {
                 });
                 let msgHash = hashUserMsg(userMessage, "direct_client:");
                 let response: Content = await runtime.cacheManager.get(msgHash);
-                if(!response){
+                elizaLogger.info("response:", response);
+
+                if (!response) {
                     const context = composeContext({
                         state,
                         template: messageHandlerTemplate,
                     });
-    
+                    elizaLogger.info("context:", context);
                     response = await generateMessageResponse({
                         runtime: runtime,
                         context,
@@ -318,12 +320,14 @@ export class DirectClient {
                         );
                         return;
                     }
+                    elizaLogger.info("set cache >>>>", msgHash, response);
+                    await runtime.cacheManager.set(msgHash, response, {expires: Date.now() + 300000});
                 }
-                else{
+                else {
                     elizaLogger.info("[direct-client] use cache: ", msgHash, response);
                 }
 
-                
+
 
                 // save response to memory
                 const responseMessage: Memory = {
@@ -480,34 +484,34 @@ export class DirectClient {
                     const lookAtSchema =
                         nearby.length > 1
                             ? z
-                                  .union(
-                                      nearby.map((item) => z.literal(item)) as [
-                                          z.ZodLiteral<string>,
-                                          z.ZodLiteral<string>,
-                                          ...z.ZodLiteral<string>[],
-                                      ]
-                                  )
-                                  .nullable()
+                                .union(
+                                    nearby.map((item) => z.literal(item)) as [
+                                        z.ZodLiteral<string>,
+                                        z.ZodLiteral<string>,
+                                        ...z.ZodLiteral<string>[],
+                                    ]
+                                )
+                                .nullable()
                             : nearby.length === 1
-                              ? z.literal(nearby[0]).nullable()
-                              : z.null(); // Fallback for empty array
+                                ? z.literal(nearby[0]).nullable()
+                                : z.null(); // Fallback for empty array
 
                     const emoteSchema =
                         availableEmotes.length > 1
                             ? z
-                                  .union(
-                                      availableEmotes.map((item) =>
-                                          z.literal(item)
-                                      ) as [
-                                          z.ZodLiteral<string>,
-                                          z.ZodLiteral<string>,
-                                          ...z.ZodLiteral<string>[],
-                                      ]
-                                  )
-                                  .nullable()
+                                .union(
+                                    availableEmotes.map((item) =>
+                                        z.literal(item)
+                                    ) as [
+                                        z.ZodLiteral<string>,
+                                        z.ZodLiteral<string>,
+                                        ...z.ZodLiteral<string>[],
+                                    ]
+                                )
+                                .nullable()
                             : availableEmotes.length === 1
-                              ? z.literal(availableEmotes[0]).nullable()
-                              : z.null(); // Fallback for empty array
+                                ? z.literal(availableEmotes[0]).nullable()
+                                : z.null(); // Fallback for empty array
 
                     return z.object({
                         lookAt: lookAtSchema,
@@ -888,7 +892,7 @@ export class DirectClient {
                             ),
                             similarity_boost: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_SIMILARITY_BOOST ||
-                                    "0.9"
+                                "0.9"
                             ),
                             style: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_STYLE || "0.66"
@@ -962,7 +966,7 @@ export class DirectClient {
                             ),
                             similarity_boost: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_SIMILARITY_BOOST ||
-                                    "0.9"
+                                "0.9"
                             ),
                             style: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_STYLE || "0.66"
