@@ -1035,7 +1035,7 @@ export class AgentRuntime implements IAgentRuntime {
                     }
                 }
             }
-
+            
             if (!action) {
                 elizaLogger.error(
                     "No action found for",

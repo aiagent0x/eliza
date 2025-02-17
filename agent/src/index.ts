@@ -118,7 +118,7 @@ import { teeLogPlugin } from "@elizaos/plugin-tee-log";
 import { teeMarlinPlugin } from "@elizaos/plugin-tee-marlin";
 import { verifiableLogPlugin } from "@elizaos/plugin-tee-verifiable-log";
 // import { tonPlugin } from "@elizaos/plugin-ton";
-// import { webSearchPlugin } from "@elizaos/plugin-web-search";
+import { webSearchPlugin } from "@elizaos/plugin-web-search";
 import { dkgPlugin } from "@elizaos/plugin-dkg";
 // import { injectivePlugin } from "@elizaos/plugin-injective";
 import { giphyPlugin } from "@elizaos/plugin-giphy";
@@ -1054,7 +1054,7 @@ export async function createAgent(
             // getSecret(character, "ROUTER_NITRO_EVM_ADDRESS")
             //     ? nitroPlugin
             //     : null,
-            // getSecret(character, "TAVILY_API_KEY") ? webSearchPlugin : null,
+            getSecret(character, "TAVILY_API_KEY") ? webSearchPlugin : null,
             // getSecret(character, "SOLANA_PUBLIC_KEY") ||
             // (getSecret(character, "WALLET_PUBLIC_KEY") &&
             //     !getSecret(character, "WALLET_PUBLIC_KEY")?.startsWith("0x"))
