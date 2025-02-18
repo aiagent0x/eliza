@@ -12,35 +12,41 @@ import {
 } from "@elizaos/core";
 import { hashUserMsg } from "../utils/format";
 import { searchPoolInFileJson, listPoolsInFileJson, pool } from "../providers/searchPoolInFile";
-import { getPoolInfo } from "navi-sdk";
+import { getPoolInfo,getAddressPortfolio } from "navi-sdk";
+import { SuiClient } from "@mysten/sui/client";
 import { RedisClient } from "@elizaos/adapter-redis";
+const suiClient = new SuiClient({
+    url: "https://fullnode.mainnet.sui.io" 
+});
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL);
 
 const stakeTokenTemplate = `
 Recent messages: {{recentMessages}}  
-Extract the staking parameters from the conversation above, following these rules:  
-- Sample Pool Names: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.  
-- Return only a JSON object with the specified fields in this format:  
+Extract the staking parameters from the conversation above, following these rules:
+
+- Sample Pool Names: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
+- Return only a JSON object with the specified fields in this format:
 
     {  
          "type_action": "stake" | "unstake",  
-         "type": "list" | "pool_name",  
+         "type": "list" | "pool_name" | "my_stake",  
          "pool_name": string | null,  
          "amount": number | 0  
     }  
 
-- '"type_action"' is '"stake"' when the request involves staking tokens.  
-- '"type_action"' is '"unstake"' when the request involves unstaking tokens.  
-- Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools").  
-- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
-- Set '"pool_name"' to null if no specific pool is mentioned.  
-- Use 'null' for any values that cannot be determined.  
-- All property names must use double quotes.  
-- Null values should not use quotes.  
-- No trailing commas allowed.  
-- No single quotes anywhere in the JSON.  
+- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'.
+- Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").
+- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").
+- Use '"type_action": "stake"' when the request involves staking tokens.
+- Use '"type_action": "unstake"' when the request involves unstaking tokens.
+- Set '"pool_name"' to 'null' if no specific pool is mentioned.
+- Use 'null' for any values that cannot be determined.
+- All property names must use double quotes.
+- Null values should not use quotes.
+- No trailing commas allowed.
+- No single quotes anywhere in the JSON.
 
 `;
 
@@ -155,7 +161,6 @@ export const stakeNavi: Action = {
                 return false;
             }
         }
-
         if (content.type === "pool_name") {
             let type_action = content.type_action;
             let responseData = await searchPoolInFileJson(content.pool_name);
@@ -171,7 +176,7 @@ export const stakeNavi: Action = {
             if (data && typeof data === "string" && data !== null) {
                 callback({
                     user: await runtime.character.name,
-                    text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
+                    text: "Double-check all the details before takeoff to dodge any turbulence!",
                     action: "STAKE_TOKEN",
                     result: {
                         type: type_action ==="stake"?"stake_token":"unstake_token",
@@ -197,7 +202,7 @@ export const stakeNavi: Action = {
             try {
                 callback({
                     user: await runtime.character.name,
-                    text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
+                    text: "Double-check all the details before takeoff to dodge any turbulence!",
                     action: "STAKE_TOKEN",
                     result: {
                         type: type_action ==="stake"?"stake_token":"unstake_token",
@@ -210,6 +215,29 @@ export const stakeNavi: Action = {
                 return false;
             }
         }
+        if (content.type === "my_stake") {
+            try {
+                
+                const portfolio = await getAddressPortfolio(message.userId, false, suiClient);
+                // Convert the Map to an object
+                const portfolioObject = Object.fromEntries(portfolio);
+
+                callback({
+                    user: await runtime.character.name,
+                    text: "Here is your staking portfolio:",
+                    action: "STAKE_TOKEN",
+                    result: {
+                        type: "my_stake",
+                        data: portfolioObject,
+                    },
+                });
+                return true;
+            } catch (error) {
+                console.error("Error fetching staking portfolio:", error);
+                return false;
+            }
+        }
+       
     },
     examples: [
         [
@@ -238,6 +266,21 @@ export const stakeNavi: Action = {
                 user: "{{agent}}",
                 content: {
                     text: "Stake {TOKEN_SYMBOL}",
+                    action: "STAKE_TOKEN",
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "My stake",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "My stake",
                     action: "STAKE_TOKEN",
                 },
             },
