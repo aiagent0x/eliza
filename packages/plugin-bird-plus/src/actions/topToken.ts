@@ -220,6 +220,48 @@ export const topToken: Action = {
 
                 return true;
                 break;
+            case "DEFI":
+                const projectInfos = await searchCategoriesInFileJson("Defi");
+                const projectType = await findTypesBySymbols(projectInfos);
+                const GeckoTerminal = new GeckoTerminalProvider();
+
+                const tokenInfo = await GeckoTerminal.fetchMultipleTokenOnNetwork("sui-network", projectType);
+                let dataResponse = tokenInfo.data.map((data) => ({
+                    volume_usd: data.attributes.volume_usd?.h24 || 0,
+                    symbol: data.attributes.symbol,
+                    price: data.attributes.price_usd,
+                    icon_url: data.attributes.image_url,
+                    name: data.attributes.name ? data.attributes.name.split(" / ")[0] : "N/A",
+                    market_cap: data.attributes.market_cap_usd || 0,
+                    price_change_percentage: "N/A",
+                }));
+
+                tokenInfo.included.forEach((includedData) => {
+                    const name = includedData.attributes.name.split(" / ")[0];
+                    const price_change = includedData.attributes.price_change_percentage.h24 || "N/A";
+                    const matchedToken = dataResponse.find((token) => token.symbol === name);
+                    if (matchedToken) {
+                        matchedToken.price_change_percentage = price_change;
+                    }
+                });
+                try {
+
+                    callback({
+                        user: await runtime.character.name,
+                        text: `Here are the top DeFi tokens:`,
+                        action: "TOP_DEFI",
+                        result: {
+                            type: "top_token",
+                            data: dataResponse.slice(0, content.size)
+                        }
+                    })
+
+                    return true;
+                } catch (error) {
+                    console.error("Error during token swap:", error);
+                    return false;
+                }
+                break;
         }
     },
     examples: [

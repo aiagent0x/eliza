@@ -26,7 +26,6 @@ const rockeePlusPlugin: Plugin = {
     topToken,
     stakeNavi,
     liquidityCetus
-
   ],
   evaluators: [],
   providers: []
