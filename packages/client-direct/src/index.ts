@@ -29,6 +29,7 @@ import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
 import { hashUserMsg } from "./utilities/format.ts";
 import { filterByTagging } from "./utilities/tagging.ts";
+import { suggestMessage } from "./services/suggestMessage.ts";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");
@@ -205,9 +206,7 @@ export class DirectClient {
 
                 // const userId = stringToUuid(req.body.userId ?? "user");
                 const userId = req.body.userId;
-                elizaLogger.info("agentId:", agentId)
-                elizaLogger.info("roomId:", roomId)
-                elizaLogger.info("userId:", userId)
+                const type = req.body.type || "default_message";
                 let runtime = this.agents.get(agentId);
 
                 // if runtime is null, look for runtime with the same name
@@ -237,10 +236,9 @@ export class DirectClient {
                     res.json([]);
                     return;
                 }
-                elizaLogger.log("text", text)
-                elizaLogger.log("agentNAme", await runtime.character.name)
+
                 let dataResponse = await filterByTagging(text, await runtime.character.name);
-                elizaLogger.log("dataResponse:", dataResponse)
+
                 if (dataResponse) {
                     res.json([
                         dataResponse
@@ -283,6 +281,8 @@ export class DirectClient {
                     agentId: runtime.agentId,
                 };
 
+
+
                 const memory: Memory = {
                     id: stringToUuid(messageId + "-" + userId),
                     ...userMessage,
@@ -299,6 +299,11 @@ export class DirectClient {
                 let state = await runtime.composeState(userMessage, {
                     agentName: runtime.character.name,
                 });
+                if (type === "suggest_message") {
+
+                    res.json([await suggestMessage(runtime, memory, state)]);
+                    return;
+                }
                 let msgHash = hashUserMsg(userMessage, "direct_client:");
                 let response: Content = await runtime.cacheManager.get(msgHash);
                 elizaLogger.info("response:", response);
@@ -321,7 +326,7 @@ export class DirectClient {
                         return;
                     }
                     elizaLogger.info("set cache >>>>", msgHash, response);
-                    await runtime.cacheManager.set(msgHash, response, {expires: Date.now() + 300000});
+                    await runtime.cacheManager.set(msgHash, response, { expires: Date.now() + 300000 });
                 }
                 else {
                     elizaLogger.info("[direct-client] use cache: ", msgHash, response);
