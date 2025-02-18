@@ -29,7 +29,7 @@ import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
 import { hashUserMsg } from "./utilities/format.ts";
 import { filterByTagging } from "./utilities/tagging.ts";
-import { suggestMessage } from "./services/suggestMessage.ts";
+import { suggestMessage } from "./services/suggestMessage/index.ts";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");

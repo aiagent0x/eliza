@@ -12,7 +12,7 @@ import {
 } from "@elizaos/core";
 import { hashUserMsg } from "../utils/format";
 import { searchPoolInFileJson, listPoolsInFileJson, pool } from "../providers/searchPoolInFile";
-import { getPoolInfo,getAddressPortfolio } from "navi-sdk";
+import { getPoolInfo, getAddressPortfolio } from "navi-sdk";
 import { SuiClient } from "@mysten/sui/client";
 import { RedisClient } from "@elizaos/adapter-redis";
 const suiClient = new SuiClient({
