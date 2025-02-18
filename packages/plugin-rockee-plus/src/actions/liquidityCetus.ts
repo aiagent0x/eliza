@@ -116,7 +116,7 @@ export const liquidityCetus: Action = {
         else{
             
             let cetusProvider = new CetusProvider();
-            console.log(content.pair_name)
+            
             let coinA = content.pair_name.split("-")[0];
             let coinB = content.pair_name.split("-")[1];
             let coinInfoA = await findByVerifiedAndSymbol(coinA);
@@ -127,7 +127,7 @@ export const liquidityCetus: Action = {
             try {
                 callback({
                     user: await runtime.character.name,
-                    text: "Below is a list of liquidity pools:",
+                    text: `Below is liquid pools ${result.data.lp_list[0].name}:`,
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "add_liquidity",
