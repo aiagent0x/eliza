@@ -24,11 +24,11 @@ const scheduledJobs = [
             period: "DAY"
         },
         cron: "*/5 * * * *"
-    }, // run every 15 minutes
-    { jobName: "fetchNaviPool", data: {}, cron: "*/5 * * * *" }, // run every 15 minutes
-    { jobName: "fetchCoinCMS", data: {}, cron: "*/5 * * * *" },  // run every 15 minutes
-    { jobName: "fetchLiquidityPoolsCetus", data: {}, cron: "*/5 * * * *" },  // run every 15 minutes
-    // { jobName: "fetchTopDexOnSuiVision", data: {}, cron: "*/15 * * * *" },  // run every 15 minutes
+    }, 
+    { jobName: "fetchNaviPool", data: {}, cron: "*/5 * * * *" },
+    { jobName: "fetchCoinCMS", data: {}, cron: "*/5 * * * *" }, 
+    { jobName: "fetchLiquidityPoolsCetus", data: {}, cron: "*/5 * * * *" },  
+    { jobName: "fetchSuiDexCongecko", data: {}, cron: "*/5 * * * *" },
 ];
 
 (async () => {
@@ -44,6 +44,7 @@ const startWorker = () => {
     worker.registerJob("fetchNaviPool", fetchNaviPool);
     worker.registerJob("fetchCoinCMS", getCoinAll);
     worker.registerJob("fetchLiquidityPoolsCetus", fetchLiquidityPools);
+    worker.registerJob("fetchSuiDexCongecko", fetchTopDexByNetwork);
     // worker.registerJob("fetchTopDexOnSuiVision", fetchTopDexOnSuiVision);
     elizaLogger.info("🚀 Worker & Scheduler running...");
 };

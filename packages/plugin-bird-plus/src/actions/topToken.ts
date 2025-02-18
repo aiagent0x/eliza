@@ -212,7 +212,7 @@ export const topToken: Action = {
                         text: `Below are trending coins we have collected:`,
                         action: 'TOP_TRENDING_TOKENS',
                         result: {
-                            type: "sui_trending_tokens",
+                            type: "top_token",
                             data: responseData
                         }
                     });

@@ -133,7 +133,7 @@ export const topPotentialTokenOnSui: Action = {
             text: `Top potential token on Sui`,
             action: "TOP_POTENTIAL_TOKEN",
             result: {
-                type: "sui_trending_tokens",
+                type: "top_token",
                 data: responseData,
             },
         });

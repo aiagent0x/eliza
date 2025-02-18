@@ -92,8 +92,7 @@ export const topDexInfo: Action = {
             await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
         console.log("content", content);
-        const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
-        const topDexOnSuiScan =  await blockBerryProvider.fetchDex(0,20,"CURRENT_TVL","DESC","DAY")
+        
         
         let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX" });
         
@@ -102,7 +101,8 @@ export const topDexInfo: Action = {
         } else {
             topDexOnCoinGecko = await fetchTopDexByNetwork(content.network_blockchain);
         }
-
+        const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
+        const topDexOnSuiScan =  await blockBerryProvider.fetchDex(0,20,"CURRENT_TVL","DESC","DAY")
         const responseData = topDexOnCoinGecko.data.map(dex => {
             elizaLogger.info(dex)
             const dexMetricId = dex.relationships.dex_metric.data.id;

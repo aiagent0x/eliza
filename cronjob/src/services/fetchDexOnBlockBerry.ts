@@ -17,7 +17,7 @@ const axiosInstance = axios.create({
 
 async function fetchDex(job: any) {
   try {
-    let data = await redis.getValue({ key: "TOP_DEX" });
+    let data = await redis.getValue({ key: "TOP_DEX_BLOCK_BERRY" });
     if(data) return;
     const response = await axiosInstance.post(
       `/dex?page=${job.data.page}&size=${job.data.size}&orderBy=${job.data.orderBy}&period=${job.data.period}&sortBy=${job.data.sortBy}`,
@@ -26,7 +26,7 @@ async function fetchDex(job: any) {
       }
   );
     console.log(response);
-    await redis.setValue({ key: "TOP_DEX", value: JSON.stringify(response.data.content), ttl: 300 });
+    await redis.setValue({ key: "TOP_DEX_BLOCK_BERRY", value: JSON.stringify(response.data.content), ttl: 300 });
     return;
   } catch (error) {
     console.error("Error fetching market data:", error);

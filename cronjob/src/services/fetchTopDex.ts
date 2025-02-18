@@ -22,7 +22,7 @@ export const fetchTopDexByNetwork = async (job:any)  => {
     try {
         const jsonData: any = JSON.parse(jsonText);
         console.log(jsonData)
-        redis.setValue({ key: "TOP_DEX", value: jsonText, ttl: 300 });
+        redis.setValue({ key: "TOP_DEX_COIN_GECKO", value: jsonText, ttl: 300 });
         return;
     } catch (error) {
         elizaLogger.info("❌ JSON:", error);
