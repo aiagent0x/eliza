@@ -123,7 +123,6 @@ export const liquidityCetus: Action = {
             let coinInfoB = await findByVerifiedAndSymbol(coinB);
             let result = await cetusProvider.fetchLiquidityPoolsByCoinType(`${coinInfoA.type},${coinInfoB.type}`);
             
-            result.data.lp_list[0].amount = content.amount_token_a;
             try {
                 callback({
                     user: await runtime.character.name,
