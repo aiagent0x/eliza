@@ -21,7 +21,7 @@ import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
 const topLiquidityPoolTemplate = `Recent messages: {{recentMessages}}  
 Extract the liquidity pool parameters from the conversation above, following these rules:  
 
-- Sample Pair Names: SUI-USDC, USDT-WETH, CETUS-SUI, NAVX-ETH, BTC-USDY, etc.  
+- Sample Pair Names: SUI-USDC, USDC-suiUSDT, DEEP-SUI, USDC-SUI, CETUS-SUI, HIPPO-SUI, USDC-ETH, LOFI-SUI, NS-SUI, USDC-USDY, USDC-BUCK, BUCK-SUI, wUSDC-SUI, haSUI-SUI, USDC-CETUS, afSUI-SUI, USDC-wUSDT, BLUE-SUI, ETH-WETH, USDC-WSOL, USDC-AUSD , stSUI-SUI, BUT-SUI, Sonic-SUI, AXOL-SUI, SEND-SUI, WSOL-SUI, etc.  
 - Return only a JSON object with the specified fields in this format:  
 
     {  
@@ -91,14 +91,12 @@ export const liquidityCetus: Action = {
                     result: {
                         type: "liquidity_pools",
                         data: responseData.slice(0, parseInt(content.amount_token_a )),
-
                     }
                 })
                 return true;
             }
             let cetusProvider = new CetusProvider();
             let result: any = await cetusProvider.fetchLiquidityPools();
-
             try {
                 callback({
                     user: await runtime.character.name,
@@ -107,18 +105,15 @@ export const liquidityCetus: Action = {
                     result: {
                         type: "liquidity_pools",
                         data: result.data.lp_list.slice(0, content.size),
-                        // poolInfoArray:poolInfoArray,
-                        // action_hint:getActionHint()
                     }
                 })
-
                 return true;
             } catch (error) {
                 console.error("Error during token swap:", error);
                 return false;
             }
         }
-        if (content.type_action === "add") {
+        else{
             
             let cetusProvider = new CetusProvider();
             console.log(content.pair_name)
@@ -127,6 +122,7 @@ export const liquidityCetus: Action = {
             let coinInfoA = await findByVerifiedAndSymbol(coinA);
             let coinInfoB = await findByVerifiedAndSymbol(coinB);
             let result = await cetusProvider.fetchLiquidityPoolsByCoinType(`${coinInfoA.type},${coinInfoB.type}`);
+            
             result.data.lp_list[0].amount = content.amount_token_a;
             try {
                 callback({
