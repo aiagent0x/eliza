@@ -31,25 +31,25 @@ No single quotes anywhere in the JSON
 
 
 export const sendTokenBySymbol: Action = {
-    name: "SEND_TOKEN_BY_SYMBOL",
+    name: "TRANSFER_TOKENS",
     similes: [
-        "TRANSFER_TOKENS_BY_SYMBOL",
-        "TOKENS_SEND_BY_SYMBOL",
-        "ASSET_SEND_BY_SYMBOL",
-        "TOKENS_TRANSFER_BY_SYMBOL",
-        "SEND_ASSETS_BY_SYMBOL",
-        "TOKENS_TRANSFER_BY_SYMBOL",
-        "ASSET_TRANSFER_BY_SYMBOL",
-        "TOKENS_DISPATCH_BY_SYMBOL",
-        "SEND_ASSETS_BY_SYMBOL",
-        "TOKENS_SHIP_BY_SYMBOL",
-        "TOKENS_DELIVER_BY_SYMBOL",
-        "ASSET_SHIP_BY_SYMBOL",
-        "TOKENS_SEND_OUT_BY_SYMBOL",
-        "ASSET_DISPATCH_BY_SYMBOL",
-        "ASSET_TRANSFER_OUT_BY_SYMBOL",
-        "TOKENS_SEND_OUT_BY_SYMBOL",
-        "ASSETS_DELIVER_BY_SYMBOL",
+        "SEND_TOKENS",
+        "TOKENS_SEND",
+        "ASSET_SEND",
+        "TOKENS_TRANSFER",
+        "SEND_ASSETS",
+        "TOKENS_TRANSFER",
+        "ASSET_TRANSFER",
+        "TOKENS_DISPATCH",
+        "SEND_ASSETS",
+        "TOKENS_SHIP",
+        "TOKENS_DELIVER",
+        "ASSET_SHIP",
+        "TOKENS_SEND_OUT",
+        "ASSET_DISPATCH",
+        "ASSET_TRANSFER_OUT",
+        "TOKENS_SEND_OUT",
+        "ASSETS_DELIVER",
 
 
     ],
@@ -105,7 +105,7 @@ export const sendTokenBySymbol: Action = {
         //     callback({
         //         user: await runtime.character.name,
         //         text: `This wallet address ${content.destinationAddress} does not exist. Please enter a valid one.`,
-        //         action: "SEND_TOKEN_BY_SYMBOL",
+        //         action: "SEND_TOKEN",
 
         //     })
         //     return false;
@@ -120,7 +120,7 @@ export const sendTokenBySymbol: Action = {
             callback({
                 user: await runtime.character.name,
                 text: content.responseMessage,
-                action: "SEND_TOKEN_BY_SYMBOL",
+                action: "SEND_TOKEN",
                 result: {
                     type: "send_chain",
                     data: responseData,
@@ -145,7 +145,7 @@ export const sendTokenBySymbol: Action = {
                 user: "{{user2}}",
                 content: {
                     text: "send token",
-                    action: "SEND_TOKEN_BY_SYMBOL",
+                    action: "SEND_TOKEN",
                 }
             }
         ],
@@ -160,7 +160,7 @@ export const sendTokenBySymbol: Action = {
                 user: "{{user2}}",
                 content: {
                     text: "Send token",
-                    action: "SEND_TOKEN_BY_SYMBOL",
+                    action: "SEND_TOKEN",
                 }
             }
         ]

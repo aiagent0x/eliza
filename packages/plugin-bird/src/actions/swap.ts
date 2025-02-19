@@ -42,7 +42,7 @@ Respond with a JSON markdown block containing only the extracted values.
 `;
 
 export const swapSui: Action = {
-    name: "SWAP_AND_BUY_AND_SELL_AND_TRANSFER_TOKEN",
+    name: "SWAP_AND_BUY_AND_SELL_TOKEN",
     similes: [
         "SWAP_TOKENS",
         "SWAP_SUI",
