@@ -45,7 +45,7 @@ export const checkTxhashOnSui: Action = {
         // console.log("Message:", message);
         return true;
     },
-    description: "Perform a token swap.",
+    description: "check txhash",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -81,7 +81,7 @@ export const checkTxhashOnSui: Action = {
             callback({
                 user: await runtime.character.name,
                 text: `Your transaction with hash ${content.txHash} is currently ${checkInfoTxHash.effects.status.status}. Stay soaring high! `,
-                action: "CHECK_TXHASH_NETWORK",
+                action: "CHECK_TXHASH",
                 result: {
                     type: "info_txhash",
                     data: checkInfoTxHash
@@ -93,7 +93,7 @@ export const checkTxhashOnSui: Action = {
             callback({
                 user: await runtime.character.name,
                 text: `Your transaction status for txhash ${content.txHash} is fail`,
-                action: "CHECK_TXHASH_NETWORK",
+                action: "CHECK_TXHASH",
             })
             console.error("Error during token swap:", error);
             return false;
