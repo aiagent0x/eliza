@@ -88,7 +88,7 @@ export const topPotentialTokenOnSui: Action = {
             "0xb45fcfcc2cc07ce0702cc2d229621e046c906ef14d9b25e8e4d25f6e8763fef7::send::SEND",
             "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
             "0xb4bc93ad1a07fe47943fc4d776fed31ce31923acb5bc9f92d2cab14d01fc06a4::ROCK::ROCK"
-        ];;
+        ];
         switch (content.type) {
             case "MEME":
                 tokens = [

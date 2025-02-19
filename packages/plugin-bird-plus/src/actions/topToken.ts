@@ -28,7 +28,7 @@ Extract the ranking parameters from the conversation above, following these rule
 - **Extract data only from the latest message** and discard any previous messages.
         \`\`\`json
             {
-                "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI",
+                "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING",
                 "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
                 "size": number | 5
             }
@@ -38,6 +38,9 @@ Extract the ranking parameters from the conversation above, following these rule
        - Use "type": "DEFI" for DeFi token rankings.
        - Use "type": "NFT" for NFT rankings.
        - Use "type": "TRENDING" for trending token.
+       - Use "type": "TGE" for TGE token.
+       - Use "type": "RELEASE_TOKEN" for release token.
+       - Use "type": "LISTING" for listing token.
        - Ensure that "sortBy" is one of the following: "MCAP", "24VOL", "PRICE_INCREASE", "PRICE_DECREASE", "HOLDERS", "MARKET_CAP", "24HVOLUME".
        - "size" should default to 5.
        - Use null for any values that cannot be determined.
@@ -264,6 +267,15 @@ export const topToken: Action = {
                     return false;
                 }
                 break;
+            case "TGE":
+            case "RELEASE_TOKEN":
+            case "LISTING":
+                callback({
+                    user: await runtime.character.name,
+                    text: `Top tokens that are about to have their TGE, token release, or exchange listing: BIRDS, SEED, FANTV, Walrus, Wave`,
+                    
+                })
+            break; 
         }
     },
     examples: [
