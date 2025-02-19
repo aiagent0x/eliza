@@ -97,19 +97,7 @@ export const sendTokenBySymbol: Action = {
             })
             return false
         }
-        // const checkSuiAddress = await checkSuiAddressExists(content.destinationAddress)
-
-        // const checkSuiAddress = await isValidSuiAddress(content.destinationAddress)
-
-        // if (!checkSuiAddress) {
-        //     callback({
-        //         user: await runtime.character.name,
-        //         text: `This wallet address ${content.destinationAddress} does not exist. Please enter a valid one.`,
-        //         action: "SEND_TOKEN",
-
-        //     })
-        //     return false;
-        // }
+      
         const responseData = {
             amount: content.amount,
             token_info: tokenObject,
