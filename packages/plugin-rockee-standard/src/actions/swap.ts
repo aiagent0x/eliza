@@ -291,6 +291,78 @@ export const swapSui: Action = {
                     }
                 }
             }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text: "i wanna sell {TOKEN_SYMBOL}"
+                }
+            },
+            {
+                "user": "{{Agent}}",
+                "content": {
+                    "text": "How much {TOKEN_SYMBOL} would you like to sell?",
+                    
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "10",
+                    
+                }
+            },
+            {
+                "user": "{{Agent}}",
+                "content": {
+                    "text": "Initiating sell {TOKEN_SYMBOL} on SUI network...",
+                    "action": "SWAP_TOKEN",
+                    "params": {
+                        "from_token_symbol": "{TOKEN_SYMBOL}",
+                        "destination_token_symbol": "USDC",
+                        "from_token_address": null,
+                        "destination_token_address": null,
+                        "amount": 10
+                    }
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text: "i wanna buy {TOKEN_SYMBOL}"
+                }
+            },
+            {
+                "user": "{{Agent}}",
+                "content": {
+                    "text": "How much {TOKEN_SYMBOL} would you like to buy?",
+                    
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "5",
+                    
+                }
+            },
+            {
+                "user": "{{Agent}}",
+                "content": {
+                    "text": "Initiating sell {TOKEN_SYMBOL} on SUI network...",
+                    "action": "SWAP_TOKEN",
+                    "params": {
+                        "from_token_symbol": "USDC",
+                        "destination_token_symbol": "{TOKEN_SYMBOL}",
+                        "from_token_address": null,
+                        "destination_token_address": null,
+                        "amount": 5
+                    }
+                }
+            }
         ]
     ] as ActionExample[][],
 } as Action;

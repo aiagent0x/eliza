@@ -1246,7 +1246,7 @@ export class AgentRuntime implements IAgentRuntime {
     ) {
         const { userId, roomId } = message;
 
-        const conversationLength = Math.min(this.getConversationLength(), 2);
+        const conversationLength = Math.min(this.getConversationLength(), 4);
 
         const [actorsData, recentMessagesData, goalsData]: [
             Actor[],
@@ -1698,7 +1698,7 @@ Text: ${attachment.text}
     }
 
     async updateRecentMessageState(state: State): Promise<State> {
-        const conversationLength = Math.min(this.getConversationLength(), 2);
+        const conversationLength = Math.min(this.getConversationLength(), 4);
         const recentMessagesData = await this.messageManager.getMemories({
             roomId: state.roomId,
             count: conversationLength,

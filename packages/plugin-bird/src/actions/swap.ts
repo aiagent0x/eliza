@@ -45,13 +45,13 @@ export const swapSui: Action = {
     name: "SWAP_AND_BUY_AND_SELL_AND_TRANSFER_TOKEN",
     similes: [
         "SWAP_TOKENS",
-         "SWAP_SUI",
+        "SWAP_SUI",
         "SWAP_TOKENS",
         "TRADE_TOKENS",
         "EXCHANGE_TOKENS",
         "BUY_{TOKEN_NAME}",
         "SELL_{TOKEN_NAME}"
-        ],
+    ],
     validate: async (_runtime: IAgentRuntime, message: Memory) => {
         const content = typeof message.content === 'string'
             ? message.content
@@ -112,7 +112,7 @@ export const swapSui: Action = {
             }
             // const coninGeckoTeminal = new GeckoTerminalProvider2();
 
-        
+
             let amount = content.amount;
             if (!content.from_token_address || content.from_token_address === "null") {
                 const coinGecko = new GeckoTerminalProvider2();
@@ -179,7 +179,7 @@ export const swapSui: Action = {
         }
 
         const responseData = {
-            amount: amount==="null"?0:parseFloat(amount),
+            amount: amount === "null" ? 0 : parseFloat(amount),
             fromToken: inputTokenObject,
             toToken: outputTokenObject
 
@@ -212,7 +212,7 @@ export const swapSui: Action = {
                 }
             },
             {
-                user: "{{user2}}",
+                user: "{{Agent}}",
                 content: {
                     text: "Initiating swap of 10 SUI for USDT on SUI network...",
                     action: "SWAP_TOKEN",
@@ -234,7 +234,7 @@ export const swapSui: Action = {
                 }
             },
             {
-                "user": "{{user2}}",
+                "user": "{{Agent}}",
                 "content": {
                     "text": "Initiating swap CeTUS for deep on SUI network...",
                     "action": "SWAP_TOKEN",
@@ -256,12 +256,12 @@ export const swapSui: Action = {
                 }
             },
             {
-                "user": "{{user2}}",
+                "user": "{{Agent}}",
                 "content": {
                     "text": "Buy 100 {TOKEN_SYMBOL}",
                     "action": "SWAP_TOKEN",
                     "params": {
-                        "from_token_symbol": "SUI",
+                        "from_token_symbol": "USDC",
                         "destination_token_symbol": "{TOKEN_SYMBOL}",
                         "from_token_address": null,
                         "destination_token_address": null,
@@ -278,19 +278,92 @@ export const swapSui: Action = {
                 }
             },
             {
-                "user": "{{user2}}",
+                "user": "{{Agent}}",
                 "content": {
                     "text": "Initiating swap CeTUS for deep on SUI network...",
                     "action": "SWAP_TOKEN",
                     "params": {
                         "from_token_symbol": "{TOKEN_SYMBOL}",
-                        "destination_token_symbol": "SUI",
+                        "destination_token_symbol": "USDC",
                         "from_token_address": null,
                         "destination_token_address": null,
                         "amount": 0
                     }
                 }
             }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text: "i wanna sell {TOKEN_SYMBOL}"
+                }
+            },
+            {
+                "user": "{{Agent}}",
+                "content": {
+                    "text": "How much {TOKEN_SYMBOL} would you like to sell?",
+                    
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "10",
+                    
+                }
+            },
+            {
+                "user": "{{Agent}}",
+                "content": {
+                    "text": "Initiating sell {TOKEN_SYMBOL} on SUI network...",
+                    "action": "SWAP_TOKEN",
+                    "params": {
+                        "from_token_symbol": "{TOKEN_SYMBOL}",
+                        "destination_token_symbol": "USDC",
+                        "from_token_address": null,
+                        "destination_token_address": null,
+                        "amount": 10
+                    }
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    text: "i wanna buy {TOKEN_SYMBOL}"
+                }
+            },
+            {
+                "user": "{{Agent}}",
+                "content": {
+                    "text": "How much {TOKEN_SYMBOL} would you like to buy?",
+                    
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "5",
+                    
+                }
+            },
+            {
+                "user": "{{Agent}}",
+                "content": {
+                    "text": "Initiating sell {TOKEN_SYMBOL} on SUI network...",
+                    "action": "SWAP_TOKEN",
+                    "params": {
+                        "from_token_symbol": "USDC",
+                        "destination_token_symbol": "{TOKEN_SYMBOL}",
+                        "from_token_address": null,
+                        "destination_token_address": null,
+                        "amount": 5
+                    }
+                }
+            }
         ]
+        
     ] as ActionExample[][],
 } as Action;
