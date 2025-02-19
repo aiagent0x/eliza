@@ -12,7 +12,7 @@ import {
 } from "@elizaos/core";
 import { hashUserMsg } from "../utils/format";
 import { searchPoolInFileJson, listPoolsInFileJson, pool } from "../providers/searchPoolInFile";
-import { getPoolInfo,getAddressPortfolio } from "navi-sdk";
+import { getPoolInfo, getAddressPortfolio } from "navi-sdk";
 import { SuiClient } from "@mysten/sui/client";
 import { RedisClient } from "@elizaos/adapter-redis";
 const suiClient = new SuiClient({
@@ -27,26 +27,29 @@ Recent messages: {{recentMessages}}
 Extract the staking parameters from the conversation above, following these rules:
 
 - Sample Pool Names: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
-- Return only a JSON object with the specified fields in this format:
-
+- Return only a **single JSON object** with the specified fields in this format:
+    \`\`\`json
     {  
          "type_action": "stake" | "unstake",  
          "type": "list" | "pool_name" | "my_stake",  
          "pool_name": string | null,  
          "amount": number | 0  
     }  
-
-- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'.
-- Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").
-- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").
-- Use '"type_action": "stake"' when the request involves staking tokens.
-- Use '"type_action": "unstake"' when the request involves unstaking tokens.
-- Set '"pool_name"' to 'null' if no specific pool is mentioned.
-- Use 'null' for any values that cannot be determined.
-- All property names must use double quotes.
-- Null values should not use quotes.
-- No trailing commas allowed.
+    \`\`\`
+- If multiple staking requests are detected, return only the **first valid** request found in the conversation.  
+- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'.  
+- Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").  
+- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
+- Use '"type_action": "stake"' when the request involves staking tokens.  
+- Use '"type_action": "unstake"' when the request involves unstaking tokens.  
+- Set '"pool_name"' to 'null' if no specific pool is mentioned.  
+- Use 'null' for any values that cannot be determined.  
+- **Only return one JSON object, not an array.**  
+- All property names must use double quotes.  
+- Null values should not use quotes.  
+- No trailing commas allowed.  
 - No single quotes anywhere in the JSON.
+
 
 `;
 
@@ -64,6 +67,7 @@ export const stakeNavi: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ): Promise<boolean> => {
+        elizaLogger.info("---- STAKE_TOKEN ----");
         if (!state) {
             state = (await runtime.composeState(message)) as State;
         } else {
@@ -72,6 +76,7 @@ export const stakeNavi: Action = {
         const msgHash = hashUserMsg(message, "stake");
         let content:any = await runtime.cacheManager.get(msgHash);
         elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+
         if(!content){
             const stakeContext = composeContext({
                 state,
@@ -163,11 +168,14 @@ export const stakeNavi: Action = {
         }
         if (content.type === "pool_name") {
             let type_action = content.type_action;
-            let responseData = await searchPoolInFileJson(content.pool_name);
+            if (content.pool_name === null || content.pool_name === "null") {
+                content.pool_name = "wUSDC"
+            }
+            let responseData = await searchPoolInFileJson(content.pool_name?content.pool_name:"wUSDC");
 
             let symbolOnPoolNavi;
             for (let key in pool) {
-                if (content.pool_name.toLowerCase() === key.toLowerCase()) {
+                if (responseData.name.toLowerCase() === key.toLowerCase()) {
                     symbolOnPoolNavi = key;
                 }
             }

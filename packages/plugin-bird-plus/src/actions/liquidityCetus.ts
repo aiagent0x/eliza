@@ -23,14 +23,14 @@ Extract the liquidity pool parameters from the conversation above, following the
 
 - Sample Pair Names: SUI-USDC, USDC-suiUSDT, DEEP-SUI, USDC-SUI, CETUS-SUI, HIPPO-SUI, USDC-ETH, LOFI-SUI, NS-SUI, USDC-USDY, USDC-BUCK, BUCK-SUI, wUSDC-SUI, haSUI-SUI, USDC-CETUS, afSUI-SUI, USDC-wUSDT, BLUE-SUI, ETH-WETH, USDC-WSOL, USDC-AUSD , stSUI-SUI, BUT-SUI, Sonic-SUI, AXOL-SUI, SEND-SUI, WSOL-SUI, etc.  
 - Return only a JSON object with the specified fields in this format:  
-
-    {  
-        "type_action": "show_list" | "add",  
-        "pair_name": string | SUI-USDC,  
-        "amount_token_a": number | 0,  //is size list or amount token a
-        "amount_token_b": number | 0, 
-    }  
-
+    \`\`\`json
+        {  
+            "type_action": "show_list" | "add",  
+            "pair_name": string | SUI-USDC,  
+            "amount_token_a": number | 0,  //is size list or amount token a
+            "amount_token_b": number | 0, 
+        }  
+    \`\`\`
 - Use '"type_action": "show_list"' when the request is about listing liquidity pools (e.g., "liquidity pools", "top 5 liquidity pools").  
 - Use '"type_action": "add"' when the request specifies adding liquidity (e.g., "add liquidity SUI-USDC").  
 - Set '"pair_name"' to null if no specific pair is mentioned.  

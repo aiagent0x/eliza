@@ -26,11 +26,13 @@ Extract the ranking parameters from the conversation above, following these rule
 
 - Return only a JSON object with the specified fields in this format: 
     - Return only a JSON object with the specified fields in thise format:
-        {
-            "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI",
-            "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
-            "size": number | 5
-        }
+        \`\`\`json
+            {
+                "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI",
+                "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
+                "size": number | 5
+            }
+         \`\`\`
        - Use "type": "MEME" for meme token rankings.
        - Use "type": "NEW_MEME" for new meme token rankings.
        - Use "type": "DEFI" for DeFi token rankings.
@@ -212,7 +214,7 @@ export const topToken: Action = {
                         text: `Below are trending coins we have collected:`,
                         action: 'TOP_TRENDING_TOKENS',
                         result: {
-                            type: "sui_trending_tokens",
+                            type: "top_token",
                             data: responseData
                         }
                     });
