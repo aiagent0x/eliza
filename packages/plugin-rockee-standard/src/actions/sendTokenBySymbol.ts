@@ -122,7 +122,7 @@ export const sendTokenBySymbol: Action = {
                 text: content.responseMessage,
                 action: "SEND_TOKEN",
                 result: {
-                    type: "send_chain",
+                    type: "send_sui_chain",
                     data: responseData,
                 }
 
