@@ -93,15 +93,22 @@ export const topDexInfo: Action = {
         }
         console.log("content", content);
         
-        let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX" });
+        
+        let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX_COIN_GECKO" });
         
         if (topDexOnCoinGecko) {
             topDexOnCoinGecko = JSON.parse(topDexOnCoinGecko);
         } else {
             topDexOnCoinGecko = await fetchTopDexByNetwork(content.network_blockchain);
         }
-        const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
-        const topDexOnSuiScan =  await blockBerryProvider.fetchDex(0,20,"CURRENT_TVL","DESC","DAY")
+        let topDexOnSuiScan:any = await redis.getValue({ key: "TOP_DEX_BLOCK_BERRY" });
+        if (topDexOnSuiScan) {
+            topDexOnSuiScan = JSON.parse(topDexOnSuiScan);
+        } else {
+            const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
+            // topDexOnSuiScan = await fetchTopDexByNetwork(content.network_blockchain);
+            topDexOnSuiScan =  await blockBerryProvider.fetchDex(0,20,"CURRENT_TVL","DESC","DAY")
+        }
         const responseData = topDexOnCoinGecko.data.map(dex => {
             elizaLogger.info(dex)
             const dexMetricId = dex.relationships.dex_metric.data.id;

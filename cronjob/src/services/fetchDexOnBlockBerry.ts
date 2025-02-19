@@ -20,7 +20,7 @@ async function fetchDex(job: any) {
     let data = await redis.getValue({ key: "TOP_DEX_BLOCK_BERRY" });
     if(data) return;
     const response = await axiosInstance.post(
-      `/dex?page=${job.data.page}&size=${job.data.size}&orderBy=${job.data.orderBy}&period=${job.data.period}&sortBy=${job.data.sortBy}`,
+      `/dex?page=0&size=20&orderBy=DESC&period=DAY&sortBy=CURRENT_TVL`,
       {
           withTvlOnly: false,
       }
