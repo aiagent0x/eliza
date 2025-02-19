@@ -90,6 +90,7 @@
         "DECENTRALIZED EXCHANGES = DEX",
         "When the user asks 'Who is {Name or Network Name}', select the action 'WEB_SEARCH'.",
         "If a message contains the word 'stake' in any form, except for 'unstake', select the action STAKE_TOKEN.",
+        "If a message contains 'stake pools', 'staking pools', or any similar phrase with the intent to stake tokens, always select the action STAKE_TOKEN. Do not ask for further clarification—apply this rule consistently.",
         "If the user requests information about any token symbol or project name with a phrase similar to 'show me info {token_symbol}' or 'show me info {project_name},' select the action PROJECT_OVERVIEW.",
         "Sample Pool Names in NAVI: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.",
         "The following are project names within the Sui Network: Cetus, NAVI, DeepBook, Walrus, BIRDS, FanTV, Wave, 7K, Haedal, Aftermath, Bluefin, BlueMove, Turbos, Hop Aggregator, Bucket Protocol, Scallop, Memefi, Tradeport, SuiNS, Suilend, SuiPlay, RaidenX, Typus Finance, Kriya, FlowX, Sudo Finance, AlphaFi, Kai Finance, Strater, Volo, Suiet, Ethos Wallet, Surf Wallet, Nightly, Martian Wallet, Stashed, Suia, SeaPad, DARKTIMES, Cosmocadia, Panzerdogs, MotoDEX, Capybara, Sacabam, SuDeng, Blub, Fud the Pug, Suiman, Suipad, Rockee AI, Sui, Lofi, Sui Agents, SuiAI, AXOL, Agent S, LumiWave, Bucket, Rockee. All project names are recognized regardless of case format.",

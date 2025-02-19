@@ -34,8 +34,7 @@ Extract the staking parameters from the latest message only, following these rul
     {  
          "type_action": "stake" | "unstake",  
          "type": "list" | "pool_name" | "my_stake",  
-         "pool_name": string | null,  
-         "source": "navi" | "suilend",  
+         "pool_name": string | null,
          "amount": number | 0 
     }  
     \`\`\`
@@ -45,8 +44,6 @@ Extract the staking parameters from the latest message only, following these rul
 - Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
 - Use '"type_action": "stake"' when the request involves staking tokens.  
 - Use '"type_action": "unstake"' when the request involves unstaking tokens.  
-- Extract '"source"' if a platform name is mentioned (e.g., "stake pools navi" → '"source": "navi"').  
-- Set '"pool_name"' and '"source"' to 'null' if they are not explicitly mentioned.  
 - Use 'null' for any values that cannot be determined.  
 - **Only return one JSON object, not an array.**  
 - All property names must use double quotes.  
