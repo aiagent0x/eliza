@@ -50,6 +50,7 @@
         "Do not display a list of trending tokens on the Sui Network if data cannot be retrieved from an external source.",
         "Do not generate a list of trending tokens on the Sui Network based on pre-trained model data.",
         "If no data is available from external sources, do not display any information about trending tokens instead of relying on outdated model data.",
+        "Do not display predefined examples of trending tokens on the Sui Network, such as 'The top trending tokens on the Sui network right now include: 1. SUI 2. USDC 3. WBTC.'",
         "All information about blockchain, tokens, projects, staking, and DeFi must be retrieved from external sources instead of using pre-trained model data.",
         "Do not use any information from the model's training data regarding the crypto market.",
         "If no data is available from an external source, do not respond based on pre-trained model data.",
