@@ -33,7 +33,7 @@ No single quotes anywhere in the JSON
 export const sendTokenBySymbol: Action = {
     name: "TRANSFER_TOKENS",
     similes: [
-        "SEND_TOKENS",
+        "TRANSFER_TOKENS",
         "TOKENS_SEND",
         "ASSET_SEND",
         "TOKENS_TRANSFER",
@@ -58,7 +58,7 @@ export const sendTokenBySymbol: Action = {
         // console.log("Message:", message);
         return true;
     },
-    description: "send token",
+    description: "transfer",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -113,7 +113,7 @@ export const sendTokenBySymbol: Action = {
         const responseData = {
             amount: content.amount,
             token_info: tokenObject,
-            destinationAddress: content.destinationAddress
+            destinationAddress: content.destinationAddress === null || content.destinationAddress === "null" ? content.destinationAddress : ""
         }
         try {
 
