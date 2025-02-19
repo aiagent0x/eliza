@@ -25,7 +25,7 @@ Recent messages: {{recentMessages}}
 Extract the ranking parameters from the conversation above, following these rules:  
 
 - Return only a JSON object with the specified fields in this format: 
-    - Return only a JSON object with the specified fields in thise format:
+- **Extract data only from the latest message** and discard any previous messages.
         \`\`\`json
             {
                 "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI",

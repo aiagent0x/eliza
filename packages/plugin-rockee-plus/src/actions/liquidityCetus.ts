@@ -21,7 +21,8 @@ import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
 const topLiquidityPoolTemplate = `Recent messages: {{recentMessages}}  
 Extract the liquidity pool parameters from the conversation above, following these rules:  
 
-- Sample Pair Names: SUI-USDC, USDC-suiUSDT, DEEP-SUI, USDC-SUI, CETUS-SUI, HIPPO-SUI, USDC-ETH, LOFI-SUI, NS-SUI, USDC-USDY, USDC-BUCK, BUCK-SUI, wUSDC-SUI, haSUI-SUI, USDC-CETUS, afSUI-SUI, USDC-wUSDT, BLUE-SUI, ETH-WETH, USDC-WSOL, USDC-AUSD , stSUI-SUI, BUT-SUI, Sonic-SUI, AXOL-SUI, SEND-SUI, WSOL-SUI, etc.  
+- Sample Pair Names: SUI-USDC, USDC-suiUSDT, DEEP-SUI, USDC-SUI, CETUS-SUI, HIPPO-SUI, USDC-ETH, LOFI-SUI, NS-SUI, USDC-USDY, USDC-BUCK, BUCK-SUI, wUSDC-SUI, haSUI-SUI, USDC-CETUS, afSUI-SUI, USDC-wUSDT, BLUE-SUI, ETH-WETH, USDC-WSOL, USDC-AUSD , stSUI-SUI, BUT-SUI, Sonic-SUI, AXOL-SUI, SEND-SUI, WSOL-SUI, etc. 
+- **Extract data only from the latest message** and discard any previous messages.
 - Return only a JSON object with the specified fields in this format:  
     \`\`\`json
         {  

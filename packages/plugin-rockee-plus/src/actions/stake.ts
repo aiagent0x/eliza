@@ -27,6 +27,7 @@ Recent messages: {{recentMessages}}
 Extract the staking parameters from the conversation above, following these rules:
 
 - Sample Pool Names: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
+- - **Extract data only from the latest message** and discard any previous messages.
 - Return only a **single JSON object** with the specified fields in this format:
     \`\`\`json
     {  
