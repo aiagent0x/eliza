@@ -5,6 +5,7 @@
   "type": "module",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@mysten/sui": "^1.19.0",
     "@elizaos/adapter-redis": "workspace:*",
     "@elizaos/core": "workspace:*",
     "@elizaos/plugin-tee": "^0.1.7",
@@ -19,7 +20,9 @@
     "puppeteer-extra": "3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "tsup": "8.3.5",
-    "vitest": "2.1.4"
+    "vitest": "2.1.4",
+    "@suilend/sdk": "1.1.36",
+    "@suilend/springsui-sdk": "^1.0.19"
   },
   "scripts": {
     "build": "tsup --format esm --dts",

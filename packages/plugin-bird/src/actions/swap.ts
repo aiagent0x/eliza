@@ -49,8 +49,9 @@ export const swapSui: Action = {
         "SWAP_TOKENS",
         "TRADE_TOKENS",
         "EXCHANGE_TOKENS",
-        "BUY_{TOKEN_NAME}",
-        "SELL_{TOKEN_NAME}"
+        "BUY_TOKEN",
+        "SELL_TOKEN",
+        
     ],
     validate: async (_runtime: IAgentRuntime, message: Memory) => {
         const content = typeof message.content === 'string'

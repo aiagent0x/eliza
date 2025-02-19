@@ -1,10 +1,13 @@
 import {
     getFilteredRewards,
+    getStakingYieldAprPercent,
+    getTotalAprPercent,
     initializeSuilend,
     initializeSuilendRewards,
     LENDING_MARKET_ID,
     LENDING_MARKET_TYPE,
-    SuilendClient
+    SuilendClient,
+    
 } from "@suilend/sdk";
 import {
     LIQUID_STAKING_INFO_MAP,
@@ -18,13 +21,13 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 const keypair = Ed25519Keypair.deriveKeypair('')
 const STAKER = keypair.toSuiAddress();
 
-export const Side = {
-    ["DEPOSIT"]: "deposit",
-    ["BORROW"]: "borrow",
-};
-
-const WALLET_RPC = "https://wallet-rpc.mainnet.sui.io";
-const suiClient = new SuiClient({ url: WALLET_RPC });
+export enum Side {
+    DEPOSIT = "deposit",
+    BORROW = "borrow",
+}
+const suiClient = new SuiClient({
+    url: "https://fullnode.mainnet.sui.io"
+});
 const initSuilen = async (byAddress) => {
     const suilendClient = await SuilendClient.initialize(
         LENDING_MARKET_ID,
@@ -113,16 +116,16 @@ export async function listPool() {
         console.log(reserve.coinType);
         console.log("depositAprPercent", reserve.depositAprPercent.toString());
         const totalDepositAprPercent = getTotalAprPercent(
-            "deposit",
+            Side.DEPOSIT,
             reserve.depositAprPercent,
             getFilteredRewards(rewardMap[reserve.coinType].deposit),
-            getStakingYieldAprPercent("deposit", reserve, lstAprPercentMap)
+            getStakingYieldAprPercent(Side.DEPOSIT, reserve, lstAprPercentMap)
         );
         console.log("totalDepositAprPercent", totalDepositAprPercent.toString());
 
         console.log("borrowAprPercent", reserve.borrowAprPercent.toString());
         const totalBorrowAprPercent = getTotalAprPercent(
-            "borrow",
+            Side.BORROW,
             reserve.borrowAprPercent,
             getFilteredRewards(rewardMap[reserve.coinType].borrow)
         );

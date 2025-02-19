@@ -18,7 +18,7 @@ const birdPlugin: Plugin = {
     // executeSwapByAddress,
     swapSui,
     sendTokenBySymbol,
-    checkTxhashOnSui,
+    // checkTxhashOnSui,
     projectInfo,
     topDexInfo,
     suiTokenPriceBySymbol,

@@ -18,7 +18,7 @@ const rockeeStandardPlugin: Plugin = {
     // executeSwap,
     // executeSwapByAddress,
     sendTokenBySymbol,
-    checkTxhashOnSui,
+    // checkTxhashOnSui,
     projectInfo,
     topDexInfo,
     suiTokenPriceBySymbol,
