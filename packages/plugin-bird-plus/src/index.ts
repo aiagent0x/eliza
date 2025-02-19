@@ -7,7 +7,7 @@ import { Plugin } from '@elizaos/core';
 // import { stakePoolsNavi } from './actions/stakePools';
 // import { stakeTokenPoolsNavi } from './actions/stakeToken';
 // import { unstakeTokenPoolsNavi } from './actions/unstakeToken';
-import { stakeNavi } from './actions/stake';
+import { stake } from './actions/stake';
 import { liquidityCetus } from './actions/liquidityCetus';
 import { topToken } from './actions/topToken';
 
@@ -24,7 +24,7 @@ const birdPlusPlugin: Plugin = {
     // stakeTokenPoolsNavi,
     // unstakeTokenPoolsNavi,
     topToken,
-    stakeNavi,
+    stake,
     liquidityCetus
 
   ],

@@ -32,18 +32,3 @@ export async function fetchLiquidityPools(
         throw new Error("Failed to fetch market data");
     }
 }
-
-// export async function fetchDetailLiquidityPools(pool: string) {
-//     try {
-//         const response = await axiosInstance.get("/stats_pools", {
-//             params: {
-//                 pool,
-//             },
-//         });
-//         redis.hSet('liquidity_pools', pool, JSON.stringify(response.data), 300);
-//         return response.data;
-//     } catch (error) {
-//         console.error("Error fetching market data:", error);
-//         throw new Error("Failed to fetch market data");
-//     }
-// }
