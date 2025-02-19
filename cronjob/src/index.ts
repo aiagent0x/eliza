@@ -1,11 +1,10 @@
-import { JobQueue, JobWorker } from "@elizaos/adapter-bullmq"; // Đảm bảo rằng bạn có file JobWorker.ts
+import { JobQueue, JobWorker } from "@elizaos/adapter-bullmq"; 
 import { elizaLogger } from "@elizaos/core";
 import dotenv from "dotenv";
 import { fetchTopDexByNetwork } from "./services/fetchTopDex";
 import { fetchNaviPool } from "./services/fetchNaviPool";
 import { getCoinAll } from "./services/fetchCoinCMS";
 import { fetchLiquidityPools } from "./services/fetchCetus";
-import { fetchTopDexOnSuiVision } from "./services/fetchTopDexOnSuiVision";
 import { fetchDex } from "./services/fetchDexOnBlockBerry";
 dotenv.config();
 
@@ -32,8 +31,12 @@ const scheduledJobs = [
 ];
 
 (async () => {
-    for (const job of scheduledJobs) {
-        await jobQueue.addJob(job.jobName, job.data, { repeat: { cron: job.cron } });
+    try {
+        for (const job of scheduledJobs) {
+            await jobQueue.addJob(job.jobName, job.data, { repeat: { cron: job.cron } });
+        }
+    } catch (error) {
+        elizaLogger.error("Error scheduling jobs:", error);
     }
 })();
 
@@ -46,6 +49,9 @@ const startWorker = () => {
     worker.registerJob("fetchLiquidityPoolsCetus", fetchLiquidityPools);
     worker.registerJob("fetchSuiDexCongecko", fetchTopDexByNetwork);
     // worker.registerJob("fetchTopDexOnSuiVision", fetchTopDexOnSuiVision);
+    
+   
+
     elizaLogger.info("🚀 Worker & Scheduler running...");
 };
 
