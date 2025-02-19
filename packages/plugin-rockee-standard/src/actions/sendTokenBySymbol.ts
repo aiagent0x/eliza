@@ -113,7 +113,7 @@ export const sendTokenBySymbol: Action = {
         const responseData = {
             amount: content.amount,
             token_info: tokenObject,
-            destinationAddress: content.destinationAddress === null || content.destinationAddress === "null" ? content.destinationAddress : ""
+            destinationAddress: content.destinationAddress !== null || content.destinationAddress !== "null" ? content.destinationAddress : ""
         }
         try {
 
