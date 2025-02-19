@@ -31,25 +31,25 @@ No single quotes anywhere in the JSON
 
 
 export const sendTokenBySymbol: Action = {
-    name: "SUI_SEND_TOKEN_BY_SYMBOL",
+    name: "SEND_TOKEN_BY_SYMBOL",
     similes: [
-        "SUI_TRANSFER_TOKENS_BY_SYMBOL",
-        "SUI_TOKENS_SEND_BY_SYMBOL",
-        "SUI_ASSET_SEND_BY_SYMBOL",
-        "SUI_TOKENS_TRANSFER_BY_SYMBOL",
-        "SUI_SEND_ASSETS_BY_SYMBOL",
-        "SUI_TOKENS_TRANSFER_BY_SYMBOL",
-        "SUI_ASSET_TRANSFER_BY_SYMBOL",
-        "SUI_TOKENS_DISPATCH_BY_SYMBOL",
-        "SUI_SEND_ASSETS_BY_SYMBOL",
-        "SUI_TOKENS_SHIP_BY_SYMBOL",
-        "SUI_TOKENS_DELIVER_BY_SYMBOL",
-        "SUI_ASSET_SHIP_BY_SYMBOL",
-        "SUI_TOKENS_SEND_OUT_BY_SYMBOL",
-        "SUI_ASSET_DISPATCH_BY_SYMBOL",
-        "SUI_ASSET_TRANSFER_OUT_BY_SYMBOL",
-        "SUI_TOKENS_SEND_OUT_BY_SYMBOL",
-        "SUI_ASSETS_DELIVER_BY_SYMBOL",
+        "TRANSFER_TOKENS_BY_SYMBOL",
+        "TOKENS_SEND_BY_SYMBOL",
+        "ASSET_SEND_BY_SYMBOL",
+        "TOKENS_TRANSFER_BY_SYMBOL",
+        "SEND_ASSETS_BY_SYMBOL",
+        "TOKENS_TRANSFER_BY_SYMBOL",
+        "ASSET_TRANSFER_BY_SYMBOL",
+        "TOKENS_DISPATCH_BY_SYMBOL",
+        "SEND_ASSETS_BY_SYMBOL",
+        "TOKENS_SHIP_BY_SYMBOL",
+        "TOKENS_DELIVER_BY_SYMBOL",
+        "ASSET_SHIP_BY_SYMBOL",
+        "TOKENS_SEND_OUT_BY_SYMBOL",
+        "ASSET_DISPATCH_BY_SYMBOL",
+        "ASSET_TRANSFER_OUT_BY_SYMBOL",
+        "TOKENS_SEND_OUT_BY_SYMBOL",
+        "ASSETS_DELIVER_BY_SYMBOL",
 
 
     ],
@@ -105,7 +105,7 @@ export const sendTokenBySymbol: Action = {
         //     callback({
         //         user: await runtime.character.name,
         //         text: `This wallet address ${content.destinationAddress} does not exist. Please enter a valid one.`,
-        //         action: "SUI_SEND_TOKEN_BY_SYMBOL",
+        //         action: "SEND_TOKEN_BY_SYMBOL",
 
         //     })
         //     return false;
@@ -120,9 +120,9 @@ export const sendTokenBySymbol: Action = {
             callback({
                 user: await runtime.character.name,
                 text: content.responseMessage,
-                action: "SUI_SEND_TOKEN_BY_SYMBOL",
+                action: "SEND_TOKEN_BY_SYMBOL",
                 result: {
-                    type: "send_sui_chain",
+                    type: "send_chain",
                     data: responseData,
                 }
 
@@ -145,7 +145,7 @@ export const sendTokenBySymbol: Action = {
                 user: "{{user2}}",
                 content: {
                     text: "send token",
-                    action: "SUI_SEND_TOKEN_BY_SYMBOL",
+                    action: "SEND_TOKEN_BY_SYMBOL",
                 }
             }
         ],
@@ -160,7 +160,7 @@ export const sendTokenBySymbol: Action = {
                 user: "{{user2}}",
                 content: {
                     text: "Send token",
-                    action: "SUI_SEND_TOKEN_BY_SYMBOL",
+                    action: "SEND_TOKEN_BY_SYMBOL",
                 }
             }
         ]

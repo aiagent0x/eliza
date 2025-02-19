@@ -18,8 +18,6 @@ const sendTokenTemplate = `Please extract the following swap details for SUI net
     "amount": number | 0,               // Amount of tokens to transfer
     "tokenSymbol": string | SUI,          // Token symbol on the SUI network (e.g., "SUI", "UNI")
     "destinationAddress": string | null,    // Recipient's wallet address
-
-
 }
 Recent messages: {{recentMessages}}
 Extract the token transfer parameters from the conversation and wallet context above. Return only a JSON object with the specified fields. Use null for any values that cannot be determined.
@@ -33,25 +31,25 @@ No single quotes anywhere in the JSON
 
 
 export const sendTokenBySymbol: Action = {
-    name: "SUI_SEND_TOKEN_BY_SYMBOL",
+    name: "SEND_TOKEN_BY_SYMBOL",
     similes: [
-        "SUI_TRANSFER_TOKENS_BY_SYMBOL",
-        "SUI_TOKENS_SEND_BY_SYMBOL",
-        "SUI_ASSET_SEND_BY_SYMBOL",
-        "SUI_TOKENS_TRANSFER_BY_SYMBOL",
-        "SUI_SEND_ASSETS_BY_SYMBOL",
-        "SUI_TOKENS_TRANSFER_BY_SYMBOL",
-        "SUI_ASSET_TRANSFER_BY_SYMBOL",
-        "SUI_TOKENS_DISPATCH_BY_SYMBOL",
-        "SUI_SEND_ASSETS_BY_SYMBOL",
-        "SUI_TOKENS_SHIP_BY_SYMBOL",
-        "SUI_TOKENS_DELIVER_BY_SYMBOL",
-        "SUI_ASSET_SHIP_BY_SYMBOL",
-        "SUI_TOKENS_SEND_OUT_BY_SYMBOL",
-        "SUI_ASSET_DISPATCH_BY_SYMBOL",
-        "SUI_ASSET_TRANSFER_OUT_BY_SYMBOL",
-        "SUI_TOKENS_SEND_OUT_BY_SYMBOL",
-        "SUI_ASSETS_DELIVER_BY_SYMBOL",
+        "TRANSFER_TOKENS_BY_SYMBOL",
+        "TOKENS_SEND_BY_SYMBOL",
+        "ASSET_SEND_BY_SYMBOL",
+        "TOKENS_TRANSFER_BY_SYMBOL",
+        "SEND_ASSETS_BY_SYMBOL",
+        "TOKENS_TRANSFER_BY_SYMBOL",
+        "ASSET_TRANSFER_BY_SYMBOL",
+        "TOKENS_DISPATCH_BY_SYMBOL",
+        "SEND_ASSETS_BY_SYMBOL",
+        "TOKENS_SHIP_BY_SYMBOL",
+        "TOKENS_DELIVER_BY_SYMBOL",
+        "ASSET_SHIP_BY_SYMBOL",
+        "TOKENS_SEND_OUT_BY_SYMBOL",
+        "ASSET_DISPATCH_BY_SYMBOL",
+        "ASSET_TRANSFER_OUT_BY_SYMBOL",
+        "TOKENS_SEND_OUT_BY_SYMBOL",
+        "ASSETS_DELIVER_BY_SYMBOL",
 
 
     ],
@@ -107,7 +105,7 @@ export const sendTokenBySymbol: Action = {
         //     callback({
         //         user: await runtime.character.name,
         //         text: `This wallet address ${content.destinationAddress} does not exist. Please enter a valid one.`,
-        //         action: "SUI_SEND_TOKEN_BY_SYMBOL",
+        //         action: "SEND_TOKEN_BY_SYMBOL",
 
         //     })
         //     return false;
@@ -121,10 +119,10 @@ export const sendTokenBySymbol: Action = {
 
             callback({
                 user: await runtime.character.name,
-                text: "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
-                action: "SUI_SEND_TOKEN_BY_SYMBOL",
+                text: content.responseMessage,
+                action: "SEND_TOKEN_BY_SYMBOL",
                 result: {
-                    type: "send_sui_chain",
+                    type: "send_chain",
                     data: responseData,
                 }
 
@@ -147,7 +145,7 @@ export const sendTokenBySymbol: Action = {
                 user: "{{user2}}",
                 content: {
                     text: "send token",
-                    action: "SUI_SEND_TOKEN_BY_SYMBOL",
+                    action: "SEND_TOKEN_BY_SYMBOL",
                 }
             }
         ],
@@ -162,7 +160,7 @@ export const sendTokenBySymbol: Action = {
                 user: "{{user2}}",
                 content: {
                     text: "Send token",
-                    action: "SUI_SEND_TOKEN_BY_SYMBOL",
+                    action: "SEND_TOKEN_BY_SYMBOL",
                 }
             }
         ]

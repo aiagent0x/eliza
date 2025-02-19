@@ -27,18 +27,18 @@ No trailing commas allowed
 No single quotes anywhere in the JSON
 `;
 export const checkTxhashOnSui: Action = {
-    name: "CHECK_TXHASH_SUI_NETWORK",
+    name: "CHECK_TXHASH",
     similes: [
-        "SUI_VERIFY_TXHASH",
-        "SUI_GET_TRANSACTION_DETAILS",
-        "SUI_LOOKUP_TXHASH",
-        "SUI_FETCH_TXHASH_INFO",
-        "SUI_QUERY_TRANSACTION",
-        "SUI_CHECK_TX_STATUS",
-        "SUI_INSPECT_TXHASH",
-        "SUI_RETRIEVE_TXHASH_DATA",
-        "SUI_ANALYZE_TRANSACTION",
-        "SUI_SCAN_TXHASH"
+        "VERIFY_TXHASH",
+        "GET_TRANSACTION_DETAILS",
+        "LOOKUP_TXHASH",
+        "FETCH_TXHASH_INFO",
+        "QUERY_TRANSACTION",
+        "CHECK_TX_STATUS",
+        "INSPECT_TXHASH",
+        "RETRIEVE_TXHASH_DATA",
+        "ANALYZE_TRANSACTION",
+        "SCAN_TXHASH"
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         // Check if the necessary parameters are provided in the message

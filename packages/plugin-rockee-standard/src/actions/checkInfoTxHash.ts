@@ -27,18 +27,18 @@ No trailing commas allowed
 No single quotes anywhere in the JSON
 `;
 export const checkTxhashOnSui: Action = {
-    name: "CHECK_TXHASH_SUI_NETWORK",
+    name: "CHECK_TXHASH",
     similes: [
-        "SUI_VERIFY_TXHASH",
-        "SUI_GET_TRANSACTION_DETAILS",
-        "SUI_LOOKUP_TXHASH",
-        "SUI_FETCH_TXHASH_INFO",
-        "SUI_QUERY_TRANSACTION",
-        "SUI_CHECK_TX_STATUS",
-        "SUI_INSPECT_TXHASH",
-        "SUI_RETRIEVE_TXHASH_DATA",
-        "SUI_ANALYZE_TRANSACTION",
-        "SUI_SCAN_TXHASH"
+        "VERIFY_TXHASH",
+        "GET_TRANSACTION_DETAILS",
+        "LOOKUP_TXHASH",
+        "FETCH_TXHASH_INFO",
+        "QUERY_TRANSACTION",
+        "CHECK_TX_STATUS",
+        "INSPECT_TXHASH",
+        "RETRIEVE_TXHASH_DATA",
+        "ANALYZE_TRANSACTION",
+        "SCAN_TXHASH"
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         // Check if the necessary parameters are provided in the message
@@ -80,8 +80,8 @@ export const checkTxhashOnSui: Action = {
             const checkInfoTxHash = await getTransactionInfo(content.txHash);
             callback({
                 user: await runtime.character.name,
-                text: `Your transaction status for txhash ${content.txHash} is ${checkInfoTxHash.effects.status.status}.`,
-                action: "CHECK_TXHASH_SUI_NETWORK",
+                text: `Your transaction with hash ${content.txHash} is currently ${checkInfoTxHash.effects.status.status}. Stay soaring high! `,
+                action: "CHECK_TXHASH_NETWORK",
                 result: {
                     type: "info_txhash",
                     data: checkInfoTxHash
@@ -93,7 +93,7 @@ export const checkTxhashOnSui: Action = {
             callback({
                 user: await runtime.character.name,
                 text: `Your transaction status for txhash ${content.txHash} is fail`,
-                action: "CHECK_TXHASH_SUI_NETWORK",
+                action: "CHECK_TXHASH_NETWORK",
             })
             console.error("Error during token swap:", error);
             return false;
@@ -111,7 +111,7 @@ export const checkTxhashOnSui: Action = {
                 "user": "{{user2}}",
                 "content": {
                     "text": "Fetching transaction details for txHash: 9XbGmKRrX2cYeHiY4LJDdHNY77c3MzBrMKpxz3F5BV2E...",
-                    "action": "SUI_CHECK_TXHASH",
+                    "action": "CHECK_TXHASH",
                     "params": {
                         "txHash": "9XbGmKRrX2cYeHiY4LJDdHNY77c3MzBrMKpxz3F5BV2E"
                     }
@@ -129,7 +129,7 @@ export const checkTxhashOnSui: Action = {
                 "user": "{{user2}}",
                 "content": {
                     "text": "check txhash 3LvEnUFK7qxTU4Wh3CwgUhJJowiuMAiyNhyMDpteAknC",
-                    "action": "SUI_CHECK_TXHASH",
+                    "action": "CHECK_TXHASH",
                     "params": {
                         "txHash": "3LvEnUFK7qxTU4Wh3CwgUhJJowiuMAiyNhyMDpteAknC"
                     }
