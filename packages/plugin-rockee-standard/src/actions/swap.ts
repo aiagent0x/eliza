@@ -45,7 +45,7 @@ export const swapSui: Action = {
     name: "SWAP_AND_BUY_AND_SELL_TOKEN",
     similes: [
         "SWAP_TOKENS",
-         "SWAP_SUI",
+        "SWAP_SUI",
         "SWAP_TOKENS",
         "TRADE_TOKENS",
         "EXCHANGE_TOKENS",
