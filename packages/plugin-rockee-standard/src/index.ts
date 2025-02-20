@@ -23,7 +23,7 @@ const rockeeStandardPlugin: Plugin = {
     topDexInfo,
     suiTokenPriceBySymbol,
     suiTokenPriceByAddress,
-    topPotentialTokenOnSui
+    // topPotentialTokenOnSui
 ],
   evaluators: [],
   providers: []

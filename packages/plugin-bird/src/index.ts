@@ -23,7 +23,7 @@ const birdPlugin: Plugin = {
     topDexInfo,
     suiTokenPriceBySymbol,
     suiTokenPriceByAddress,
-    topPotentialTokenOnSui
+    // topPotentialTokenOnSui
 ],
   evaluators: [],
   providers: []
