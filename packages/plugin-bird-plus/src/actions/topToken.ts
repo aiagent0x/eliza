@@ -208,8 +208,6 @@ export const topToken: Action = {
                     break;
                 case "TRENDING":
                     let result = await redis.hGet("coins_info", "trending");
-                    console.log("result:", result);
-                    console.log("type", typeof result);
                     let trendingCoins;
                     if (result !== null) {
                         trendingCoins = JSON.parse(result).data
@@ -247,9 +245,6 @@ export const topToken: Action = {
                 case "DEFI":
                     let defis = await redis.hGet("coins_info", "defi");
                     let defiCoins;
-                    console.log("result:", defis);
-                    console.log("type", typeof defis);
-
                     if (defis !== null) {
                         defiCoins = JSON.parse(defis).data
                     }
@@ -285,9 +280,6 @@ export const topToken: Action = {
                 case "GAINERS":
                     let gainers = await redis.hGet("coins_info", "gainers");
                     let gainerCoins;
-                    console.log("result:", gainers);
-                    console.log("type", typeof gainers);
-
                     if (gainers !== null) {
                         gainerCoins = JSON.parse(gainers).data
                     }
@@ -322,9 +314,7 @@ export const topToken: Action = {
                     return true;
                 case "LOSERS":
                     let losers = await redis.hGet("coins_info", "losers");
-                    let loserCoins
-                    console.log("result:", losers);
-                    console.log("type", typeof losers);
+                    let loserCoins;
                     if (losers !== null) {
                         loserCoins = JSON.parse(losers).data
                     }
