@@ -188,14 +188,12 @@ export const topToken: Action = {
                             }
                         });
                     }
-
                     return true;
                     break;
                 case "NFT":
                     // const nft = new SuiOnChainProvider()
                     const nft = new BlockBerryProvider(process.env.BLOCKBERRY_API_KEY || "defaultApiKey");
-                    responseData = await nft.fetchCollectionNft(0, 10, "VOLUME", "DESC", "DAY")
-                    elizaLogger.info("responseData: ",responseData);
+                    responseData = await nft.fetchCollectionNft(0, 10, "VOLUME", "DESC", "DAY");
                     callback({
                         user: await runtime.character.name,
                         text: `The top DEX on ${content.network_blockchain}`,
@@ -227,7 +225,6 @@ export const topToken: Action = {
                         iconUrl: token.logo
 
                     }));
-
 
                     if (callback) {
                         callback({
@@ -264,7 +261,6 @@ export const topToken: Action = {
 
                     }));
 
-
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
@@ -298,7 +294,6 @@ export const topToken: Action = {
                         iconUrl: token.logo
 
                     }));
-
 
                     if (callback) {
                         callback({
@@ -334,7 +329,6 @@ export const topToken: Action = {
 
                     }));
 
-
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
@@ -351,9 +345,7 @@ export const topToken: Action = {
                 case "STABLECOIN":
                     let stables = await redis.hGet("coins_info", "stablecoin");
                     // let stableCoins = JSON.parse(stables).data
-                    let stableCoins
-                    console.log("result:", stables);
-                    console.log("type", typeof stables);
+                    let stableCoins;
                     if (stables !== null) {
                         stableCoins = JSON.parse(stables).data
                     }
@@ -389,9 +381,7 @@ export const topToken: Action = {
                 case "AI":
                     let ais = await redis.hGet("coins_info", "ai");
                     // let aiCoins = JSON.parse(ais).data
-                    let aiCoins
-                    console.log("result_ai:", ais);
-                    console.log("type_ai ", typeof ais);
+                    let aiCoins;
                     if (ais !== null) {
                         aiCoins = JSON.parse(ais).data
                     }
@@ -428,8 +418,7 @@ export const topToken: Action = {
                     let games = await redis.hGet("coins_info", "game");
                     // let gameCoins = JSON.parse(games).data
                     let gameCoins;
-                    console.log("result:", games);
-                    console.log("type", typeof games);
+
                     if (games !== null) {
                         gameCoins = JSON.parse(games).data
                     }
@@ -466,8 +455,6 @@ export const topToken: Action = {
                     let dexs = await redis.hGet("coins_info", "dex");
                     // let gameCoins = JSON.parse(games).data
                     let dexCoins;
-                    console.log("result:", dexs);
-                    console.log("type", typeof dexs);
                     if (dexs !== null) {
                         dexCoins = JSON.parse(dexs).data
                     }
@@ -485,8 +472,6 @@ export const topToken: Action = {
                         iconUrl: token.logo
 
                     }));
-
-
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
