@@ -31,7 +31,7 @@ Extract the ranking parameters from the conversation above, following these rule
         \`\`\`json
             {
                 "type_action": "DEFAULT" | "POTENTIAL",
-                "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME",
+                "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME" | "DEX",
                 "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
                 "size": number | 5
             }
@@ -51,6 +51,7 @@ Extract the ranking parameters from the conversation above, following these rule
        - Use "type": "STABLECOIN" for stablecoin rankings.
        - Use "type": "AI" for AI-related token rankings.
        - Use "type": "GAME" for gaming token rankings.
+       - Use "type": "DEX" for dex token rankings.
        - Ensure that "sortBy" is one of the following: "MCAP", "24VOL", "PRICE_INCREASE", "PRICE_DECREASE", "HOLDERS", "MARKET_CAP", "24HVOLUME".
        - "size" should default to 5.
        - Use null for any values that cannot be determined.
@@ -267,7 +268,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are defi coins we have collected:`,
+                            text: `Below are gainers coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -314,7 +315,7 @@ export const topToken: Action = {
                     return true;
                 case "LOSERS":
                     let losers = await redis.hGet("coins_info", "losers");
-                    let loserCoins
+                    let loserCoins;
                     if (losers !== null) {
                         loserCoins = JSON.parse(losers).data
                     }
@@ -351,6 +352,8 @@ export const topToken: Action = {
                     let stables = await redis.hGet("coins_info", "stablecoin");
                     // let stableCoins = JSON.parse(stables).data
                     let stableCoins
+                    console.log("result:", stables);
+                    console.log("type", typeof stables);
                     if (stables !== null) {
                         stableCoins = JSON.parse(stables).data
                     }
@@ -387,6 +390,8 @@ export const topToken: Action = {
                     let ais = await redis.hGet("coins_info", "ai");
                     // let aiCoins = JSON.parse(ais).data
                     let aiCoins
+                    console.log("result_ai:", ais);
+                    console.log("type_ai ", typeof ais);
                     if (ais !== null) {
                         aiCoins = JSON.parse(ais).data
                     }
@@ -423,6 +428,8 @@ export const topToken: Action = {
                     let games = await redis.hGet("coins_info", "game");
                     // let gameCoins = JSON.parse(games).data
                     let gameCoins;
+                    console.log("result:", games);
+                    console.log("type", typeof games);
                     if (games !== null) {
                         gameCoins = JSON.parse(games).data
                     }
@@ -455,18 +462,53 @@ export const topToken: Action = {
                     }
 
                     return true;
+                case "DEX":
+                    let dexs = await redis.hGet("coins_info", "dex");
+                    // let gameCoins = JSON.parse(games).data
+                    let dexCoins;
+                    console.log("result:", dexs);
+                    console.log("type", typeof dexs);
+                    if (dexs !== null) {
+                        dexCoins = JSON.parse(dexs).data
+                    }
+                    else {
+                        dexCoins = await cmsProvider.getTokens("dex");
+                        dexCoins = dexCoins.data;
+                    }
+                    responseData = dexCoins.map((token: any) => ({
+                        name: token.name,
+                        symbol: token.symbol.toUpperCase(),
+                        price: token.price,
+                        market_cap: token.cap,
+                        price_change_24h: token.change24h,
+                        type: token.address,
+                        iconUrl: token.logo
+
+                    }));
+
+
+                    if (callback) {
+                        callback({
+                            user: await runtime.character.name,
+                            text: `Below are dex coins we have collected:`,
+                            action: 'TOP_TOKEN',
+                            result: {
+                                type: "top_token",
+                                data: responseData
+                            }
+                        });
+                    }
+
+                    return true;
                 case "TGE":
                 case "RELEASE_TOKEN":
                 case "LISTING":
                     callback({
                         user: await runtime.character.name,
                         text: `Top tokens that are about to have their TGE, token release, or exchange listing: BIRDS, SEED, FANTV, Walrus, Wave`,
-
                     })
                     return true;
                     break;
-
-
             }
         }
         else {
