@@ -49,7 +49,7 @@ export default async function listStakes(req: Request, res: Response) {
                 responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
                 responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
                 responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                responseData[index].type = "navi";
+                responseData[index].protocol = "navi";
             } else {
                 elizaLogger.error(`Pool information for key ${key} is undefined.`);
             }

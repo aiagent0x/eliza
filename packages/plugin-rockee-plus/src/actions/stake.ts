@@ -15,6 +15,7 @@ import { searchPoolInFileJson, listPoolsInFileJson, pool } from "../providers/se
 import { getPoolInfo, getAddressPortfolio } from "navi-sdk";
 import { SuiClient } from "@mysten/sui/client";
 import { RedisClient } from "@elizaos/adapter-redis";
+import { ScallopProvider } from "../providers/fetchScallop/scallopProvider";
 // import { listPool } from "../providers/fetchSuilend/listPools";
 const suiClient = new SuiClient({
     url: "https://fullnode.mainnet.sui.io"
@@ -94,9 +95,9 @@ export const stake: Action = {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
 
-
+            // const scallopProvider = new ScallopProvider();
+            // await scallopProvider.listPools();
             let data = await redis.hGetAll("STAKE_POOLS");
-
             if (data && Object.keys(data).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
@@ -138,7 +139,7 @@ export const stake: Action = {
                         responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
                         responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
                         responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                        responseData[index].type = "navi";
+                        responseData[index].protocol = "navi";
 
                     } else {
                         elizaLogger.error(`Pool information for key ${key} is undefined.`);
