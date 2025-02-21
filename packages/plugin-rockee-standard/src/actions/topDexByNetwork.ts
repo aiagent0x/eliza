@@ -65,7 +65,7 @@ export const topDexInfo: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         elizaLogger.info("[tokenInfo]");
-        const redis = new RedisClient(process.env.REDIS_URL)
+        
         if (!state) {
             state = (await runtime.composeState(message)) as State;
         } else {
@@ -93,7 +93,7 @@ export const topDexInfo: Action = {
         }
         console.log("content", content);
         
-        
+        const redis = new RedisClient(process.env.REDIS_URL)
         let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX_COIN_GECKO" });
         
         if (topDexOnCoinGecko) {
@@ -106,7 +106,6 @@ export const topDexInfo: Action = {
             topDexOnSuiScan = JSON.parse(topDexOnSuiScan);
         } else {
             const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
-            // topDexOnSuiScan = await fetchTopDexByNetwork(content.network_blockchain);
             topDexOnSuiScan =  await blockBerryProvider.fetchDex(0,20,"CURRENT_TVL","DESC","DAY")
         }
         const responseData = topDexOnCoinGecko.data.map(dex => {
@@ -142,7 +141,6 @@ export const topDexInfo: Action = {
             };
         });
         const filteredResponseData = responseData.filter(dex => dex !== null);
-        // console.log(mappedData);
         callback({
             user: await runtime.character.name,
             text: `The top DEX on ${content.network_blockchain}`,
@@ -152,8 +150,6 @@ export const topDexInfo: Action = {
                 data: filteredResponseData,
             },
         });
-
-
         return true;
     }
 }
