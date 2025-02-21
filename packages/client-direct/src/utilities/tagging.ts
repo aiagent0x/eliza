@@ -93,15 +93,19 @@ export async function filterByTagging(tag: string,agentName:string) {
             break;
         case "stake_pools":
             let data = await redis.hGetAll("STAKE_POOLS");
-            if (data && Object.keys(data).length > 0) {
+            let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
-                parsedData.sort((a, b) => {
-                    const aSupplyRate = parseFloat(a.base_supply_rate) + parseFloat(a.boosted_supply_rate);
-                    const bSupplyRate = parseFloat(b.base_supply_rate) + parseFloat(b.boosted_supply_rate);
-                    return bSupplyRate - aSupplyRate;
+                let poolsScallopData: { [key: string]: string }[] = [];
+                for (let key in dataScallop) {
+                    poolsScallopData.push(JSON.parse(dataScallop[key]));
+                }
+                parsedData = parsedData.concat(poolsScallopData);
+                parsedData.sort((a: any, b: any) => {
+                    return b.total_supply_rate - a.total_supply_rate;
                 });
                 responseData= {
                     user:agentName,

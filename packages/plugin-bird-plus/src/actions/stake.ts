@@ -95,15 +95,19 @@ export const stake: Action = {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
 
-            const scallopProvider = new ScallopProvider();
-            const listPoolsScallop = await scallopProvider.listPools();
+
             let data = await redis.hGetAll("STAKE_POOLS");
-            if (data && Object.keys(data).length > 0) {
+            let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
-                parsedData = parsedData.concat(listPoolsScallop);
+                let poolsScallopData: { [key: string]: string }[] = [];
+                for (let key in dataScallop) {
+                    poolsScallopData.push(JSON.parse(dataScallop[key]));
+                }
+                parsedData = parsedData.concat(poolsScallopData);
                 parsedData.sort((a: any, b: any) => {
                     return b.total_supply_rate - a.total_supply_rate;
                 });
@@ -119,6 +123,8 @@ export const stake: Action = {
                 return true;
             }
 
+            const scallopProvider = new ScallopProvider();
+            const listPoolsScallop = await scallopProvider.listPools();
             let responseData = await listPoolsInFileJson();
 
             let index = 0;
@@ -131,7 +137,6 @@ export const stake: Action = {
                             address: pool[key].type,
                             decimal: responseData[index].decimal,
                         });
-                        
                         responseData[index].name = key;
                         responseData[index].total_supply = poolInfo.total_supply;
                         responseData[index].token_price = poolInfo.tokenPrice;
@@ -210,6 +215,7 @@ export const stake: Action = {
             responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
             responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
             responseData.amount = content.amount;
+
             try {
                 callback({
                     user: await runtime.character.name,
@@ -230,7 +236,9 @@ export const stake: Action = {
             try {
 
                 const portfolio = await getAddressPortfolio(message.userId, false, suiClient);
+                // Convert the Map to an object
                 const portfolioObject = Object.fromEntries(portfolio);
+
                 callback({
                     user: await runtime.character.name,
                     text: "Here is your staking portfolio:",

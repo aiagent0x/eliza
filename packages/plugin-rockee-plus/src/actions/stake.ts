@@ -95,16 +95,19 @@ export const stake: Action = {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
 
-            const scallopProvider = new ScallopProvider();
-            const listPoolsScallop = await scallopProvider.listPools();
+
             let data = await redis.hGetAll("STAKE_POOLS");
-            if (data && Object.keys(data).length > 0) {
+            let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
-                parsedData = parsedData.concat(listPoolsScallop);
-                elizaLogger.info("parsedData:", parsedData);
+                let poolsScallopData: { [key: string]: string }[] = [];
+                for (let key in dataScallop) {
+                    poolsScallopData.push(JSON.parse(dataScallop[key]));
+                }
+                parsedData = parsedData.concat(poolsScallopData);
                 parsedData.sort((a: any, b: any) => {
                     return b.total_supply_rate - a.total_supply_rate;
                 });
@@ -120,6 +123,8 @@ export const stake: Action = {
                 return true;
             }
 
+            const scallopProvider = new ScallopProvider();
+            const listPoolsScallop = await scallopProvider.listPools();
             let responseData = await listPoolsInFileJson();
 
             let index = 0;
