@@ -13,16 +13,19 @@ import { Request, Response } from "express";
 import ScallopProvider from "../../services/stakeService/stakeScallop";
 
 export default async function listStakes(req: Request, res: Response) {
-    const scallopProvider = new ScallopProvider();
-    const listPoolsScallop = await scallopProvider.listPools();
+    
     let data = await redis.hGetAll("STAKE_POOLS");
-
-    if (data && Object.keys(data).length > 0) {
+    let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+    if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
         let parsedData: { [key: string]: string }[] = [];
         for (let key in data) {
             parsedData.push(JSON.parse(data[key]));
         }
-        parsedData = parsedData.concat(listPoolsScallop);
+        let poolsScallopData: { [key: string]: string }[] = [];
+        for (let key in dataScallop) {
+            poolsScallopData.push(JSON.parse(dataScallop[key]));
+        }
+        parsedData = parsedData.concat(poolsScallopData);
         parsedData.sort((a: any, b: any) => {
             return b.total_supply_rate - a.total_supply_rate;
         });
@@ -32,8 +35,9 @@ export default async function listStakes(req: Request, res: Response) {
         });
         return
     }
+    const scallopProvider = new ScallopProvider();
+    const listPoolsScallop = await scallopProvider.listPools();
     let responseData = await listPoolsInFileJson();
-
     let index = 0;
     for (let key in pool) {
         if (pool.hasOwnProperty(key)) {
