@@ -25,7 +25,7 @@ async function fetchDex(job: any) {
           withTvlOnly: false,
       }
   );
-    console.log(response);
+
     await redis.setValue({ key: "TOP_DEX_BLOCK_BERRY", value: JSON.stringify(response.data.content), ttl: 300 });
     return;
   } catch (error) {

@@ -20,8 +20,7 @@ export const fetchTopDexOnSuiVision = async (job:any)  => {
     const $ = cheerio.load(content);
     const jsonText: string = $("pre").text().trim();
     try {
-        const jsonData: any = JSON.parse(jsonText);
-        elizaLogger.info(jsonData)
+       
         redis.setValue({ key: "TOP_DEX", value: jsonText, ttl: 300 });
         return;
     } catch (error) {

@@ -20,8 +20,8 @@ export const fetchTopDexByNetwork = async (job:any)  => {
     const $ = cheerio.load(content);
     const jsonText: string = $("pre").text().trim();
     try {
-        const jsonData: any = JSON.parse(jsonText);
-        console.log(jsonData)
+     
+    
         redis.setValue({ key: "TOP_DEX_COIN_GECKO", value: jsonText, ttl: 300 });
         return;
     } catch (error) {
