@@ -44,7 +44,6 @@ export default async function listStakes(req: Request, res: Response) {
                     address: pool[key].type,
                     decimal: responseData[index].decimal,
                 });
-
                 responseData[index].name = key;
                 responseData[index].total_supply = poolInfo.total_supply;
                 responseData[index].token_price = poolInfo.tokenPrice;
