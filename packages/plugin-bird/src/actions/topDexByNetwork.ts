@@ -64,7 +64,7 @@ export const topDexInfo: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ): Promise<boolean> => {
-       
+
         if (!state) {
             state = (await runtime.composeState(message)) as State;
         } else {
@@ -91,7 +91,7 @@ export const topDexInfo: Action = {
             await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
         console.log("content", content);
-        
+
         const redis = new RedisClient(process.env.REDIS_URL)
         let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX_COIN_GECKO" });
         if (topDexOnCoinGecko) {
@@ -99,56 +99,57 @@ export const topDexInfo: Action = {
         } else {
             topDexOnCoinGecko = await fetchTopDexByNetwork(content.network_blockchain);
         }
-        let topDexOnSuiScan:any = await redis.getValue({ key: "TOP_DEX_BLOCK_BERRY" });
+        let topDexOnSuiScan: any = await redis.getValue({ key: "TOP_DEX_BLOCK_BERRY" });
         if (topDexOnSuiScan) {
             topDexOnSuiScan = JSON.parse(topDexOnSuiScan);
         } else {
             const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
-            topDexOnSuiScan =  await blockBerryProvider.fetchDex(0,20,"CURRENT_TVL","DESC","DAY")
+            topDexOnSuiScan = await blockBerryProvider.fetchDex(0, 20, "CURRENT_TVL", "DESC", "DAY")
+            const responseData = topDexOnCoinGecko.data.map(dex => {
+                elizaLogger.info(dex)
+                const dexMetricId = dex.relationships.dex_metric.data.id;
+                const metric = topDexOnCoinGecko.included.find(item => item.id === dexMetricId);
+                const project = topDexOnSuiScan.find(item =>
+                    dex.attributes.name.toLowerCase().includes(item.projectName.toLowerCase().trim())
+                );
+                if (!project) return null;
+                return {
+                    swap_volume_usd_24h: metric?.attributes.swap_volume_usd_24h || null,
+                    swap_count_24h: metric?.attributes.swap_count_24h || null,
+                    swap_volume_usd_48h_24h: metric?.attributes.swap_volume_usd_48h_24h || null,
+                    swap_volume_percent_change_24h: metric?.attributes.swap_volume_percent_change_24h || null,
+                    name: dex.attributes.name,
+                    identifier: dex.attributes.identifier,
+                    url: dex.attributes.url,
+                    analytics_pool_page_url: dex.attributes.analytics_pool_page_url,
+                    analytics_token_page_url: dex.attributes.analytics_token_page_url,
+                    img_icon: dex.attributes.image_url,
+                    website: project?.socialWebsite || null,
+                    discord: project?.socialDiscord || null,
+                    twitter: project?.socialTwitter || null,
+                    telegram: project?.socialTelegram || null,
+                    currentTvl: project?.currTvl || null,
+                    volume: project?.volume || null,
+                    volumeChange: project?.volumeChange || null,
+                    txBlocks: project?.txsCount || null,
+                    pools: project?.pools || null,
+                    poolsCount: project?.poolsCount || null,
+                    packages: project?.packages || []
+                };
+            });
+            const filteredResponseData = responseData.filter(dex => dex !== null);
+            callback({
+                user: await runtime.character.name,
+                text: `The top DEX on sui network`,
+                action: "TOP_DEX",
+                result: {
+                    type: "top_dex",
+                    data: filteredResponseData,
+                },
+            });
+            return true;
         }
-        const responseData = topDexOnCoinGecko.data.map(dex => {
-            elizaLogger.info(dex)
-            const dexMetricId = dex.relationships.dex_metric.data.id;
-            const metric = topDexOnCoinGecko.included.find(item => item.id === dexMetricId);
-            const project = topDexOnSuiScan.find(item =>
-                dex.attributes.name.toLowerCase().includes(item.projectName.toLowerCase().trim())
-            );
-            if (!project) return null;
-            return {
-                swap_volume_usd_24h: metric?.attributes.swap_volume_usd_24h || null,
-                swap_count_24h: metric?.attributes.swap_count_24h || null,
-                swap_volume_usd_48h_24h: metric?.attributes.swap_volume_usd_48h_24h || null,
-                swap_volume_percent_change_24h: metric?.attributes.swap_volume_percent_change_24h || null,
-                name: dex.attributes.name,
-                identifier: dex.attributes.identifier,
-                url: dex.attributes.url,
-                analytics_pool_page_url: dex.attributes.analytics_pool_page_url,
-                analytics_token_page_url: dex.attributes.analytics_token_page_url,
-                img_icon: dex.attributes.image_url,
-                website: project?.socialWebsite || null,
-                discord: project?.socialDiscord || null,
-                twitter: project?.socialTwitter || null,
-                telegram: project?.socialTelegram || null,
-                currentTvl: project?.currTvl || null,
-                volume: project?.volume || null,
-                volumeChange: project?.volumeChange || null,
-                txBlocks: project?.txsCount || null,
-                pools: project?.pools || null,
-                poolsCount:project?.poolsCount || null,
-                packages: project?.packages || []
-            };
-        });
-        const filteredResponseData = responseData.filter(dex => dex !== null);
-        callback({
-            user: await runtime.character.name,
-            text: `The top DEX on ${content.network_blockchain}`,
-            action: "TOP_DEX",
-            result: {
-                type: "top_dex",
-                data: filteredResponseData,
-            },
-        });
-        return true;
+
     }
 }
 
