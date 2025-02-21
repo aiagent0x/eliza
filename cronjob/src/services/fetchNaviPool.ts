@@ -18,11 +18,13 @@ export const fetchNaviPool = async (job: any) => {
                 });
                 responseData[index].name = key;
                 responseData[index].total_supply = poolInfo.total_supply;
+                responseData[index].token_price = poolInfo.tokenPrice;
                 responseData[index].total_borrow = poolInfo.total_borrow;
                 responseData[index].base_supply_rate = poolInfo.base_supply_rate;
                 responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
                 responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
                 responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                responseData[index].total_supply_rate = poolInfo.base_supply_rate + poolInfo.base_supply_rate;
                 responseData[index].protocol = "navi";
             } else {
                 elizaLogger.error(`Pool information for key ${key} is undefined.`);
