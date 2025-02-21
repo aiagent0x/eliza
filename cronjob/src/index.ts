@@ -6,6 +6,7 @@ import { fetchNaviPool } from "./services/fetchNaviPool";
 import { getCoinAll } from "./services/fetchCoinCMS";
 import { fetchLiquidityPools } from "./services/fetchCetus";
 import { fetchDex } from "./services/fetchDexOnBlockBerry";
+import { listPoolScallop } from "./services/fetchScallopPool";
 dotenv.config();
 
 const QUEUE_NAME = process.env.QUEUE_NAME || "cronjob";
@@ -28,6 +29,7 @@ const scheduledJobs = [
     { jobName: "fetchCoinCMS", data: {}, cron: "*/5 * * * *" }, 
     { jobName: "fetchLiquidityPoolsCetus", data: {}, cron: "*/5 * * * *" },  
     { jobName: "fetchSuiDexCongecko", data: {}, cron: "*/5 * * * *" },
+    { jobName: "fetchScallopPool", data: {}, cron: "*/5 * * * *" },
 ];
 
 (async () => {
@@ -48,10 +50,7 @@ const startWorker = () => {
     worker.registerJob("fetchCoinCMS", getCoinAll);
     worker.registerJob("fetchLiquidityPoolsCetus", fetchLiquidityPools);
     worker.registerJob("fetchSuiDexCongecko", fetchTopDexByNetwork);
-    // worker.registerJob("fetchTopDexOnSuiVision", fetchTopDexOnSuiVision);
-    
-   
-
+    worker.registerJob("fetchScallopPool", listPoolScallop);
     elizaLogger.info("🚀 Worker & Scheduler running...");
 };
 
