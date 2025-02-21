@@ -15,7 +15,6 @@ export default async function listStakes(req: Request, res: Response) {
     let data = await redis.hGetAll("STAKE_POOLS");
 
     if (data && Object.keys(data).length > 0) {
-        elizaLogger.info("Get data from redis");
         let parsedData: { [key: string]: string }[] = [];
         for (let key in data) {
             parsedData.push(JSON.parse(data[key]));
