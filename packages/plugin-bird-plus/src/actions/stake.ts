@@ -140,7 +140,7 @@ export const stake: Action = {
                         responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
                         responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
                         responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                        responseData[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.base_supply_rate);
+                        responseData[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
                         responseData[index].protocol = "navi";
                     } else {
                         elizaLogger.error(`Pool information for key ${key} is undefined.`);
