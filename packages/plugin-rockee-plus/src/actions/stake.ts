@@ -104,6 +104,7 @@ export const stake: Action = {
                     parsedData.push(JSON.parse(data[key]));
                 }
                 parsedData = parsedData.concat(listPoolsScallop);
+                elizaLogger.info("parsedData:", parsedData);
                 parsedData.sort((a: any, b: any) => {
                     return b.total_supply_rate - a.total_supply_rate;
                 });
