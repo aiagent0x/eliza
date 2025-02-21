@@ -102,6 +102,7 @@ export const topToken: Action = {
             modelClass: ModelClass.SMALL,
         });
         elizaLogger.info("content:", content);
+        let size = parseInt(content.size || content.size !== "null" ? content.size : "5");
         if (content.type_action === "DEFAULT") {
             let responseData;
             let cmsProvider = new CmsProvider();
@@ -201,7 +202,7 @@ export const topToken: Action = {
                         action: "TOP_TOKEN",
                         result: {
                             type: "top_nft",
-                            data: responseData,
+                            data: responseData.slice(0, size),
                         },
                         action_hint: getActionHint()
                     });
@@ -235,7 +236,7 @@ export const topToken: Action = {
                             action: 'TOP_TỌKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -271,7 +272,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -306,7 +307,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -314,7 +315,7 @@ export const topToken: Action = {
                     return true;
                 case "LOSERS":
                     let losers = await redis.hGet("coins_info", "losers");
-                    let loserCoins
+                    let loserCoins;
                     if (losers !== null) {
                         loserCoins = JSON.parse(losers).data
                     }
@@ -341,7 +342,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -351,6 +352,8 @@ export const topToken: Action = {
                     let stables = await redis.hGet("coins_info", "stablecoin");
                     // let stableCoins = JSON.parse(stables).data
                     let stableCoins
+                    console.log("result:", stables);
+                    console.log("type", typeof stables);
                     if (stables !== null) {
                         stableCoins = JSON.parse(stables).data
                     }
@@ -377,7 +380,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -387,6 +390,8 @@ export const topToken: Action = {
                     let ais = await redis.hGet("coins_info", "ai");
                     // let aiCoins = JSON.parse(ais).data
                     let aiCoins
+                    console.log("result_ai:", ais);
+                    console.log("type_ai ", typeof ais);
                     if (ais !== null) {
                         aiCoins = JSON.parse(ais).data
                     }
@@ -413,7 +418,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -423,6 +428,8 @@ export const topToken: Action = {
                     let games = await redis.hGet("coins_info", "game");
                     // let gameCoins = JSON.parse(games).data
                     let gameCoins;
+                    console.log("result:", games);
+                    console.log("type", typeof games);
                     if (games !== null) {
                         gameCoins = JSON.parse(games).data
                     }
@@ -449,7 +456,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }

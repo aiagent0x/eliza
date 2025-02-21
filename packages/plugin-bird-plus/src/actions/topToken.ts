@@ -102,6 +102,7 @@ export const topToken: Action = {
             modelClass: ModelClass.SMALL,
         });
         elizaLogger.info("content:", content);
+        let size = parseInt(content.size || content.size !== "null" ? content.size : "5");
         if (content.type_action === "DEFAULT") {
             let responseData;
             let cmsProvider = new CmsProvider();
@@ -201,7 +202,7 @@ export const topToken: Action = {
                         action: "TOP_TOKEN",
                         result: {
                             type: "top_nft",
-                            data: responseData,
+                            data: responseData.slice(0, size),
                         },
                         action_hint: getActionHint()
                     });
@@ -235,7 +236,7 @@ export const topToken: Action = {
                             action: 'TOP_TỌKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -267,11 +268,11 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are gainers coins we have collected:`,
+                            text: `Below are defi coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -306,7 +307,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -341,7 +342,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -379,7 +380,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -417,7 +418,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -455,7 +456,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
