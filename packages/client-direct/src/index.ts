@@ -136,7 +136,7 @@ export class DirectClient {
             "/media/generated",
             express.static(path.join(process.cwd(), "/generatedImages"))
         );
-
+        elizaLogger.info("create api router");
         const apiRouter = createApiRouter(this.agents, this);
         this.app.use(apiRouter);
 
@@ -147,7 +147,7 @@ export class DirectClient {
         interface CustomRequest extends ExpressRequest {
             file?: Express.Multer.File;
         }
-
+        elizaLogger.info("create api router");
         // Update the route handler to use CustomRequest instead of express.Request
         this.app.post(
             "/:agentId/whisper",

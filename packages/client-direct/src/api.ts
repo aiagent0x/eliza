@@ -19,6 +19,7 @@ import { REST, Routes } from "discord.js";
 import type { DirectClient } from ".";
 import { validateUuid } from "@elizaos/core";
 import listCharactorExample from "./controllers/agentControllers/listCharactorExample";
+import listStakes from "./controllers/stakeControllers/list";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 interface UUIDParams {
@@ -601,5 +602,6 @@ export function createApiRouter(
     }
     })
     router.post("/agents/examples", listCharactorExample)
+    router.get("/stakes", listStakes)
     return router;
 }

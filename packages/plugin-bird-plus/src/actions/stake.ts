@@ -15,7 +15,6 @@ import { searchPoolInFileJson, listPoolsInFileJson, pool } from "../providers/se
 import { getPoolInfo, getAddressPortfolio } from "navi-sdk";
 import { SuiClient } from "@mysten/sui/client";
 import { RedisClient } from "@elizaos/adapter-redis";
-import { listPool } from "../providers/fetchSuilend/listPools";
 // import { listPool } from "../providers/fetchSuilend/listPools";
 const suiClient = new SuiClient({
     url: "https://fullnode.mainnet.sui.io"
