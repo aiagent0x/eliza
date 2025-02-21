@@ -25,6 +25,7 @@
         "@elizaos/adapter-redis": "workspace:*",
         "@elizaos/plugin-tee-verifiable-log": "workspace:*",
         "@elizaos/plugin-tee-log": "workspace:*",
+        "@scallop-io/sui-scallop-sdk": "^1.4.23",
         "@types/body-parser": "1.19.5",
         "@types/cors": "2.8.17",
         "@types/express": "5.0.0",

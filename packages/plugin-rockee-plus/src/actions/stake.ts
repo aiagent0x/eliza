@@ -132,7 +132,6 @@ export const stake: Action = {
                             address: pool[key].type,
                             decimal: responseData[index].decimal,
                         });
-                        console.log("poolInfo:", poolInfo);
                         responseData[index].name = key;
                         responseData[index].total_supply = poolInfo.total_supply;
                         responseData[index].token_price = poolInfo.tokenPrice;
