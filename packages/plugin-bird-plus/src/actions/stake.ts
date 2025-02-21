@@ -191,7 +191,7 @@ export const stake: Action = {
                     action: "STAKE_TOKEN",
                     result: {
                         type: type_action === "stake" ? "stake_token" : "unstake_token",
-                        data: { ...JSON.parse(data), amount: content.amount },
+                        data: { ...JSON.parse(data), amount: content.amount, protocol: "navi" },
                     },
                 });
                 return true;
