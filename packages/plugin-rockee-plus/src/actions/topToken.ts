@@ -20,6 +20,7 @@ import { CoingeckoProvider } from "../providers/coingeckoProvider";
 import { RedisClient } from "@elizaos/adapter-redis";
 import CmsProvider from "../providers/fetchCMS/cmsProvider";
 import BlockBerryProvider from "../providers/fetchBlockBerry/blockBerryProvider";
+import { fetchTopDexByNetwork } from "../providers/topDex";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 const topTemplate = `
@@ -30,14 +31,16 @@ Extract the ranking parameters from the conversation above, following these rule
 - **Extract data only from the latest message** and discard any previous messages.
         \`\`\`json
             {
-                "type_action": "DEFAULT" | "POTENTIAL",
+                "type_action": "TOKEN" | "POTENTIAL"| LIST,
                 "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME" | "DEX",
                 "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
                 "size": number | 5
             }
          \`\`\`
-       - Use "type_action": Otherwise, set "DEFAULT".
+       - Use "type_action": Otherwise, set "TOKEN".
        - Use "type_action": "POTENTIAL" if the message includes words or phrases like "potential", "hidden gem", "underrated", "next big", "high growth", "future top", or similar expressions.
+       - Use "type_action": "LIST" when the request is about listing top entities (e.g., "top dex", "top decentralized exchanges", "list top DEX").
+       - Use "type_action": "TOKEN" when the request is about top DEX tokens (e.g., "top dex token").
        - Use "type": "MEME" for meme token rankings.
        - Use "type": "NEW_MEME" for new meme token rankings.
        - Use "type": "DEFI" for DeFi token rankings.
@@ -104,7 +107,7 @@ export const topToken: Action = {
         });
         elizaLogger.info("content:", content);
         let size = parseInt(content.size || content.size !== "null" ? content.size : "5");
-        if (content.type_action === "DEFAULT") {
+        if (content.type_action === "TOKEN") {
             let responseData;
             let cmsProvider = new CmsProvider();
             switch (content.type) {
@@ -133,7 +136,6 @@ export const topToken: Action = {
                             }
                         });
                         try {
-
                             callback({
                                 user: await runtime.character.name,
                                 text: `Here are the top Meme tokens:`,
@@ -144,7 +146,6 @@ export const topToken: Action = {
                                     action_hint: getActionHint()
                                 }
                             })
-
                             return true;
                         } catch (error) {
                             elizaLogger.info("Error top meme token:", error);
@@ -197,7 +198,7 @@ export const topToken: Action = {
                     responseData = await nft.fetchCollectionNft(0, 10, "VOLUME", "DESC", "DAY");
                     callback({
                         user: await runtime.character.name,
-                        text: `The top DEX on ${content.network_blockchain}`,
+                        text: `The top NFT on ${content.network_blockchain}`,
                         action: "TOP_TOKEN",
                         result: {
                             type: "top_nft",
@@ -265,7 +266,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are gainers coins we have collected:`,
+                            text: `Below are defi coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -479,7 +480,7 @@ export const topToken: Action = {
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
-                                data: responseData
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
@@ -496,7 +497,7 @@ export const topToken: Action = {
                     break;
             }
         }
-        else {
+        else if (content.type_action === "POTENTIAL") {
             const coinGeckoProvider = new GeckoTerminalProvider();
             let tokens = [
                 "0x2::sui::SUI",
@@ -552,10 +553,71 @@ export const topToken: Action = {
                 action: "TOP_TOKEN",
                 result: {
                     type: "top_token",
-                    data: responseData,
+                    data: responseData.slice(0, size),
                 },
             });
             return true;
+        }
+        else {
+            const redis = new RedisClient(process.env.REDIS_URL)
+            let topDexOnCoinGecko: any = await redis.getValue({ key: "TOP_DEX_COIN_GECKO" });
+
+            if (topDexOnCoinGecko) {
+                topDexOnCoinGecko = JSON.parse(topDexOnCoinGecko);
+            } else {
+                topDexOnCoinGecko = await fetchTopDexByNetwork(content.network_blockchain);
+            }
+            let topDexOnSuiScan: any = await redis.getValue({ key: "TOP_DEX_BLOCK_BERRY" });
+            if (topDexOnSuiScan) {
+                topDexOnSuiScan = JSON.parse(topDexOnSuiScan);
+            } else {
+                const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
+                topDexOnSuiScan = await blockBerryProvider.fetchDex(0, 20, "CURRENT_TVL", "DESC", "DAY")
+            }
+            const responseData = topDexOnCoinGecko.data.map(dex => {
+                elizaLogger.info(dex)
+                const dexMetricId = dex.relationships.dex_metric.data.id;
+                const metric = topDexOnCoinGecko.included.find(item => item.id === dexMetricId);
+                const project = topDexOnSuiScan.find(item =>
+                    dex.attributes.name.toLowerCase().includes(item.projectName.toLowerCase().trim())
+                );
+                if (!project) return null;
+                return {
+                    swap_volume_usd_24h: metric?.attributes.swap_volume_usd_24h || null,
+                    swap_count_24h: metric?.attributes.swap_count_24h || null,
+                    swap_volume_usd_48h_24h: metric?.attributes.swap_volume_usd_48h_24h || null,
+                    swap_volume_percent_change_24h: metric?.attributes.swap_volume_percent_change_24h || null,
+                    name: dex.attributes.name,
+                    identifier: dex.attributes.identifier,
+                    url: dex.attributes.url,
+                    analytics_pool_page_url: dex.attributes.analytics_pool_page_url,
+                    analytics_token_page_url: dex.attributes.analytics_token_page_url,
+                    img_icon: dex.attributes.image_url,
+                    website: project?.socialWebsite || null,
+                    discord: project?.socialDiscord || null,
+                    twitter: project?.socialTwitter || null,
+                    telegram: project?.socialTelegram || null,
+                    currentTvl: project?.currTvl || null,
+                    volume: project?.volume || null,
+                    volumeChange: project?.volumeChange || null,
+                    txBlocks: project?.txsCount || null,
+                    pools: project?.pools || null,
+                    poolsCount: project?.poolsCount || null,
+                    packages: project?.packages || []
+                };
+            });
+            const filteredResponseData = responseData.filter(dex => dex !== null);
+            callback({
+                user: await runtime.character.name,
+                text: `The top DEX on ${content.network_blockchain}`,
+                action: "TOP_DEX",
+                result: {
+                    type: "top_dex",
+                    data: filteredResponseData,
+                },
+            });
+            return true;
+
         }
     },
     examples: [

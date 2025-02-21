@@ -20,7 +20,7 @@ const birdPlugin: Plugin = {
     sendTokenBySymbol,
     // checkTxhashOnSui,
     projectInfo,
-    topDexInfo,
+    // topDexInfo,
     suiTokenPriceBySymbol,
     suiTokenPriceByAddress,
     // topPotentialTokenOnSui
