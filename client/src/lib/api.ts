@@ -72,8 +72,9 @@ export const apiClient = {
     ) => {
         const formData = new FormData();
         formData.append("text", message);
-        formData.append("user", "user");
-
+        formData.append("userId", "user12424");
+        formData.append("roomId", "2424");
+        console.log(formData);
         if (selectedFile) {
             formData.append("file", selectedFile);
         }
