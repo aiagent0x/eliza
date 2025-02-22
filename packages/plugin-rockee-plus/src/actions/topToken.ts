@@ -32,7 +32,7 @@ Extract the ranking parameters from the conversation above, following these rule
         \`\`\`json
             {
                 "type_action": "TOKEN" | "POTENTIAL",
-                "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME" | "DEX",
+                "type": "MEME" | "NEW" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME" | "DEX",
                 "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
                 "size": number | 3
             }
@@ -41,7 +41,7 @@ Extract the ranking parameters from the conversation above, following these rule
        - Use "type_action": "POTENTIAL" if the message includes words or phrases like "potential", "hidden gem", "underrated", "next big", "high growth", "future top", or similar expressions.
        - Use "type_action": "TOKEN" when the request is about top DEX tokens (e.g., "top dex token").
        - Use "type": "MEME" for meme token rankings.
-       - Use "type": "NEW_MEME" for new meme token rankings.
+       - Use "type": "NEW" for new token rankings.
        - Use "type": "DEFI" for DeFi token rankings.
        - Use "type": "NFT" for NFT rankings.
        - Use "type": "TRENDING" for trending token.
@@ -55,7 +55,7 @@ Extract the ranking parameters from the conversation above, following these rule
        - Use "type": "GAME" for gaming token rankings.
        - Use "type": "DEX" for dex token rankings.
        - Ensure that "sortBy" is one of the following: "MCAP", "24VOL", "PRICE_INCREASE", "PRICE_DECREASE", "HOLDERS", "MARKET_CAP", "24HVOLUME".
-       - "size" should default to 5.
+       - "size" should default to 3.
        - Use null for any values that cannot be determined.
        - All property names must use double quotes.
        - No trailing commas or single quotes.
@@ -440,6 +440,40 @@ export const topToken: Action = {
                     }
 
                     return true;
+                case "NEW":
+                    let news = await redis.hGet("coins_info", "new");
+                    // let gameCoins = JSON.parse(games).data
+                    let newCoins;
+                    if (news !== null) {
+                        dexCoins = JSON.parse(news).data
+                    }
+                    else {
+                        newCoins = await cmsProvider.getTokens("new");
+                        newCoins = newCoins.data;
+                    }
+                    responseData = newCoins.map((token: any) => ({
+                        name: token.name,
+                        symbol: token.symbol.toUpperCase(),
+                        price: token.price,
+                        market_cap: token.cap,
+                        price_change_24h: token.change24h,
+                        type: token.address,
+                        iconUrl: token.logo
+
+                    }));
+                    if (callback) {
+                        callback({
+                            user: await runtime.character.name,
+                            text: `Below are New tokens we have collected:`,
+                            action: 'TOP_TOKEN',
+                            result: {
+                                type: "top_token",
+                                data: responseData.slice(0, size)
+                            }
+                        });
+                    }
+
+                    return true;
                 case "TGE":
                 case "RELEASE_TOKEN":
                 case "LISTING":
@@ -571,7 +605,7 @@ export const topToken: Action = {
                 });
                 return true;
             }
-           
+
 
         }
     },
