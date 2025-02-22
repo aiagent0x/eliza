@@ -81,7 +81,7 @@ export const topToken: Action = {
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
-    description: "List top meme token",
+    description: "List top token",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -228,6 +228,7 @@ export const topToken: Action = {
                     }
 
                     return true;
+                    break;
                 case "GAINERS":
                     let gainers = await redis.hGet("coins_info", "gainers");
                     let gainerCoins;
