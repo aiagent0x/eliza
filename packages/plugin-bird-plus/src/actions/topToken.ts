@@ -34,7 +34,7 @@ Extract the ranking parameters from the conversation above, following these rule
                 "type_action": "TOKEN" | "POTENTIAL"| LIST,
                 "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME" | "DEX",
                 "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
-                "size": number | 5
+                "size": number | 3
             }
          \`\`\`
        - Use "type_action": Otherwise, set "TOKEN".
@@ -78,7 +78,6 @@ export const topToken: Action = {
         "GET_MOST_SEARCHED_TOKENS",
         "LIST_VIRAL_CRYPTOCURRENCIES",
         "LIST_TOKEN"
-
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
@@ -113,84 +112,37 @@ export const topToken: Action = {
             let cmsProvider = new CmsProvider();
             switch (content.type) {
                 case "MEME":
-                    if (content.sortBy !== "HOLDERS") {
-                        const projectInfos = await searchCategoriesInFileJson("Meme");
-                        const projectType = await findTypesBySymbols(projectInfos);
-                        const GeckoTerminal = new GeckoTerminalProvider();
-                        const tokenInfo = await GeckoTerminal.fetchMultipleTokenOnNetwork("sui-network", projectType);
-                        responseData = tokenInfo.data.map((data) => ({
-                            volume_usd: data.attributes.volume_usd?.h24 || 0,
-                            symbol: data.attributes.symbol,
-                            price: data.attributes.price_usd,
-                            icon_url: data.attributes.image_url,
-                            name: data.attributes.name ? data.attributes.name.split(" / ")[0] : "N/A",
-                            market_cap: data.attributes.market_cap_usd || 0,
-                            price_change_percentage: "N/A",
-                        }));
-
-                        tokenInfo.included.forEach((includedData) => {
-                            const name = includedData.attributes.name.split(" / ")[0];
-                            const price_change = includedData.attributes.price_change_percentage.h24 || "N/A";
-                            const matchedToken = responseData.find((token) => token.symbol === name);
-                            if (matchedToken) {
-                                matchedToken.price_change_percentage = price_change;
-                            }
-                        });
-                        try {
-                            callback({
-                                user: await runtime.character.name,
-                                text: `Here are the top Meme tokens:`,
-                                action: "TOP_TOKEN",
-                                result: {
-                                    type: "top_token",
-                                    data: responseData.slice(0, 5),
-                                    action_hint: getActionHint()
-                                }
-                            })
-                            return true;
-                        } catch (error) {
-                            elizaLogger.info("Error top meme token:", error);
-                            return false;
-                        }
+                    let memes = await redis.hGet("coins_info", "meme");
+                    let memeCoins;
+                    if (memes !== null) {
+                        memeCoins = JSON.parse(memes).data
                     }
                     else {
-                        try {
-                            const projectInfos = await searchCategoriesInFileJson("Meme");
-                            const projectType = await findTypesBySymbols(projectInfos);
-                            const suiOnChainProvider = new SuiOnChainProvider()
-                            const responseData = await suiOnChainProvider.fetchHolders(projectType.slice(0, content.size));
-                            callback({
-                                user: await runtime.character.name,
-                                text: `Here are the top Meme tokens by holders:`,
-                                action: "TOP_TOKEN",
-                                result: {
-                                    type: "top_token_meme_by_holders",
-                                    data: responseData.slice(0, content.size),
-                                    action_hint: getActionHint()
-                                }
-                            })
-                            return true;
-                        }
-                        catch (error) {
-                            elizaLogger.info("Error top meme token:", error);
-                            return false;
-                        }
+                        memeCoins = await cmsProvider.getTokens("trending");
+                        memeCoins = memeCoins.data;
                     }
-                    break;
-                case "NEW_MEME":
-                    const coinGecko = new CoingeckoProvider();
-                    const info = await coinGecko.topNewMeMeCoin();
+                    responseData = memeCoins.map((token: any) => ({
+                        name: token.name,
+                        symbol: token.symbol.toUpperCase(),
+                        price: token.price,
+                        market_cap: token.cap,
+                        price_change_24h: token.change24h,
+                        type: token.address,
+                        iconUrl: token.logo
+
+                    }));
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are ${content.size} trending coins we have collected:`,
-                            action: 'TOP_TOKEN',
+                            text: `Below are Meme tokens we have collected:`,
+                            action: 'TOP_TỌKEN',
                             result: {
-                                type: "sui_new_meme_coin",
-                                data: info.slice(0, content.size)
+                                type: "top_token",
+                                data: responseData.slice(0, size)
                             }
                         });
                     }
+
                     return true;
                     break;
                 case "NFT":
@@ -232,7 +184,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are trending coins we have collected:`,
+                            text: `Below are trending tokens we have collected:`,
                             action: 'TOP_TỌKEN',
                             result: {
                                 type: "top_token",
@@ -267,7 +219,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Defi coins we have collected:`,
+                            text: `Below are Defi tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -301,7 +253,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Gainers coins we have collected:`,
+                            text: `Below are Gainers tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -335,7 +287,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Losers coins we have collected:`,
+                            text: `Below are Losers tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -371,7 +323,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are stable coins we have collected:`,
+                            text: `Below are Stable coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -407,7 +359,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are AI coins we have collected:`,
+                            text: `Below are AI tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -443,7 +395,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Game coins we have collected:`,
+                            text: `Below are Game tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -477,7 +429,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Dex coins we have collected:`,
+                            text: `Below are Dex tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -573,7 +525,7 @@ export const topToken: Action = {
                 topDexOnSuiScan = JSON.parse(topDexOnSuiScan);
             } else {
                 const blockBerryProvider = new BlockBerryProvider(process.env.BLOCKBERRY_API);
-                topDexOnSuiScan = await blockBerryProvider.fetchDex(0, 20, "CURRENT_TVL", "DESC", "DAY");
+                topDexOnSuiScan = await blockBerryProvider.fetchDex(0, 20, "CURRENT_TVL", "DESC", "DAY")
                 const responseData = topDexOnCoinGecko.data.map(dex => {
                     elizaLogger.info(dex)
                     const dexMetricId = dex.relationships.dex_metric.data.id;
@@ -609,7 +561,7 @@ export const topToken: Action = {
                 const filteredResponseData = responseData.filter(dex => dex !== null);
                 callback({
                     user: await runtime.character.name,
-                    text: `The top DEX on sui network`,
+                    text: `The top DEX on ${content.network_blockchain}`,
                     action: "TOP_DEX",
                     result: {
                         type: "top_dex",
@@ -618,7 +570,7 @@ export const topToken: Action = {
                 });
                 return true;
             }
-
+           
 
         }
     },

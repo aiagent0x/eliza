@@ -8,7 +8,6 @@ const rockeePlusPlugin: Plugin = {
   name: "rockeePlusPlugin",
   description: "Everything about rockee plus",
   actions: [
-
     topToken,
     stake,
     liquidityCetus
