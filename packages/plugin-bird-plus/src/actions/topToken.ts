@@ -117,7 +117,7 @@ export const topToken: Action = {
                         memeCoins = JSON.parse(memes).data
                     }
                     else {
-                        memeCoins = await cmsProvider.getTokens("trending");
+                        memeCoins = await cmsProvider.getTokens("meme");
                         memeCoins = memeCoins.data;
                     }
                     responseData = memeCoins.map((token: any) => ({

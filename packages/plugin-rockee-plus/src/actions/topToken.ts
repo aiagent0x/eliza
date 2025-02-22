@@ -112,12 +112,13 @@ export const topToken: Action = {
             switch (content.type) {
                 case "MEME":
                     let memes = await redis.hGet("coins_info", "meme");
+                    console.log("memes:", memes);
                     let memeCoins;
                     if (memes !== null) {
                         memeCoins = JSON.parse(memes).data
                     }
                     else {
-                        memeCoins = await cmsProvider.getTokens("trending");
+                        memeCoins = await cmsProvider.getTokens("meme");
                         memeCoins = memeCoins.data;
                     }
                     responseData = memeCoins.map((token: any) => ({
