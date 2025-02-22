@@ -1,23 +1,22 @@
-import {RedisClient} from "@elizaos/adapter-redis";
+import { RedisClient } from "@elizaos/adapter-redis";
+import { CmsProvider } from "../services/CMS/cmsProvider";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 
 const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools"]
 
-export async function filterByTagging(tag: string,agentName:string) {
+export async function filterByTagging(tag: string, agentName: string) {
     console.log(agentName)
     tag = tag.trim().toLowerCase();
     const text = tagging.find(t => t.replace(/\s+/g, '_') === tag.replace(/\s+/g, '_'));
     let responseData;
     let result;
-    console.log(text)
-    if(!text) return null;
-  
+    if (!text) return null;
     switch (text) {
         case "swap_1_sui_to_usdc":
             responseData = {
-                user:agentName,
-                "text": agentName==="BIRDS DEFAI Platfrom"?"Double-check all the details before takeoff to dodge any turbulence!":"Please ensure all details are correct before proceeding with the swap to prevent any losses.",
+                user: agentName,
+                "text": agentName === "BIRDS DEFAI Platfrom" ? "Double-check all the details before takeoff to dodge any turbulence!" : "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 "result": {
                     "type": "swap",
                     "data": {
@@ -50,8 +49,8 @@ export async function filterByTagging(tag: string,agentName:string) {
             break;
         case "send_1_sui_to_address":
             responseData = {
-                user:agentName,
-                "text": agentName==="BIRDS DEFAI Platfrom"?"Double-check all the details before takeoff to dodge any turbulence!":"Please ensure all details are correct before proceeding with the swap to prevent any losses.",
+                user: agentName,
+                "text": agentName === "BIRDS DEFAI Platfrom" ? "Double-check all the details before takeoff to dodge any turbulence!" : "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
                 "result": {
                     "type": "send_sui_chain",
                     "data": {
@@ -71,9 +70,19 @@ export async function filterByTagging(tag: string,agentName:string) {
             }
             break;
         case "trending_tokens":
+
             result = await redis.hGet("coins_info", "trending");
+            let trendingCoins;
+            if (result !== null) {
+                trendingCoins = JSON.parse(result).data
+            }
+            else {
+                let cmsProvider = new CmsProvider()
+                trendingCoins = await cmsProvider.getTokens("trending");
+                result = trendingCoins.data;
+            }
             responseData = {
-                "user":agentName,
+                "user": agentName,
                 "text": "Below are trending coins we have collected:",
                 "action": "TOP_TRENDING_TOKENS",
                 "result": {
@@ -84,9 +93,9 @@ export async function filterByTagging(tag: string,agentName:string) {
                         price: token.price,
                         market_cap: token.cap,
                         price_change_24h: token.change24h,
-                        type:token.address,
-                        iconUrl:token.logo
-            
+                        type: token.address,
+                        iconUrl: token.logo
+
                     }))
                 }
             }
@@ -107,8 +116,8 @@ export async function filterByTagging(tag: string,agentName:string) {
                 parsedData.sort((a: any, b: any) => {
                     return b.total_supply_rate - a.total_supply_rate;
                 });
-                responseData= {
-                    user:agentName,
+                responseData = {
+                    user: agentName,
                     text: "Below is a list of stake pools:",
                     action: "STAKE_POOLS",
                     result: {
@@ -116,12 +125,12 @@ export async function filterByTagging(tag: string,agentName:string) {
                         data: parsedData.slice(0, 6),
                     },
                 };
-                
+
             }
-           
+
             break;
         default:
-            responseData=null;
+            responseData = null;
     }
     return responseData;
 }
