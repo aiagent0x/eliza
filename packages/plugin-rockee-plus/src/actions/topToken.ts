@@ -160,7 +160,7 @@ export const topToken: Action = {
                             const responseData = await suiOnChainProvider.fetchHolders(projectType.slice(0, content.size));
                             callback({
                                 user: await runtime.character.name,
-                                text: `Here are the top Meme tokens by holders:`,
+                                text: `Here are the top MEME tokens by holders:`,
                                 action: "TOP_TOKEN",
                                 result: {
                                     type: "top_token_meme_by_holders",
@@ -266,7 +266,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are defi coins we have collected:`,
+                            text: `Below are Defi coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -300,7 +300,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are gainers coins we have collected:`,
+                            text: `Below are Gainers coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -334,7 +334,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are losers coins we have collected:`,
+                            text: `Below are Losers coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -370,7 +370,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are stable coins we have collected:`,
+                            text: `Below are Stable coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -406,7 +406,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are ai coins we have collected:`,
+                            text: `Below are AI coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -442,7 +442,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are game coins we have collected:`,
+                            text: `Below are Game coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -476,7 +476,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are dex coins we have collected:`,
+                            text: `Below are Dex coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",

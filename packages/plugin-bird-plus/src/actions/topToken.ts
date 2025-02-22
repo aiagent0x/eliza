@@ -267,7 +267,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are defi coins we have collected:`,
+                            text: `Below are Defi coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -301,7 +301,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are gainers coins we have collected:`,
+                            text: `Below are Gainers coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -335,7 +335,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are losers coins we have collected:`,
+                            text: `Below are Losers coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -407,7 +407,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are ai coins we have collected:`,
+                            text: `Below are AI coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -443,7 +443,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are game coins we have collected:`,
+                            text: `Below are Game coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -477,7 +477,7 @@ export const topToken: Action = {
                     if (callback) {
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are dex coins we have collected:`,
+                            text: `Below are Dex coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
