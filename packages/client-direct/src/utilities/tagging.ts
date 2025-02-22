@@ -70,16 +70,15 @@ export async function filterByTagging(tag: string, agentName: string) {
             }
             break;
         case "trending_tokens":
-
-            result = await redis.hGet("coins_info", "trending");
+            let cmsProvider = new CmsProvider()
+            let result = await redis.hGet("coins_info", "trending");
             let trendingCoins;
             if (result !== null) {
-                trendingCoins = JSON.parse(result).data
+                trendingCoins = result ? JSON.parse(result).data : []
             }
             else {
-                let cmsProvider = new CmsProvider()
                 trendingCoins = await cmsProvider.getTokens("trending");
-                result = trendingCoins.data;
+                trendingCoins = trendingCoins.data;
             }
             responseData = {
                 "user": agentName,
@@ -87,7 +86,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 "action": "TOP_TRENDING_TOKENS",
                 "result": {
                     "type": "sui_trending_tokens",
-                    "data": JSON.parse(result).data.map((token: any) => ({
+                    "data": trendingCoins.map((token: any) => ({
                         name: token.name,
                         symbol: token.symbol.toUpperCase(),
                         price: token.price,
