@@ -31,7 +31,7 @@ Extract the ranking parameters from the conversation above, following these rule
 - **Extract data only from the latest message** and discard any previous messages.
         \`\`\`json
             {
-                "type_action": "TOKEN" | "POTENTIAL"| LIST,
+                "type_action": "TOKEN" | "POTENTIAL",
                 "type": "MEME" | "NEW_MEME" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME" | "DEX",
                 "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
                 "size": number | 3
@@ -39,7 +39,6 @@ Extract the ranking parameters from the conversation above, following these rule
          \`\`\`
        - Use "type_action": Otherwise, set "TOKEN".
        - Use "type_action": "POTENTIAL" if the message includes words or phrases like "potential", "hidden gem", "underrated", "next big", "high growth", "future top", or similar expressions.
-       - Use "type_action": "LIST" when the request is about listing top entities (e.g., "top dex", "top decentralized exchanges", "list top DEX").
        - Use "type_action": "TOKEN" when the request is about top DEX tokens (e.g., "top dex token").
        - Use "type": "MEME" for meme token rankings.
        - Use "type": "NEW_MEME" for new meme token rankings.
