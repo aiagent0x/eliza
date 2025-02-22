@@ -184,6 +184,7 @@ export const stake: Action = {
 
             let symbolOnPoolNavi;
             for (let key in pool) {
+                console.log("name: ", responseData.name.toLowerCase());
                 if (responseData.name.toLowerCase() === key.toLowerCase()) {
                     symbolOnPoolNavi = key;
                 }
