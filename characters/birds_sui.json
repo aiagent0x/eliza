@@ -47,7 +47,7 @@
     ],
     "knowledge": [
         "Do not display action placeholders in responses. Execute the action silently without showing it to the user.",
-        " Do not use responses like 'I'm unable to provide a list of top DEXs at the moment...' Instead, select TOP_TOKEN.",
+        "Do not use responses like 'I'm unable to provide a list of top DEXs at the moment...' Instead, select TOP_TOKEN.",
         "Do not display lists of meme tokens from the model. If asked about top meme tokens, select TOP_TOKEN instead.",
         "Do not display pre-existing model data for top DEXs. When asked about top DEXs, select the TOP_TOKEN action instead of generating a list",
         "Do not use pre-existing model knowledge to list top meme tokens. Instead, always select TOP_TOKEN for real-time data. Avoid displaying predefined responses about top meme tokens, including Dogecoin, Shiba Inu, SafeMoon, Meme Coin, and Hoge Finance.",
