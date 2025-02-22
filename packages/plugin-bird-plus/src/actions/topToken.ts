@@ -77,6 +77,7 @@ export const topToken: Action = {
         "SHOW_WHATS_TRENDING",
         "GET_MOST_SEARCHED_TOKENS",
         "LIST_VIRAL_CRYPTOCURRENCIES",
+        "LIST_TOKEN"
 
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
@@ -617,7 +618,7 @@ export const topToken: Action = {
                 });
                 return true;
             }
-            
+
 
         }
     },
