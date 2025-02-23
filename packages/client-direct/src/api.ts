@@ -603,5 +603,6 @@ export function createApiRouter(
     })
     router.post("/agents/examples", listCharactorExample)
     router.get("/stakes", listStakes)
+    
     return router;
 }

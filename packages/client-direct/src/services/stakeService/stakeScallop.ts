@@ -81,7 +81,7 @@ const listCoins: any = [{
 },
 {
     coin_name: "deep",
-    img_icon: "https://images.deepbook.tech/icon.svg"
+    img_icon: "https://app.scallop.io/assets/deep-BSlmC92V.webp"
 },
 
 {
