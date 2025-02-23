@@ -272,10 +272,8 @@ export const stake: Action = {
                                 user: await runtime.character.name,
                                 text: "No valid staking pools found.",
                                 action: "STAKE_TOKEN",
-                                result: {
-                                    type: type_action === "stake" ? "stake_token" : "unstake_token",
                                
-                                },
+                                
                             });
                             return true
                         }
