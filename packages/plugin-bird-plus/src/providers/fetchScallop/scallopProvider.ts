@@ -158,12 +158,12 @@ export class ScallopProvider {
     }
     async getDetail(symbol:any){
         if (!listCoinName.includes(symbol.toLowerCase())) {
-            throw new Error(`Symbol ${symbol} does not exist in the list of coin names.`);
+            return;
         }
         const marketPools: any = await scallopQuery.getMarketPools([symbol.toLowerCase()]);
        
         if (!marketPools.pools || !Object.keys(marketPools.pools).length) {
-            throw new Error(`No market pool found for symbol ${symbol}.`);
+            return;
         }
         let pool;
         Object.keys(marketPools.pools).forEach((key, index) => {
@@ -216,6 +216,7 @@ export class ScallopProvider {
             protocol: "scallop"
         };
     }
+    
 
 }
 

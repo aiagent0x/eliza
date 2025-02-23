@@ -28,8 +28,8 @@ const stakeTokenTemplate = `
 Recent messages: {{recentMessages}}  
 Extract the staking parameters from the latest message only, following these rules:  
 
-- Sample Pool Names: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
-- Sample Pool Name Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd"  
+- Sample Pool Names Navi: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI.  
+- Sample Pool Name Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd"
 - **Extract data only from the latest message** and discard any previous messages.  
 - Return only a **single JSON object** with the specified fields in this format:  
     \`\`\`json
@@ -38,22 +38,22 @@ Extract the staking parameters from the latest message only, following these rul
          "type": "list" | "pool_name" | "my_stake",  
          "pool_name": string | null,
          "amount": number | 0,
-         "protocol": "navi" | "scallop"
+         "protocol": "navi" | "scallop"  | "all"
     }  
     \`\`\`
 - If multiple staking requests are detected, return only the **first valid** request found in the conversation.  
-- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'. The '"protocol"' should default to '"navi"'.  
+- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'. The '"protocol"' should default to '"all"'.  
 - Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").  
 - Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
 - Use '"type_action": "stake"' when the request involves staking tokens.  
 - Use '"type_action": "unstake"' when the request involves unstaking tokens.  
-- Set '"protocol"' to '"scallop"' if the request explicitly mentions "Scallop"; otherwise, default to '"navi"'.  
+- **If the message explicitly mentions "Navi" or "Scallop", set '"protocol"'accordingly. Otherwise, set '"protocol": "all"'**.  
 - Use 'null' for any values that cannot be determined.  
 - **Only return one JSON object, not an array.**  
 - All property names must use double quotes.  
 - Null values should not use quotes.  
 - No trailing commas allowed.  
-- No single quotes anywhere in the JSON.  
+- No single quotes anywhere in the JSON. 
 `;
 
 export const stake: Action = {
@@ -126,7 +126,7 @@ export const stake: Action = {
                 return true;
             }
 
-            
+
             const listPoolsScallop = await scallopProvider.listPools();
             let responseData = await listPoolsInFileJson();
 
@@ -179,21 +179,27 @@ export const stake: Action = {
 
         }
         if (content.type === "pool_name") {
+            let type_action;
+            let responseData;
+            let data;
+            let poolInfo;
+            let dataScallop;
+            let poolScallopInfo;
+            let symbolOnPoolNavi;
             switch (content.protocol) {
                 case "navi":
-                    let type_action = content.type_action;
+                    type_action = content.type_action;
                     if (content.pool_name === null || content.pool_name === "null") {
-                        content.pool_name = "wUSDC"
+                        content.pool_name = "Sui"
                     }
-                    let responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "wUSDC");
-                    let symbolOnPoolNavi;
-                    for (let key in pool) {
+                    responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
 
+                    for (let key in pool) {
                         if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
                             symbolOnPoolNavi = key;
                         }
                     }
-                    let data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
+                    data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
                     if (data && typeof data === "string" && data !== null) {
                         callback({
                             user: await runtime.character.name,
@@ -206,19 +212,23 @@ export const stake: Action = {
                         });
                         return true;
                     }
-                    let poolInfo = await getPoolInfo({
-                        symbol: symbolOnPoolNavi,
-                        address: responseData.type,
-                        decimal: responseData.decimal,
-                    });
-                    responseData.name = symbolOnPoolNavi;
-                    responseData.total_supply = poolInfo.total_supply;
-                    responseData.total_borrow = poolInfo.total_borrow;
-                    responseData.base_supply_rate = poolInfo.base_supply_rate;
-                    responseData.base_borrow_rate = poolInfo.base_borrow_rate;
-                    responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
-                    responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                    responseData.amount = content.amount;
+                    if (symbolOnPoolNavi) {
+                        poolInfo = await getPoolInfo({
+                            symbol: symbolOnPoolNavi,
+                            address: responseData.type,
+                            decimal: responseData.decimal,
+                        });
+                        responseData.name = symbolOnPoolNavi;
+                        responseData.total_supply = poolInfo.total_supply;
+                        responseData.total_borrow = poolInfo.total_borrow;
+                        responseData.base_supply_rate = poolInfo.base_supply_rate;
+                        responseData.base_borrow_rate = poolInfo.base_borrow_rate;
+                        responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
+                        responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                        responseData.total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                        responseData.protocol = "navi";
+                        responseData.amount = content.amount;
+                    }
                     try {
                         callback({
                             user: await runtime.character.name,
@@ -236,12 +246,11 @@ export const stake: Action = {
                     }
                     break;
                 case "scallop":
-                    let type_action_scallop = content.type_action;
+                    type_action = content.type_action;
                     if (content.pool_name === null || content.pool_name === "null") {
                         content.pool_name = "sui"
                     }
-
-                    let dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
+                    dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
                     if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
                         callback({
                             user: await runtime.character.name,
@@ -254,17 +263,116 @@ export const stake: Action = {
                         });
                         return true;
                     }
-                   
-                    let poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
-                    
+
+                    poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
+                    console.log("poolScallopInfo:", poolScallopInfo)
+
+                    try {
+                        if (!poolScallopInfo) {
+                            callback({
+                                user: await runtime.character.name,
+                                text: "No valid staking pools found.",
+                                action: "STAKE_TOKEN",
+                                result: {
+                                    type: type_action === "stake" ? "stake_token" : "unstake_token",
+                               
+                                },
+                            });
+                            return true
+                        }
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Double-check all the details before takeoff to dodge any turbulence!",
+                            action: "STAKE_TOKEN",
+                            result: {
+                                type: type_action === "stake" ? "stake_token" : "unstake_token",
+                                data: poolScallopInfo,
+                            },
+                        });
+                        return true
+                      
+                    } catch (error) {
+                        console.error("Error during token swap:", error);
+                        return false;
+                    }
+
+
+                    break;
+                default:
+                    type_action = content.type_action;
+                    if (content.pool_name === null || content.pool_name === "null") {
+                        content.pool_name = "Sui"
+                    }
+
+                    //Navi
+                    responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
+                    if (responseData) {
+                        for (let key in pool) {
+                            if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
+                                symbolOnPoolNavi = key;
+                            }
+                        }
+                        console.log("symbolOnPoolNavi", symbolOnPoolNavi)
+
+                        data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
+                        console.log("data", data)
+                        if (data && typeof data === "string" && data !== null) {
+                            data = { ...JSON.parse(data), amount: content.amount, protocol: "navi" }
+                        }
+                        if (symbolOnPoolNavi) {
+                            poolInfo = await getPoolInfo({
+                                symbol: symbolOnPoolNavi,
+                                address: responseData.type,
+                                decimal: responseData.decimal,
+                            });
+                       
+                            responseData.name = symbolOnPoolNavi;
+                            responseData.total_supply = poolInfo.total_supply;
+                            responseData.total_borrow = poolInfo.total_borrow;
+                            responseData.base_supply_rate = poolInfo.base_supply_rate;
+                            responseData.base_borrow_rate = poolInfo.base_borrow_rate;
+                            responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
+                            responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                            responseData.total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                            responseData.protocol = "navi";
+                            responseData.amount = content.amount;
+                            data = responseData;
+                        }
+
+                    }
+                    //Scallop 
+                    dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
+                    if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
+                        dataScallop = { ...JSON.parse(dataScallop), amount: content.amount, protocol: "scallop" }
+                    }
+
+                    poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
+
+                    dataScallop = poolScallopInfo;
+                    //Map
+
+                    const arrayMap = [data, dataScallop];
+               
+                    if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "No valid staking pools found.",
+                            action: "STAKE_TOKEN",
+                        });
+                        return true;
+                    }
+                    arrayMap.sort(
+                        (a, b) =>
+                            b.total_supply_rate - a.total_supply_rate
+                    );
                     try {
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
                             action: "STAKE_TOKEN",
                             result: {
-                                type: type_action_scallop === "stake" ? "stake_token" : "unstake_token",
-                                data: poolScallopInfo,
+                                type: type_action === "stake" ? "stake_token" : "unstake_token",
+                                data: arrayMap[0],
                             },
                         });
                         return true;
