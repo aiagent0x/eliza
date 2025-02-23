@@ -36,7 +36,7 @@ Extract the staking parameters from the latest message only, following these rul
     {  
          "type_action": "stake" | "unstake",  
          "type": "list" | "pool_name" | "my_stake",  
-         "pool_name": string | null,
+         "pool_name": string |  ,
          "amount": number | 0,
          "protocol": "navi" | "scallop"  | "all"
     }  
@@ -48,6 +48,7 @@ Extract the staking parameters from the latest message only, following these rul
 - Use '"type_action": "stake"' when the request involves staking tokens.  
 - Use '"type_action": "unstake"' when the request involves unstaking tokens.  
 - **If the message explicitly mentions "Navi" or "Scallop", set '"protocol"'accordingly. Otherwise, set '"protocol": "all"'**.  
+- **Ensure '"pool_name"' is always a valid pool name or token symbol from the sample lists above. If an invalid name is detected, set it to 'null'.**  
 - Use 'null' for any values that cannot be determined.  
 - **Only return one JSON object, not an array.**  
 - All property names must use double quotes.  
