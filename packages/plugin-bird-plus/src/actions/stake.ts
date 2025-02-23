@@ -265,8 +265,6 @@ export const stake: Action = {
                     }
 
                     poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
-                    console.log("poolScallopInfo:", poolScallopInfo)
-
                     try {
                         if (!poolScallopInfo) {
                             callback({
@@ -312,10 +310,7 @@ export const stake: Action = {
                                 symbolOnPoolNavi = key;
                             }
                         }
-                        console.log("symbolOnPoolNavi", symbolOnPoolNavi)
-
                         data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
-                        console.log("data", data)
                         if (data && typeof data === "string" && data !== null) {
                             data = { ...JSON.parse(data), amount: content.amount, protocol: "navi" }
                         }
