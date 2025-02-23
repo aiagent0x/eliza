@@ -181,13 +181,15 @@ export const stake: Action = {
                 content.pool_name = "wUSDC"
             }
             let responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "wUSDC");
-
+       
             let symbolOnPoolNavi;
             for (let key in pool) {
-                if (responseData.name.toLowerCase() === key.toLowerCase()) {
+          
+                if (responseData.name.toLowerCase() === key.toLowerCase()||responseData.symbol.toLowerCase() === key.toLowerCase()) {
                     symbolOnPoolNavi = key;
                 }
             }
+      
             let data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
 
             if (data && typeof data === "string" && data !== null) {
