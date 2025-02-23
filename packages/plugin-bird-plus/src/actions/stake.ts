@@ -28,7 +28,8 @@ const stakeTokenTemplate = `
 Recent messages: {{recentMessages}}  
 Extract the staking parameters from the latest message only, following these rules:  
 
-- Sample Pool Names: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.  
+- Sample Pool Names: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, suiBTC.
+- Sample Pool Name Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd"  
 - **Extract data only from the latest message** and discard any previous messages.  
 - Return only a **single JSON object** with the specified fields in this format:  
     \`\`\`json
@@ -36,15 +37,17 @@ Extract the staking parameters from the latest message only, following these rul
          "type_action": "stake" | "unstake",  
          "type": "list" | "pool_name" | "my_stake",  
          "pool_name": string | null,
-         "amount": number | 0 
+         "amount": number | 0,
+         "protocol": "navi" | "scallop"
     }  
     \`\`\`
 - If multiple staking requests are detected, return only the **first valid** request found in the conversation.  
-- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', '"source"' to 'null', and '"amount"' to '0'.  
+- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'. The '"protocol"' should default to '"navi"'.  
 - Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").  
 - Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
 - Use '"type_action": "stake"' when the request involves staking tokens.  
 - Use '"type_action": "unstake"' when the request involves unstaking tokens.  
+- Set '"protocol"' to '"scallop"' if the request explicitly mentions "Scallop"; otherwise, default to '"navi"'.  
 - Use 'null' for any values that cannot be determined.  
 - **Only return one JSON object, not an array.**  
 - All property names must use double quotes.  
@@ -90,7 +93,7 @@ export const stake: Action = {
             await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
         elizaLogger.info("content:", content)
-
+        const scallopProvider = new ScallopProvider();
         if (content.type === "list") {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
@@ -123,7 +126,7 @@ export const stake: Action = {
                 return true;
             }
 
-            const scallopProvider = new ScallopProvider();
+            
             const listPoolsScallop = await scallopProvider.listPools();
             let responseData = await listPoolsInFileJson();
 
@@ -176,63 +179,102 @@ export const stake: Action = {
 
         }
         if (content.type === "pool_name") {
-            let type_action = content.type_action;
-            if (content.pool_name === null || content.pool_name === "null") {
-                content.pool_name = "wUSDC"
-            }
-            let responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "wUSDC");
-       
-            let symbolOnPoolNavi;
-            for (let key in pool) {
-          
-                if (responseData.name.toLowerCase() === key.toLowerCase()||responseData.symbol.toLowerCase() === key.toLowerCase()) {
-                    symbolOnPoolNavi = key;
-                }
-            }
-      
-            let data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
+            switch (content.protocol) {
+                case "navi":
+                    let type_action = content.type_action;
+                    if (content.pool_name === null || content.pool_name === "null") {
+                        content.pool_name = "wUSDC"
+                    }
+                    let responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "wUSDC");
+                    let symbolOnPoolNavi;
+                    for (let key in pool) {
 
-            if (data && typeof data === "string" && data !== null) {
-                callback({
-                    user: await runtime.character.name,
-                    text: "Double-check all the details before takeoff to dodge any turbulence!",
-                    action: "STAKE_TOKEN",
-                    result: {
-                        type: type_action === "stake" ? "stake_token" : "unstake_token",
-                        data: { ...JSON.parse(data), amount: content.amount, protocol: "navi" },
-                    },
-                });
-                return true;
-            }
-            let poolInfo = await getPoolInfo({
-                symbol: symbolOnPoolNavi,
-                address: responseData.type,
-                decimal: responseData.decimal,
-            });
-            responseData.name = symbolOnPoolNavi;
-            responseData.total_supply = poolInfo.total_supply;
-            responseData.total_borrow = poolInfo.total_borrow;
-            responseData.base_supply_rate = poolInfo.base_supply_rate;
-            responseData.base_borrow_rate = poolInfo.base_borrow_rate;
-            responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
-            responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-            responseData.amount = content.amount;
+                        if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
+                            symbolOnPoolNavi = key;
+                        }
+                    }
+                    let data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
+                    if (data && typeof data === "string" && data !== null) {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Double-check all the details before takeoff to dodge any turbulence!",
+                            action: "STAKE_TOKEN",
+                            result: {
+                                type: type_action === "stake" ? "stake_token" : "unstake_token",
+                                data: { ...JSON.parse(data), amount: content.amount, protocol: "navi" },
+                            },
+                        });
+                        return true;
+                    }
+                    let poolInfo = await getPoolInfo({
+                        symbol: symbolOnPoolNavi,
+                        address: responseData.type,
+                        decimal: responseData.decimal,
+                    });
+                    responseData.name = symbolOnPoolNavi;
+                    responseData.total_supply = poolInfo.total_supply;
+                    responseData.total_borrow = poolInfo.total_borrow;
+                    responseData.base_supply_rate = poolInfo.base_supply_rate;
+                    responseData.base_borrow_rate = poolInfo.base_borrow_rate;
+                    responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
+                    responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                    responseData.amount = content.amount;
+                    try {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Double-check all the details before takeoff to dodge any turbulence!",
+                            action: "STAKE_TOKEN",
+                            result: {
+                                type: type_action === "stake" ? "stake_token" : "unstake_token",
+                                data: responseData,
+                            },
+                        });
+                        return true;
+                    } catch (error) {
+                        console.error("Error during token swap:", error);
+                        return false;
+                    }
+                    break;
+                case "scallop":
+                    let type_action_scallop = content.type_action;
+                    if (content.pool_name === null || content.pool_name === "null") {
+                        content.pool_name = "sui"
+                    }
 
-            try {
-                callback({
-                    user: await runtime.character.name,
-                    text: "Double-check all the details before takeoff to dodge any turbulence!",
-                    action: "STAKE_TOKEN",
-                    result: {
-                        type: type_action === "stake" ? "stake_token" : "unstake_token",
-                        data: responseData,
-                    },
-                });
-                return true;
-            } catch (error) {
-                console.error("Error during token swap:", error);
-                return false;
+                    let dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
+                    if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Double-check all the details before takeoff to dodge any turbulence!",
+                            action: "STAKE_TOKEN",
+                            result: {
+                                type: type_action === "stake" ? "stake_token" : "unstake_token",
+                                data: { ...JSON.parse(dataScallop), amount: content.amount, protocol: "scallop" },
+                            },
+                        });
+                        return true;
+                    }
+                   
+                    let poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
+                    
+                    try {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Double-check all the details before takeoff to dodge any turbulence!",
+                            action: "STAKE_TOKEN",
+                            result: {
+                                type: type_action_scallop === "stake" ? "stake_token" : "unstake_token",
+                                data: poolScallopInfo,
+                            },
+                        });
+                        return true;
+                    } catch (error) {
+                        console.error("Error during token swap:", error);
+                        return false;
+                    }
+                    break;
             }
+
         }
         if (content.type === "my_stake") {
             try {

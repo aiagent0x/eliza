@@ -156,6 +156,66 @@ export class ScallopProvider {
         });
         return marketPoolsArray;
     }
+    async getDetail(symbol:any){
+        if (!listCoinName.includes(symbol.toLowerCase())) {
+            throw new Error(`Symbol ${symbol} does not exist in the list of coin names.`);
+        }
+        const marketPools: any = await scallopQuery.getMarketPools([symbol.toLowerCase()]);
+       
+        if (!marketPools.pools || !Object.keys(marketPools.pools).length) {
+            throw new Error(`No market pool found for symbol ${symbol}.`);
+        }
+        let pool;
+        Object.keys(marketPools.pools).forEach((key, index) => {
+            pool = marketPools.pools[key];
+        })
+        const coin = listCoins.find((c: any) => c.coin_name === pool.coinName);
+        return {
+            img_icon: coin.img_icon,
+            coin_name: pool.coinName,
+            symbol: pool.symbol,
+            market_coin_type: pool.marketCoinType,
+            coin_type: pool.coinType,
+            s_coin_type: pool.sCoinType,
+            coin_wrapped_type: pool.coinWrappedType,
+            coin_price: pool.coinPrice,
+            high_kink: parseFloat(pool.highKink) * 100,
+            mid_kink: parseFloat(pool.midKink) * 100,
+            reserve_factor: parseFloat(pool.reserveFactor) * 100,
+            borrow_weight: parseFloat(pool.borrowWeight) * 100,
+            borrow_fee: parseFloat(pool.borrowFee) * 100,
+            market_coin_supply_amount: parseFloat(pool.marketCoinSupplyAmount) * 100,
+            min_borrow_amount: parseFloat(pool.minBorrowAmount) * 100,
+            base_borrow_apr: parseFloat(pool.baseBorrowApr) * 100,
+            base_borrow_apy: parseFloat(pool.baseBorrowApy) * 100,
+            borrow_apr_on_high_kink: parseFloat(pool.borrowAprOnHighKink) * 100,
+            borrow_apy_on_high_kink: parseFloat(pool.borrowApyOnHighKink) * 100,
+            borrow_apr_on_mid_kink: parseFloat(pool.borrowAprOnMidKink) * 100,
+            borrow_apy_on_mid_kink: parseFloat(pool.borrowApyOnMidKink) * 100,
+            coin_decimal: pool.coinDecimal,
+            max_borrow_apr: parseFloat(pool.maxBorrowApr) * 100,
+            max_borrow_apy: parseFloat(pool.maxBorrowApy) * 100,
+            borrow_apr: parseFloat(pool.borrowApr) * 100,
+            borrow_apy: parseFloat(pool.borrowApy) * 100,
+            borrow_index: pool.borrowIndex,
+            growth_interest: pool.growthInterest,
+            supply_amount: pool.supplyAmount,
+            supply_coin: pool.supplyCoin,
+            borrow_amount: pool.borrowAmount,
+            borrow_coin: pool.borrowCoin,
+            reserve_amount: pool.reserveAmount,
+            reserve_coin: pool.reserveCoin,
+            utilization_rate: parseFloat(pool.utilizationRate) * 100,
+            supply_apr: parseFloat(pool.supplyApr) * 100,
+            supply_apy: parseFloat(pool.supplyApy) * 100,
+            total_supply_rate: parseFloat(pool.supplyApy) * 100,
+            conversion_rate: pool.conversionRate,
+            is_isolated: pool.isIsolated,
+            max_supply_coin: pool.maxSupplyCoin,
+            max_borrow_coin: pool.maxBorrowCoin,
+            protocol: "scallop"
+        };
+    }
 
 }
 
