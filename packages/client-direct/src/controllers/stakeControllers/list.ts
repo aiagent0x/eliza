@@ -15,9 +15,7 @@ import ScallopProvider from "../../services/stakeService/stakeScallop";
 export default async function listStakes(req: Request, res: Response) {
 
     let data = await redis.hGetAll("STAKE_POOLS");
-    console.log("data_navi_cache:>>>>>>", data);
     let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-    console.log("dataScallop:>>>>>>>", dataScallop);
     if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
         let parsedData: { [key: string]: string }[] = [];
         for (let key in data) {
@@ -28,12 +26,10 @@ export default async function listStakes(req: Request, res: Response) {
             poolsScallopData.push(JSON.parse(dataScallop[key]));
         }
         parsedData = parsedData.concat(poolsScallopData);
-        console.log("parseDataBeforeSort:>>>>>>>", parsedData);
         parsedData.sort(
             (a: any, b: any) =>
                 b.total_supply_rate - a.total_supply_rate
         );
-        console.log("parseDataAfterSort:>>>>>>>", parsedData);
         res.status(200).json({
             code: "success",
             data: parsedData

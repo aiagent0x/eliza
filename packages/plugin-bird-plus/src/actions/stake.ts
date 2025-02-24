@@ -112,9 +112,10 @@ export const stake: Action = {
                     poolsScallopData.push(JSON.parse(dataScallop[key]));
                 }
                 parsedData = parsedData.concat(poolsScallopData);
-                parsedData.sort((a: any, b: any) => {
-                    return b.total_supply_rate - a.total_supply_rate;
-                });
+                parsedData.sort(
+                    (a: any, b: any) =>
+                        b.total_supply_rate - a.total_supply_rate
+                );
                 callback({
                     user: await runtime.character.name,
                     text: "Below is a list of stake pools:",
