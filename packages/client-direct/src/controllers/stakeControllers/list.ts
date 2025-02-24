@@ -28,9 +28,11 @@ export default async function listStakes(req: Request, res: Response) {
             poolsScallopData.push(JSON.parse(dataScallop[key]));
         }
         parsedData = parsedData.concat(poolsScallopData);
+        console.log("parseDataBeforeSort:>>>>>>>", parsedData);
         parsedData.sort((a: any, b: any) => {
             return b.total_supply_rate - a.total_supply_rate;
         });
+        console.log("parseDataAfterSort:>>>>>>>", parsedData);
         res.status(200).json({
             code: "success",
             data: parsedData
