@@ -101,7 +101,9 @@ export async function filterByTagging(tag: string, agentName: string) {
             break;
         case "stake_pools":
             let data = await redis.hGetAll("STAKE_POOLS");
+            console.log("dataNavi:>>>>>>", data)
             let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            console.log("dataScallop:>>>>>>", dataScallop)
             if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {

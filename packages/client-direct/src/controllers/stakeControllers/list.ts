@@ -13,9 +13,11 @@ import { Request, Response } from "express";
 import ScallopProvider from "../../services/stakeService/stakeScallop";
 
 export default async function listStakes(req: Request, res: Response) {
-    
+
     let data = await redis.hGetAll("STAKE_POOLS");
+    console.log("data_navi_cache:>>>>>>", data);
     let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+    console.log("dataScallop:>>>>>>>", dataScallop);
     if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
         let parsedData: { [key: string]: string }[] = [];
         for (let key in data) {
@@ -37,7 +39,9 @@ export default async function listStakes(req: Request, res: Response) {
     }
     const scallopProvider = new ScallopProvider();
     const listPoolsScallop = await scallopProvider.listPools();
+    console.log("listPoolsScallop:>>>>>>>", listPoolsScallop);
     let responseData = await listPoolsInFileJson();
+
     let index = 0;
     for (let key in pool) {
         if (pool.hasOwnProperty(key)) {
@@ -64,6 +68,7 @@ export default async function listStakes(req: Request, res: Response) {
         }
         index++;
     }
+    console.log("responseData:>>>>>>>", responseData);
     responseData = responseData.concat(listPoolsScallop);
     responseData.sort(
         (a, b) =>

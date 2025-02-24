@@ -24,7 +24,7 @@ export const fetchNaviPool = async (job: any) => {
                 responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
                 responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
                 responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                responseData[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate );
+                responseData[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
                 responseData[index].protocol = "navi";
             } else {
                 elizaLogger.error(`Pool information for key ${key} is undefined.`);
@@ -32,8 +32,8 @@ export const fetchNaviPool = async (job: any) => {
         }
         index++;
     }
-    responseData.sort((a, b) => (parseFloat(b.base_supply_rate) + parseFloat(b.boosted_supply_rate)) - (parseFloat(a.base_supply_rate) + parseFloat(a.boosted_supply_rate)));
     for (let data of responseData) {
+        console.log("name_navi:>>>>>>>", data);
         const success = await redis.hSet("STAKE_POOLS", data.name, JSON.stringify(data), 300);
         if (!success) {
             elizaLogger.error(`Failed to set data for pool ${data.name} in Redis.`);
