@@ -119,10 +119,12 @@ export async function filterByTagging(tag: string, agentName: string) {
                     poolsScallopData.push(JSON.parse(dataScallop[key]));
                 }
                 parsedData = parsedData.concat(poolsScallopData);
+                console.log("parsedBeforeData:>>>>>>>>>>>>>",parsedData)
                 parsedData.sort(
                     (a: any, b: any) =>
                         b.total_supply_rate - a.total_supply_rate
                 );
+                console.log("parsedAfterData:>>>>>>>>>>>>>",parsedData)
                 return responseData = {
                     user: agentName,
                     text: "Below is a list of stake pools:",
