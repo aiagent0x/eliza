@@ -18,7 +18,7 @@ export default async function listStakes(req: Request, res: Response) {
     let data = await redis.hGetAll("STAKE_POOLS");
     let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
     let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND")
-    
+
     if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
         let parsedData: { [key: string]: string }[] = [];
         for (let key in data) {
@@ -39,7 +39,7 @@ export default async function listStakes(req: Request, res: Response) {
         );
         res.status(200).json({
             code: "success",
-            data: parsedData
+            data: parsedData.slice(0, 30)
         });
         return
     }
@@ -82,7 +82,7 @@ export default async function listStakes(req: Request, res: Response) {
     );
     res.status(200).json({
         code: "success",
-        data: responseData
+        data: responseData.slice(0, 30)
     });
     return;
 
