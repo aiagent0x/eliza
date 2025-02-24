@@ -24,7 +24,7 @@ export const fetchNaviPool = async (job: any) => {
                 responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
                 responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
                 responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                responseData[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                responseData[index].total_supply_rate = (poolInfo.boosted_supply_rate && poolInfo.boosted_borrow_rate) ? parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate) : 0
                 responseData[index].protocol = "navi";
             } else {
                 elizaLogger.error(`Pool information for key ${key} is undefined.`);
@@ -32,6 +32,7 @@ export const fetchNaviPool = async (job: any) => {
         }
         index++;
     }
+    console.log("responseData_cache_navi:",responseData);
     for (let data of responseData) {
         const success = await redis.hSet("STAKE_POOLS", data.name, JSON.stringify(data), 300);
         if (!success) {

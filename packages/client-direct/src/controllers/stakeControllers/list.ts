@@ -40,7 +40,7 @@ export default async function listStakes(req: Request, res: Response) {
     }
     const scallopProvider = new ScallopProvider();
     const listPoolsScallop = await scallopProvider.listPools();
-    console.log("listPoolsScallop:>>>>>>>", listPoolsScallop);
+    
     let responseData = await listPoolsInFileJson();
 
     let index = 0;
@@ -69,7 +69,6 @@ export default async function listStakes(req: Request, res: Response) {
         }
         index++;
     }
-    console.log("responseData:>>>>>>>", responseData);
     responseData = responseData.concat(listPoolsScallop);
     responseData.sort(
         (a, b) =>
