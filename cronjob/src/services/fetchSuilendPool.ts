@@ -125,7 +125,7 @@ export async function listSuilendPool(job: any) {
             reserve.borrowAprPercent,
             getFilteredRewards(rewardMap[reserve.coinType].borrow)
         );
-        let obj ={
+        let obj = {
             protocol: "suilend",
             type: reserve.token.coinType,
             decimals: reserve.token.decimals,
@@ -136,13 +136,17 @@ export async function listSuilendPool(job: any) {
             total_deposit_apr_percent: totalDepositAprPercent.toString(),
             borrow_apr_percent: reserve.borrowAprPercent.toString(),
             total_borrow_apr_percent: totalBorrowAprPercent.toString(),
+            deposited_amount_usd: new BigNumber(reserve.depositedAmountUsd).toString(),
+            deposited_amount: new BigNumber(reserve.depositedAmount).toString(),
+            available_amount_usd: new BigNumber(reserve.availableAmountUsd).toString(),
+            borrowed_amount_usd: new BigNumber(reserve.borrowedAmountUsd).toString(),
             total_supply_rate: parseFloat(totalDepositAprPercent.toString())
         }
         dataLendingMarket.push(obj)
-        const success = await redis.hSet("STAKE_POOLS_SUILEND", obj.symbol, JSON.stringify(obj), 300);
+        const success = await redis.hSet("STAKE_POOLS_SUILEND", obj.symbol.toLowerCase(), JSON.stringify(obj), 300);
         if (!success) {
             elizaLogger.error(`Failed to set data for pool ${obj.symbol} in Redis.`);
         }
     }
-    return dataLendingMarket;
+    return;
 }

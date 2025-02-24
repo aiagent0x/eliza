@@ -108,8 +108,9 @@ export async function listPool() {
     );
     const lstAprPercentMap = Object.fromEntries(lstAprPercentMapEntries);
     const revers = lendingMarket.reserves;
-    let dataLendingMarket:any = [];
+    let dataLendingMarket: any = [];
     for (const reserve of revers) {
+
         const totalDepositAprPercent = getTotalAprPercent(
             Side.DEPOSIT,
             reserve.depositAprPercent,
@@ -121,19 +122,26 @@ export async function listPool() {
             reserve.borrowAprPercent,
             getFilteredRewards(rewardMap[reserve.coinType].borrow)
         );
-        dataLendingMarket.push({
-            protocol:"suilend",
-            type:reserve.token.coinType,
+        let obj = {
+            protocol: "suilend",
+            type: reserve.token.coinType,
             decimals: reserve.token.decimals,
             symbol: reserve.token.symbol,
             description: reserve.token.symbol,
             img_icon: reserve.token.iconUrl,
-            deposit_apr_percent:reserve.depositAprPercent.toString(),
-            total_deposit_apr_percent:totalDepositAprPercent.toString(),
-            borrow_apr_percent:reserve.borrowAprPercent.toString(),
-            total_borrow_apr_percent:totalBorrowAprPercent.toString(),
-            total_supply_rate: parseFloat(totalDepositAprPercent.toString()) 
-        })
+            deposit_apr_percent: reserve.depositAprPercent.toString(),
+            total_deposit_apr_percent: totalDepositAprPercent.toString(),
+            borrow_apr_percent: reserve.borrowAprPercent.toString(),
+            total_borrow_apr_percent: totalBorrowAprPercent.toString(),
+            deposited_amount_usd: new BigNumber(reserve.depositedAmountUsd).toString(),
+            deposited_amount: new BigNumber(reserve.depositedAmount).toString(),
+            available_amount_usd: new BigNumber(reserve.availableAmountUsd).toString(),
+            borrowed_amount_usd: new BigNumber(reserve.borrowedAmountUsd).toString(),
+            total_supply_rate: parseFloat(totalDepositAprPercent.toString())
+        }
+     
+        dataLendingMarket.push(obj)
+
     }
     return dataLendingMarket;
 }

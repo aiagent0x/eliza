@@ -17,7 +17,9 @@ export default async function listStakes(req: Request, res: Response) {
 
     let data = await redis.hGetAll("STAKE_POOLS");
     let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-    if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
+    let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND")
+    
+    if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
         let parsedData: { [key: string]: string }[] = [];
         for (let key in data) {
             parsedData.push(JSON.parse(data[key]));
@@ -26,7 +28,11 @@ export default async function listStakes(req: Request, res: Response) {
         for (let key in dataScallop) {
             poolsScallopData.push(JSON.parse(dataScallop[key]));
         }
-        parsedData = parsedData.concat(poolsScallopData);
+        let poolsSuilendData: { [key: string]: string }[] = [];
+        for (let key in dataSuilend) {
+            poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+        }
+        parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
         parsedData.sort(
             (a: any, b: any) =>
                 b.total_supply_rate - a.total_supply_rate

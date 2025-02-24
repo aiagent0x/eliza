@@ -102,22 +102,30 @@ export const stake: Action = {
 
             let data = await redis.hGetAll("STAKE_POOLS");
             let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-            if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
+            let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+            if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
+                console.log("STAKE_POOLS")
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
+                console.log("STAKE_POOLS_SCALLOP")
                 let poolsScallopData: { [key: string]: string }[] = [];
                 for (let key in dataScallop) {
                     poolsScallopData.push(JSON.parse(dataScallop[key]));
                 }
-                console.log("parsedDataBefore:>>>>>>>>>>>>", parsedData);
-                parsedData = parsedData.concat(poolsScallopData);
+                console.log("STAKE_POOLS_SUILEND")
+                let poolsSuilendData: { [key: string]: string }[] = [];
+                for (let key in dataSuilend) {
+                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                }
+                console.log("oke")
+                parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
                 parsedData.sort(
                     (a: any, b: any) =>
                         b.total_supply_rate - a.total_supply_rate
                 );
-                console.log("parsedData:>>>>>>>>>>>>", parsedData);
+
                 callback({
                     user: await runtime.character.name,
                     text: "Below is a list of stake pools:",
@@ -275,8 +283,8 @@ export const stake: Action = {
                                 user: await runtime.character.name,
                                 text: "No valid staking pools found.",
                                 action: "STAKE_TOKEN",
-                               
-                                
+
+
                             });
                             return true
                         }
@@ -290,7 +298,7 @@ export const stake: Action = {
                             },
                         });
                         return true
-                      
+
                     } catch (error) {
                         console.error("Error during token swap:", error);
                         return false;
@@ -322,7 +330,7 @@ export const stake: Action = {
                                 address: responseData.type,
                                 decimal: responseData.decimal,
                             });
-                       
+
                             responseData.name = symbolOnPoolNavi;
                             responseData.total_supply = poolInfo.total_supply;
                             responseData.total_borrow = poolInfo.total_borrow;
@@ -349,7 +357,7 @@ export const stake: Action = {
                     //Map
 
                     const arrayMap = [data, dataScallop];
-               
+
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,

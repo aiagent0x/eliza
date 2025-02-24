@@ -6,6 +6,7 @@ import { getPoolInfo } from "navi-sdk";
 import {
     elizaLogger,
 } from "@elizaos/core";
+import { listPool } from "../services/stakeService/fetchSuilend/listPools";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
 let redis = new RedisClient(REDIS_URL)
@@ -109,6 +110,7 @@ export async function filterByTagging(tag: string, agentName: string) {
         case "stake_pools":
             let data = await redis.hGetAll("STAKE_POOLS");
             let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
             if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
@@ -118,13 +120,16 @@ export async function filterByTagging(tag: string, agentName: string) {
                 for (let key in dataScallop) {
                     poolsScallopData.push(JSON.parse(dataScallop[key]));
                 }
-                parsedData = parsedData.concat(poolsScallopData);
-                console.log("parsedBeforeData:>>>>>>>>>>>>>",parsedData)
+                let poolsSuilendData: { [key: string]: string }[] = [];
+                for (let key in dataSuilend) {
+                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                }
+                parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
                 parsedData.sort(
                     (a: any, b: any) =>
                         b.total_supply_rate - a.total_supply_rate
                 );
-                console.log("parsedAfterData:>>>>>>>>>>>>>",parsedData)
+
                 return responseData = {
                     user: agentName,
                     text: "Below is a list of stake pools:",
@@ -135,6 +140,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                     },
                 };
             }
+            const listSuilendPools = await listPool()
             const scallopProvider = new ScallopProvider();
             const listPoolsScallop = await scallopProvider.listPools();
 
@@ -166,7 +172,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 }
                 index++;
             }
-            responseData = responseData.concat(listPoolsScallop);
+            responseData = responseData.concat(listPoolsScallop, listSuilendPools);
             responseData.sort(
                 (a, b) =>
                     b.total_supply_rate - a.total_supply_rate
