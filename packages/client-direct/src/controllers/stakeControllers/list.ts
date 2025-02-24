@@ -43,7 +43,7 @@ export default async function listStakes(req: Request, res: Response) {
         });
         return
     }
-    const listSuilendPools = await listPool()
+    // const listSuilendPools = await listPool()
     const scallopProvider = new ScallopProvider();
     const listScallopPools = await scallopProvider.listPools();
 
@@ -75,7 +75,8 @@ export default async function listStakes(req: Request, res: Response) {
         }
         index++;
     }
-    responseData = responseData.concat(listScallopPools, listSuilendPools);
+    // responseData = responseData.concat(listScallopPools, listSuilendPools);
+    responseData = responseData.concat(listScallopPools);
     responseData.sort(
         (a, b) =>
             b.total_supply_rate - a.total_supply_rate
