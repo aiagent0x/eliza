@@ -72,7 +72,7 @@ export const apiClient = {
     ) => {
         const formData = new FormData();
         formData.append("text", message);
-        formData.append("userId", "user12424");
+        formData.append("userId", "0x263290aad0a3ce8e68e9e60a9e22d977f039fbfdba954965acac218c8d037b3e");
         formData.append("roomId", "2424");
         console.log(formData);
         if (selectedFile) {

@@ -266,7 +266,7 @@ export const stake: Action = {
                     }
 
                     poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
-               
+
 
                     try {
                         if (!poolScallopInfo) {
@@ -274,7 +274,7 @@ export const stake: Action = {
                                 user: await runtime.character.name,
                                 text: "No valid staking pools found.",
                                 action: "STAKE_TOKEN",
-                               
+
                             });
                             return true
                         }
@@ -288,7 +288,7 @@ export const stake: Action = {
                             },
                         });
                         return true
-                      
+
                     } catch (error) {
                         console.error("Error during token swap:", error);
                         return false;
@@ -310,10 +310,10 @@ export const stake: Action = {
                                 symbolOnPoolNavi = key;
                             }
                         }
-                       
+
 
                         data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
-                   
+
                         if (data && typeof data === "string" && data !== null) {
                             data = { ...JSON.parse(data), amount: content.amount, protocol: "navi" }
                         }
@@ -323,7 +323,7 @@ export const stake: Action = {
                                 address: responseData.type,
                                 decimal: responseData.decimal,
                             });
-                       
+
                             responseData.name = symbolOnPoolNavi;
                             responseData.total_supply = poolInfo.total_supply;
                             responseData.total_borrow = poolInfo.total_borrow;
@@ -350,7 +350,7 @@ export const stake: Action = {
                     //Map
 
                     const arrayMap = [data, dataScallop];
-               
+
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,
@@ -384,18 +384,19 @@ export const stake: Action = {
         }
         if (content.type === "my_stake") {
             try {
-
                 const portfolio = await getAddressPortfolio(message.userId, false, suiClient);
-                // Convert the Map to an object
                 const portfolioObject = Object.fromEntries(portfolio);
-
+                const scallopPortfolio = await scallopProvider.myStake(message.userId);
                 callback({
                     user: await runtime.character.name,
                     text: "Here is your staking portfolio:",
                     action: "STAKE_TOKEN",
                     result: {
                         type: "my_stake",
-                        data: portfolioObject,
+                        data: {
+                            navi: portfolioObject,
+                            scallop: scallopPortfolio
+                        },
                     },
                 });
                 return true;

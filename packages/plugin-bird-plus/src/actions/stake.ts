@@ -384,14 +384,17 @@ export const stake: Action = {
                 const portfolio = await getAddressPortfolio(message.userId, false, suiClient);
                 // Convert the Map to an object
                 const portfolioObject = Object.fromEntries(portfolio);
-
+                const scallopPortfolio = await scallopProvider.myStake(message.userId);
                 callback({
                     user: await runtime.character.name,
                     text: "Here is your staking portfolio:",
                     action: "STAKE_TOKEN",
                     result: {
                         type: "my_stake",
-                        data: portfolioObject,
+                        data: {
+                            navi: portfolioObject,
+                            scallop: scallopPortfolio
+                        },
                     },
                 });
                 return true;

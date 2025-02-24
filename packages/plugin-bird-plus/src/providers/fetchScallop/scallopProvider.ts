@@ -216,7 +216,10 @@ export class ScallopProvider {
             protocol: "scallop"
         };
     }
-    
+    async myStake(walletAddress: string) {
+        const userPortofilo = await scallopQuery.getUserPortfolio({ walletAddress });
+        return userPortofilo;
+    }
 
 }
 

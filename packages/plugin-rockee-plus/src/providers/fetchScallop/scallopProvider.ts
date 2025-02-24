@@ -1,9 +1,11 @@
 import {
     Scallop,
-} from '@scallop-io/sui-scallop-sdk'
+    ScallopClient
+} from '@scallop-io/sui-scallop-sdk';
 const scallopSDK = new Scallop({
     networkType: 'mainnet'
 });
+
 const scallopQuery = await scallopSDK.createScallopQuery();
 const listCoinName: any = ["usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd"];
 const listCoins: any = [{
@@ -156,12 +158,12 @@ export class ScallopProvider {
         });
         return marketPoolsArray;
     }
-    async getDetail(symbol:any){
+    async getDetail(symbol: any) {
         if (!listCoinName.includes(symbol.toLowerCase())) {
             return;
         }
         const marketPools: any = await scallopQuery.getMarketPools([symbol.toLowerCase()]);
-       
+
         if (!marketPools.pools || !Object.keys(marketPools.pools).length) {
             return;
         }
@@ -216,7 +218,11 @@ export class ScallopProvider {
             protocol: "scallop"
         };
     }
-    
+    async myStake(walletAddress: string) {
+        const userPortofilo = await scallopQuery.getUserPortfolio({ walletAddress });
+        return userPortofilo;
+    }
+
 
 }
 
