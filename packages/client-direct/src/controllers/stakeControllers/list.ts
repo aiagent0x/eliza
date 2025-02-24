@@ -39,7 +39,7 @@ export default async function listStakes(req: Request, res: Response) {
         );
         res.status(200).json({
             code: "success",
-            data: parsedData.slice(0, 30)
+            data: parsedData
         });
         return
     }
@@ -82,7 +82,7 @@ export default async function listStakes(req: Request, res: Response) {
     );
     res.status(200).json({
         code: "success",
-        data: responseData.slice(0, 30)
+        data: responseData
     });
     return;
 
