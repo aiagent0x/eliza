@@ -8,7 +8,7 @@
     "@elizaos/adapter-redis": "workspace:*",
     "@elizaos/core": "workspace:*",
     "@elizaos/plugin-tee": "^0.1.7",
-    "@mysten/sui": "1.19.0",
+    "@mysten/sui": "1.20.0",
     "@mysten/sui.js": "^0.53.0",
     "@scallop-io/sui-scallop-sdk": "^1.4.23",
     "@suilend/sdk": "1.1.36",

@@ -16,6 +16,7 @@ import { getPoolInfo, getAddressPortfolio } from "navi-sdk";
 import { SuiClient } from "@mysten/sui/client";
 import { RedisClient } from "@elizaos/adapter-redis";
 import { ScallopProvider } from "../providers/fetchScallop/scallopProvider";
+import { listPool } from "../providers/fetchSuilend/listPools";
 // import { listPool } from "../providers/fetchSuilend/listPools";
 const suiClient = new SuiClient({
     url: "https://fullnode.mainnet.sui.io"
@@ -128,7 +129,7 @@ export const stake: Action = {
                 return true;
             }
 
-
+            const listPoolSuilend = await listPool(message.userId);
             const listPoolsScallop = await scallopProvider.listPools();
             let responseData = await listPoolsInFileJson();
 
@@ -158,7 +159,7 @@ export const stake: Action = {
                 }
                 index++;
             }
-            responseData = responseData.concat(listPoolsScallop);
+            responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
             responseData.sort(
                 (a, b) =>
                     b.total_supply_rate - a.total_supply_rate

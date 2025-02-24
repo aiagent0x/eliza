@@ -11,6 +11,7 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL);
 import { Request, Response } from "express";
 import ScallopProvider from "../../services/stakeService/stakeScallop";
+import { listPool } from "../../services/stakeService/fetchSuilend/listPools";
 
 export default async function listStakes(req: Request, res: Response) {
 
@@ -36,9 +37,10 @@ export default async function listStakes(req: Request, res: Response) {
         });
         return
     }
+    const listSuilendPools = await listPool()
     const scallopProvider = new ScallopProvider();
-    const listPoolsScallop = await scallopProvider.listPools();
-    
+    const listScallopPools = await scallopProvider.listPools();
+
     let responseData = await listPoolsInFileJson();
 
     let index = 0;
@@ -67,7 +69,7 @@ export default async function listStakes(req: Request, res: Response) {
         }
         index++;
     }
-    responseData = responseData.concat(listPoolsScallop);
+    responseData = responseData.concat(listScallopPools, listSuilendPools);
     responseData.sort(
         (a, b) =>
             b.total_supply_rate - a.total_supply_rate

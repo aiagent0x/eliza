@@ -26,8 +26,8 @@ const suiClient = new SuiClient({
     url: "https://fullnode.mainnet.sui.io"
 });
 
-export async function listPool(walletAddress: any) {
-    const initSuilen = async (byAddress: any) => {
+export async function listPool() {
+    const initSuilen = async () => {
         const suilendClient = await SuilendClient.initialize(
             LENDING_MARKET_ID,
             LENDING_MARKET_TYPE,
@@ -47,7 +47,7 @@ export async function listPool(walletAddress: any) {
             rewardCoinMetadataMap,
             obligations,
             obligationOwnerCaps,
-        } = await initializeSuilend(suiClient, suilendClient, byAddress);
+        } = await initializeSuilend(suiClient, suilendClient);
 
         const { rewardPriceMap, rewardMap } = await initializeSuilendRewards(
             reserveMap,
@@ -78,7 +78,7 @@ export async function listPool(walletAddress: any) {
         lendingMarket,
         reserveMap,
         rewardMap,
-    } = await initSuilen(walletAddress);
+    } = await initSuilen();
     const lstAprPercentMapEntries = await Promise.all(
         NORMALIZED_LST_COINTYPES.filter(
             (lstCoinType) =>
