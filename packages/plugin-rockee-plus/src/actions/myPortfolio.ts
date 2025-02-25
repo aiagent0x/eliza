@@ -25,7 +25,7 @@ export const myPortfolio: Action = {
     ): Promise<boolean> => {
 
         callback({
-            text: "Below is a list of stake pools:",
+            text: "Below is your portofilo",
             action: "PORTFOLIO",
             result: {
                 type: "my_portfolio",
