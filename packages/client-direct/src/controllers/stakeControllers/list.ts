@@ -46,9 +46,7 @@ export default async function listStakes(req: Request, res: Response) {
     const listSuilendPools = await listPool()
     const scallopProvider = new ScallopProvider();
     const listScallopPools = await scallopProvider.listPools();
-
     let responseData = await listPoolsInFileJson();
-
     let index = 0;
     for (let key in pool) {
         if (pool.hasOwnProperty(key)) {
@@ -76,7 +74,6 @@ export default async function listStakes(req: Request, res: Response) {
         index++;
     }
     responseData = responseData.concat(listScallopPools, listSuilendPools);
-    // responseData = responseData.concat(listScallopPools);
     responseData.sort(
         (a, b) =>
             b.total_supply_rate - a.total_supply_rate

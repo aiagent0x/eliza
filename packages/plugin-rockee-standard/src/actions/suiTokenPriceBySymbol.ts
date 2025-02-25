@@ -141,7 +141,7 @@ export const suiTokenPriceBySymbol: Action = {
             await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
         }
         elizaLogger.info("content: ", content);
-
+        
         const tokenInfo = await findByVerifiedAndSymbol(content.token_symbol);
 
         const coninGeckoTeminal = new GeckoTerminalProvider2()
