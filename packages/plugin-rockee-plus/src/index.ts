@@ -3,6 +3,7 @@ import { Plugin } from '@elizaos/core';
 import { stake } from './actions/stake';
 import { liquidityCetus } from './actions/liquidityCetus';
 import { topToken } from './actions/topToken';
+import { myPortfolio } from './actions/myPortfolio';
 
 const rockeePlusPlugin: Plugin = {
   name: "rockeePlusPlugin",
@@ -10,7 +11,8 @@ const rockeePlusPlugin: Plugin = {
   actions: [
     topToken,
     stake,
-    liquidityCetus
+    liquidityCetus,
+    myPortfolio
   ],
   evaluators: [],
   providers: []
