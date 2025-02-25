@@ -413,8 +413,12 @@ export const stake: Action = {
                     }
                     //Map
 
-                    const arrayMap = [data, dataScallop, dataSuilend];
-
+                    const arrayMap = [data, dataScallop];
+                    if (Array.isArray(dataSuilend)) {
+                        arrayMap.push(...dataSuilend);
+                    } else {
+                        arrayMap.push(dataSuilend);
+                    }
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,

@@ -401,10 +401,23 @@ export const stake: Action = {
                     poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
 
                     dataScallop = poolScallopInfo;
+                    //Suilend
+                    dataSuilend = await redis.hGet("STAKE_POOLS_SUILEND", content.pool_name.toLowerCase());
+                    if (dataSuilend && typeof dataSuilend === "string" && dataSuilend !== null) {
+                        dataSuilend = { ...JSON.parse(dataSuilend), amount: content.amount, protocol: "suilend" };
+                    }
+                    else {
+                        poolSuilendInfo = await getDetail(content.pool_name);
+                        dataSuilend = poolSuilendInfo;
+                    }
                     //Map
 
                     const arrayMap = [data, dataScallop];
-
+                    if (Array.isArray(dataSuilend)) {
+                        arrayMap.push(...dataSuilend);
+                    } else {
+                        arrayMap.push(dataSuilend);
+                    }
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,

@@ -91,7 +91,7 @@ export const liquidityCetus: Action = {
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "liquidity_pools",
-                        data: responseData.slice(0, parseInt(content.amount_token_a )),
+                        data: JSON.parse(responseData).slice(0, parseInt(content.amount_token_a )),
                     }
                 })
                 return true;

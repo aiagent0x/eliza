@@ -20,6 +20,7 @@ import type { DirectClient } from ".";
 import { validateUuid } from "@elizaos/core";
 import listCharactorExample from "./controllers/agentControllers/listCharactorExample";
 import listStakes from "./controllers/stakeControllers/list";
+import listLiquidityPools from "./controllers/liquidityControllers/list";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 interface UUIDParams {
@@ -603,6 +604,6 @@ export function createApiRouter(
     })
     router.post("/agents/examples", listCharactorExample)
     router.get("/stakes", listStakes)
-    
+    router.get("/liquidity-pools", listLiquidityPools)
     return router;
 }

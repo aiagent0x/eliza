@@ -25,7 +25,9 @@ export async function fetchLiquidityPools(
                 offset:0,
             },
         });
-        await redis.setValue({ key: 'liquidity_pools', value: JSON.stringify(response.data.lp_list), ttl: 300 });
+
+        console.log("liquidity_pools:",response.data.data.lp_list)
+        await redis.setValue({ key: 'liquidity_pools', value: JSON.stringify(response.data.data.lp_list), ttl: 300 });
        
     } catch (error) {
         console.error("Error fetching market data:", error);

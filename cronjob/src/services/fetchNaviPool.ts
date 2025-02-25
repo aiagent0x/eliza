@@ -32,7 +32,7 @@ export const fetchNaviPool = async (job: any) => {
         }
         index++;
     }
-    console.log("responseDataNavi:>>>>>>>>>>>>>", responseData)
+ 
     for (let data of responseData) {
         const success = await redis.hSet("STAKE_POOLS", data.name.toLowerCase(), JSON.stringify(data), 300);
         if (!success) {
