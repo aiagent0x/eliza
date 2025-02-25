@@ -64,7 +64,7 @@ export const projectInfo: Action = {
         "MORE_INFORMATION",
         "KNOW_{INPUT}",
         "INFO_{TOKEN_SYMBOL}",
-        "INFO_{PROJECT_NAME}",  
+        "INFO_{PROJECT_NAME}",
     ],
 
     examples: [
@@ -193,7 +193,7 @@ export const projectInfo: Action = {
             return false
         }
         const responseText = `Name:${projectObj.name} ($${projectObj.symbol})`
-        let tokenSuiInfo, coinObject;
+        let tokenSuiInfo;
         let infoPrice, infoDetail;
         if (tokenObject) {
             const coninGeckoTeminal = new GeckoTerminalProvider2()
@@ -203,18 +203,16 @@ export const projectInfo: Action = {
 
             infoPrice = { market_cap_rank: "N/A", price_change_24h: "N/A", price: tokenSuiInfo.tokenPrice, market_cap: tokenSuiInfo.marketCap };
             infoDetail = { market_cap_rank: "N/A", tickers: [] };
+            const coinGecko = new CoingeckoProvider();
+            let getToken = await coinGecko.getToken(tokenSuiInfo && tokenSuiInfo.coingecko_coin_id && tokenSuiInfo.coingecko_coin_id !== null ? tokenSuiInfo.coingecko_coin_id : tokenObject.coinGeckoId);
+            let getDetail = await coinGecko.getCoinDataById(tokenSuiInfo && tokenSuiInfo.coingecko_coin_id && tokenSuiInfo.coingecko_coin_id !== null ? tokenSuiInfo.coingecko_coin_id : tokenObject.coinGeckoId);
+            if (getToken) {
+                infoPrice = getToken;
+            }
+            if (getDetail) {
+                infoDetail = getDetail;
+            }
         }
-        const coinGecko = new CoingeckoProvider();
-        let getToken = await coinGecko.getToken(tokenSuiInfo&&tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
-        let getDetail = await coinGecko.getCoinDataById(tokenSuiInfo&&tokenSuiInfo.coingecko_coin_id?tokenSuiInfo.coingecko_coin_id:tokenObject.coinGeckoId);
-        if (getToken) {
-            infoPrice = getToken;
-        }
-        if (getDetail) {
-            infoDetail = getDetail;
-        }
-        
-
         callback({
             user: await runtime.character.name,
             text: responseText,
@@ -234,7 +232,7 @@ export const projectInfo: Action = {
                         .slice(0, 5)
                         .map(item => item.market.name)
                         .join(",") : ""},...`,
-                    categories: projectObj.categories.join(", "),
+                    categories: projectObj && projectObj.categories ?projectObj.categories.join(", ") : "N/A",
                     imgUrl: tokenSuiInfo && tokenSuiInfo.image_url ? tokenSuiInfo.image_url : "",
                     contract_address: tokenSuiInfo && tokenSuiInfo.address ? tokenSuiInfo.address : "",
                     ...infoPrice
@@ -242,8 +240,8 @@ export const projectInfo: Action = {
                 action_hint: getActionHint(
                     "Do you need any further assistance? Please let me know!",
                     projectObj.symbol,
-                    tokenSuiInfo.address,
-                    tokenSuiInfo.image_url
+                    tokenSuiInfo && tokenSuiInfo.address ? tokenSuiInfo.address : "",
+                    tokenSuiInfo && tokenSuiInfo.image_url ? tokenSuiInfo.image_url : ""
                 )
             }
         });
