@@ -117,7 +117,7 @@ export const stake: Action = {
                         );
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of stake pools:",
+                            text: "Below is a list of Navi staking pools:",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -160,7 +160,7 @@ export const stake: Action = {
                     try {
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of Navi staking pools.:",
+                            text: "Below is a list of Navi staking pools:",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -188,7 +188,7 @@ export const stake: Action = {
                         );
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of stake pools:",
+                            text: "Below is a list of Scallop staking pools:",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -249,7 +249,7 @@ export const stake: Action = {
                     try {
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of staking pools:",
+                            text: "Below is a list of Suilend staking pools:",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -286,7 +286,7 @@ export const stake: Action = {
                         );
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of stake pools:",
+                            text: "Below is a list of staking pools:",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",

@@ -11,14 +11,21 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
 let redis = new RedisClient(REDIS_URL)
 
-const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools"]
+const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools"]
 
 export async function filterByTagging(tag: string, agentName: string) {
     console.log(agentName)
     tag = tag.trim().toLowerCase();
     const text = tagging.find(t => t.replace(/\s+/g, '_') === tag.replace(/\s+/g, '_'));
     let responseData;
-    let result;
+    let data;
+    let dataScallop;
+    let dataSuilend;
+    let listPoolsNavi;
+    let index;
+    let listPoolsScallop;
+    let listPoolSuilend;
+    let scallopProvider = new ScallopProvider();
     if (!text) return null;
     switch (text) {
         case "swap_1_sui_to_usdc":
@@ -90,7 +97,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             }
             responseData = {
                 "user": agentName,
-                "text": "Below are trending coins we have collected:",
+                "text": "Below are trending tokens we have collected:",
                 "action": "TOP_TRENDING_TOKENS",
                 "result": {
                     "type": "sui_trending_tokens",
@@ -108,9 +115,9 @@ export async function filterByTagging(tag: string, agentName: string) {
             }
             break;
         case "stake_pools":
-            let data = await redis.hGetAll("STAKE_POOLS");
-            let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-            let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+            data = await redis.hGetAll("STAKE_POOLS");
+            dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
             if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
@@ -132,7 +139,7 @@ export async function filterByTagging(tag: string, agentName: string) {
 
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of stake pools:",
+                    text: "Below is a list of staking pools:",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",
@@ -140,10 +147,8 @@ export async function filterByTagging(tag: string, agentName: string) {
                     },
                 };
             }
-            const listSuilendPools = await listPool()
-            const scallopProvider = new ScallopProvider();
-            const listPoolsScallop = await scallopProvider.listPools();
-
+            listPoolSuilend = await listPool()
+            listPoolsScallop = await scallopProvider.listPools();
             responseData = await listPoolsInFileJson();
 
             let index = 0;
@@ -172,7 +177,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 }
                 index++;
             }
-            responseData = responseData.concat(listPoolsScallop, listSuilendPools);
+            responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
             responseData.sort(
                 (a, b) =>
                     b.total_supply_rate - a.total_supply_rate
@@ -186,6 +191,157 @@ export async function filterByTagging(tag: string, agentName: string) {
                     data: responseData.slice(0, 6),
                 },
             };
+            break;
+        case "navi_pools":
+            data = await redis.hGetAll("STAKE_POOLS");
+            if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
+                let parsedData: { [key: string]: string }[] = [];
+                for (let key in data) {
+                    parsedData.push(JSON.parse(data[key]));
+                }
+                parsedData.sort(
+                    (a: any, b: any) =>
+                        b.total_supply_rate - a.total_supply_rate
+                );
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Navi staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: parsedData.slice(0, 6),
+                    },
+                };
+            }
+            listPoolsNavi = await listPoolsInFileJson();
+            index = 0;
+            for (let key in pool) {
+                if (pool.hasOwnProperty(key)) {
+                    let poolInfo;
+                    if (pool[key]) {
+                        poolInfo = await getPoolInfo({
+                            symbol: key,
+                            address: pool[key].type,
+                            decimal: listPoolsNavi[index].decimal,
+                        });
+                        listPoolsNavi[index].name = key;
+                        listPoolsNavi[index].total_supply = poolInfo.total_supply;
+                        listPoolsNavi[index].token_price = poolInfo.tokenPrice;
+                        listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
+                        listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
+                        listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
+                        listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
+                        listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                        listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                        listPoolsNavi[index].protocol = "navi";
+                    } else {
+                        elizaLogger.error(`Pool information for key ${key} is undefined.`);
+                    }
+                }
+                index++;
+            }
+            listPoolsNavi.sort(
+                (a, b) =>
+                    b.total_supply_rate - a.total_supply_rate
+            );
+            try {
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Navi staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: listPoolsNavi.slice(0, 6),
+                    },
+                };
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
+            break;
+        case "scallop_pools":
+            dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            if (dataScallop && Object.keys(dataScallop).length > 0) {
+
+                let poolsScallopData: { [key: string]: string }[] = [];
+                for (let key in dataScallop) {
+                    poolsScallopData.push(JSON.parse(dataScallop[key]));
+                }
+
+                poolsScallopData.sort(
+                    (a: any, b: any) =>
+                        b.total_supply_rate - a.total_supply_rate
+                );
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Scallop staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: poolsScallopData.slice(0, 6),
+                    },
+                };
+            }
+            listPoolsScallop = await scallopProvider.listPools();
+            listPoolsScallop.sort(
+                (a, b) =>
+                    b.total_supply_rate - a.total_supply_rate
+            );
+            try {
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Scallop staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: listPoolsScallop.slice(0, 6),
+                    },
+                };
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
+            break;
+        case "suilend_pools":
+            dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+            if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+                let poolsSuilendData: { [key: string]: string }[] = [];
+                for (let key in dataSuilend) {
+                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                }
+                poolsSuilendData.sort(
+                    (a: any, b: any) =>
+                        b.total_supply_rate - a.total_supply_rate
+                );
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Suilend staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: poolsSuilendData.slice(0, 6),
+                    },
+                };
+            }
+            listPoolSuilend = await listPool();
+            listPoolSuilend.sort(
+                (a, b) =>
+                    b.total_supply_rate - a.total_supply_rate
+            );
+            try {
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Suilend staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: listPoolSuilend.slice(0, 6),
+                    },
+                };
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
             break;
         default:
             responseData = null;
