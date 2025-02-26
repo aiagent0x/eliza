@@ -7,9 +7,10 @@ import {
     elizaLogger,
 } from "@elizaos/core";
 import { listPool } from "../services/stakeService/fetchSuilend/listPools";
+import CetusProvider from "../services/liquidityService/liquidityCetus";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
-const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools"]
+const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools", "cetus_liquidity_pools"]
 export async function filterByTagging(tag: string, agentName: string) {
     console.log(agentName)
     tag = tag.trim().toLowerCase();
@@ -341,6 +342,35 @@ export async function filterByTagging(tag: string, agentName: string) {
             }
             break;
         case "cetus_liquidity_pools":
+            let liquidityCetus: any = await redis.getValue({ key: "liquidity_pools" })
+            if (liquidityCetus !== undefined) {
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of liquidity pools:",
+                    action: "LIQUIDITY_POOLS",
+                    result: {
+                        type: "liquidity_pools",
+                        data: JSON.parse(liquidityCetus).slice(0, 6),
+                    },
+                };
+            }
+            let cetusProvider = new CetusProvider();
+            liquidityCetus = await cetusProvider.fetchLiquidityPools();
+            try {
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of liquidity pools:",
+                    action: "LIQUIDITY_POOLS",
+                    result: {
+                        type: "liquidity_pools",
+                        data: liquidityCetus.data.lp_list.slice(0, 6),
+                    },
+                };
+
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
             break;
         default:
             responseData = null;
