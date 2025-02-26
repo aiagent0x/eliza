@@ -26,10 +26,10 @@ const stakeTokenTemplate = `
 Recent messages: {{recentMessages}}  
 Extract the staking parameters from the latest message only, following these rules:  
 
-- Sample Pool Names Navi: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, NAVX, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI.  
-- Sample Pool Name Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd"
+- Sample Pool Names Navi: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, **NAVX**, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI.  
+- Sample Pool Names Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd".  
 - **Extract data only from the latest message** and discard any previous messages.  
-- Return only a **single JSON object** with the specified fields in this format:  
+- Return only a **single JSON object** with the specified fields in this format: 
     \`\`\`json
     {  
          "type_action": "stake" | "unstake",  
@@ -39,20 +39,24 @@ Extract the staking parameters from the latest message only, following these rul
          "protocol": "navi" | "scallop"  | "suilend" | "all"
     }  
     \`\`\`
-- If multiple staking requests are detected, return only the **first valid** request found in the conversation.  
+- **NAVX is always treated as a token symbol, not a protocol.**  
+- **Navi is always treated as a protocol, not a token symbol.**  
+- **If multiple protocols ("Navi", "Scallop", "Suilend") appear together, determine the correct protocol as follows:**  
+  - If the message contains **"on", "of", or "in"**, assign the protocol that appears after these words.  
+  - If no such word exists, assign **"protocol": "all"**.  
 - If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'. The '"protocol"' should default to '"all"'.  
 - Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").  
 - Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
 - Use '"type_action": "stake"' when the request involves staking tokens.  
 - Use '"type_action": "unstake"' when the request involves unstaking tokens.  
-- **If the message explicitly mentions "Navi" or "Scallop" or "Suilend" or "navi" or "scallop" or "suilend" , set '"protocol"'accordingly. Otherwise, set '"protocol": "all"'**.  
+- **If the message explicitly mentions "Navi", "Scallop", or "Suilend", set '"protocol"' accordingly. Otherwise, set '"protocol": "all"'.**  
 - **Ensure '"pool_name"' is always a valid pool name or token symbol from the sample lists above. If an invalid name is detected, set it to 'null'.**  
 - Use 'null' for any values that cannot be determined.  
 - **Only return one JSON object, not an array.**  
 - All property names must use double quotes.  
 - Null values should not use quotes.  
 - No trailing commas allowed.  
-- No single quotes anywhere in the JSON. 
+- No single quotes anywhere in the JSON.  
 `;
 
 export const stake: Action = {
@@ -416,7 +420,7 @@ export const stake: Action = {
                         responseData.amount = content.amount;
                     }
                     try {
-                        
+
                         callback({
                             user: await runtime.character.name,
                             text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
@@ -437,7 +441,9 @@ export const stake: Action = {
                     if (content.pool_name === null || content.pool_name === "null") {
                         content.pool_name = "sui"
                     }
-                    dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
+                    console.log("dataScallop:", dataScallop);
+                    dataScallop = await redis.hGet("STAKE_POOLS_SCALLOP", content.pool_name.toLowerCase());
+                    console.log("dataScallop:", dataScallop);
                     if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
                         callback({
                             user: await runtime.character.name,

@@ -25,7 +25,6 @@ export const searchProjectInFileJson = async (name: string) => {
                         );
                     }
                 );
-
                 return foundProject || null;
             } catch (err) {
                 console.error(`Error reading file ${file}:`, err);
@@ -33,7 +32,6 @@ export const searchProjectInFileJson = async (name: string) => {
             }
         })
     );
-
     return results.find(result => result !== null) || null;
 }
 
