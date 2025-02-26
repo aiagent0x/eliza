@@ -7429,7 +7429,7 @@
     "type": "0x46fbe54691b27d7abd2c9e5a01088913531f241b98f3c2351f8215e45cc17a4c::times::TIMES",
     "decimals": 5,
     "symbol": "$TIMES",
-    "name": "TIMES",
+    "name": "DARKTIMES",
     "iconUrl": "https://assets.playdarktimes.com/images/icons/darktimes_logo.png",
     "verified":true,
     "coinGeckoId":"times"
