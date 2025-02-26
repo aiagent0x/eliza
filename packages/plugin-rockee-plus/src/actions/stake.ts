@@ -366,6 +366,19 @@ export const stake: Action = {
                         content.pool_name = "Sui"
                     }
                     responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
+                    if (!responseData) {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "We couldn't find staking pools in Navi. You can search in list staking pools of Navi:",
+                            action: "STAKE_TOKEN",
+                            action_hint: getActionHint(
+                                "navi pools",
+                                "button_generate_text",
+                                "navi"
+                            )
+                        });
+                        return true
+                    }
                     for (let key in pool) {
                         if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
                             symbolOnPoolNavi = key;
@@ -402,19 +415,7 @@ export const stake: Action = {
                         responseData.amount = content.amount;
                     }
                     try {
-                        if (!responseData) {
-                            callback({
-                                user: await runtime.character.name,
-                                text: "We couldn't find staking pools in Navi. You can search in list staking pools of Navi:",
-                                action: "STAKE_TOKEN",
-                                action_hint: getActionHint(
-                                    "navi pools",
-                                    "button_generate_text",
-                                    "navi"
-                                )
-                            });
-                            return true
-                        }
+                        
                         callback({
                             user: await runtime.character.name,
                             text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
@@ -470,7 +471,7 @@ export const stake: Action = {
                             result: {
                                 type: type_action === "stake" ? "stake_token" : "unstake_token",
                                 data: poolScallopInfo,
-                                
+
                             },
                         });
                         return true
@@ -499,8 +500,9 @@ export const stake: Action = {
                         return true;
                     }
                     poolSuilendInfo = await getDetail(content.pool_name);
+
                     try {
-                        if (!poolSuilendInfo) {
+                        if (!poolSuilendInfo || poolSuilendInfo.length === 0) {
                             callback({
                                 user: await runtime.character.name,
                                 text: "We couldn't find staking pools in Suilend. You can search in list staking pools of Suilend:",
@@ -596,14 +598,13 @@ export const stake: Action = {
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,
-                            text: "We couldn't find staking pools in Suilend. You can search in the list of staking pools:",
+                            text: "We couldn't find staking pools. You can search in the list of staking pools:",
                             action: "STAKE_TOKEN",
                             action_hint: getActionHint(
                                 "all stake pools",
                                 "button_generate_text",
                                 "all"
                             )
-
                         });
                         return true;
                     }

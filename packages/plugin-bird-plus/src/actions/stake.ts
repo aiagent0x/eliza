@@ -62,7 +62,7 @@ Extract the staking parameters from the latest message only, following these rul
 
 export const stake: Action = {
     name: "STAKE_TOKEN",
-    similes: ["TOKEN_STAKE", "STAKE_{INPUT}", "STAKE_TOKEN", "STAKE_POOLS", "MY_STAKE","SUPPLY_POOLS","SUPPLY_{INPUT}"],
+    similes: ["TOKEN_STAKE", "STAKE_{INPUT}", "STAKE_TOKEN", "STAKE_POOLS", "MY_STAKE", "SUPPLY_POOLS", "SUPPLY_{INPUT}"],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
@@ -246,7 +246,7 @@ export const stake: Action = {
                         return true;
                     }
                     listPoolSuilend = await listPool();
-              
+
                     listPoolSuilend.sort(
                         (a, b) =>
                             b.total_supply_rate - a.total_supply_rate
@@ -371,7 +371,19 @@ export const stake: Action = {
                         content.pool_name = "Sui"
                     }
                     responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
-
+                    if (!responseData) {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "We couldn't find staking pools in Navi. You can search in list staking pools of Navi:",
+                            action: "STAKE_TOKEN",
+                            action_hint: getActionHint(
+                                "navi pools",
+                                "button_generate_text",
+                                "navi"
+                            )
+                        });
+                        return true
+                    }
                     for (let key in pool) {
                         if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
                             symbolOnPoolNavi = key;
@@ -408,19 +420,7 @@ export const stake: Action = {
                         responseData.amount = content.amount;
                     }
                     try {
-                        if (!responseData) {
-                            callback({
-                                user: await runtime.character.name,
-                                text: "We couldn't find staking pools in Navi. You can search in list staking pools of Navi:",
-                                action: "STAKE_TOKEN",
-                                action_hint: getActionHint(
-                                    "navi pools",
-                                    "button_generate_text",
-                                    "navi"
-                                )
-                            });
-                            return true
-                        }
+
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -507,7 +507,7 @@ export const stake: Action = {
                     }
                     poolSuilendInfo = await getDetail(content.pool_name);
                     try {
-                        if (!poolSuilendInfo) {
+                        if (!poolSuilendInfo || poolSuilendInfo.length === 0) {
                             callback({
                                 user: await runtime.character.name,
                                 text: "We couldn't find staking pools in Suilend. You can search in list staking pools of Suilend:",
@@ -606,7 +606,6 @@ export const stake: Action = {
                                 "button_generate_text",
                                 "all"
                             )
-
                         });
                         return true;
                     }
