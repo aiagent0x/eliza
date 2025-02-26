@@ -7430,7 +7430,8 @@
     "decimals": 5,
     "symbol": "$TIMES",
     "name": "TIMES",
-    "iconUrl": "https://assets.playdarktimes.com/images/icons/darktimes_logo.png"
+    "iconUrl": "https://assets.playdarktimes.com/images/icons/darktimes_logo.png",
+    "verified":true
   },
   {
     "objectId": "0x41911b7d8d87ceee4043ea3b83f402a03d0ffa0b286e78b23dcd81c9cde0f02f",
