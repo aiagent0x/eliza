@@ -151,7 +151,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             listPoolsScallop = await scallopProvider.listPools();
             responseData = await listPoolsInFileJson();
 
-            let index = 0;
+            index = 0;
             for (let key in pool) {
                 if (pool.hasOwnProperty(key)) {
                     let poolInfo;
@@ -194,7 +194,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             break;
         case "navi_pools":
             data = await redis.hGetAll("STAKE_POOLS");
-            if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
+            if (data && Object.keys(data).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
