@@ -237,7 +237,7 @@ export const projectInfo: Action = {
                     contract_address: tokenSuiInfo && tokenSuiInfo.address ? tokenSuiInfo.address : "",
                     ...infoPrice
                 },
-                action_hint: getActionHint()
+                // action_hint: getActionHint()
             }
         });
         return true;
