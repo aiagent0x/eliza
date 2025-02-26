@@ -1,65 +1,80 @@
-export default function getActionHint(actionHintText: string = "Do you need any further assistance? Please let me know!", type?: string, protocol?: string) {
+export default function getActionHint(actionHintText: string = "Do you need any further assistance? Please let me know!", type?: string, protocol?: string, type_action?: string) {
 
     if (type === "button_generate_text") {
-        switch (protocol) {
-            case "navi":
-                return {
-                    text: actionHintText,
-                    actions: [
-                        {
-                            type: "button_generate_text",
-                            text: "Navi pools",
+        if(type_action === "liquidity"){
+            return {
+                text: actionHintText,
+                actions: [
+                    {
+                        type: "button_generate_text",
+                        text: "Cetus liquidity pools",
 
-                        },
-                    ]
-                }
-                break;
-            case "scallop":
-                return {
-                    text: actionHintText,
-                    actions: [
-                        {
-                            type: "button_generate_text",
-                            text: "Scallop pools",
-
-                        },
-                    ]
-                }
-                break;
-            case "suilend":
-                return {
-                    text: actionHintText,
-                    actions: [
-                        {
-                            type: "button_generate_text",
-                            text: "Suilend pools",
-                        },
-                    ]
-                }
-                break;
-
-            default:
-                return {
-                    text: actionHintText,
-                    actions: [
-                        {
-                            type: "button_generate_text",
-                            text: "Navi pools",
-
-                        },
-                        {
-                            type: "button_generate_text",
-                            text: "Scallop pools",
-
-                        },
-                        {
-                            type: "button_generate_text",
-                            text: "Suilend pools",
-                        },
-                    ]
-                }
-                break;
+                    },
+                ]
+            }
         }
+        if(type_action === "stake"){
+            switch (protocol) {
+                case "navi":
+                    return {
+                        text: actionHintText,
+                        actions: [
+                            {
+                                type: "button_generate_text",
+                                text: "Navi pools",
+    
+                            },
+                        ]
+                    }
+                    break;
+                case "scallop":
+                    return {
+                        text: actionHintText,
+                        actions: [
+                            {
+                                type: "button_generate_text",
+                                text: "Scallop pools",
+    
+                            },
+                        ]
+                    }
+                    break;
+                case "suilend":
+                    return {
+                        text: actionHintText,
+                        actions: [
+                            {
+                                type: "button_generate_text",
+                                text: "Suilend pools",
+                            },
+                        ]
+                    }
+                    break;
+    
+                default:
+                    return {
+                        text: actionHintText,
+                        actions: [
+                            {
+                                type: "button_generate_text",
+                                text: "Navi pools",
+    
+                            },
+                            {
+                                type: "button_generate_text",
+                                text: "Scallop pools",
+    
+                            },
+                            {
+                                type: "button_generate_text",
+                                text: "Suilend pools",
+                            },
+                        ]
+                    }
+                    break;
+            }
+        }
+        
     }
     else {
         return {

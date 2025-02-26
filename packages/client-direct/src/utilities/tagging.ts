@@ -8,11 +8,8 @@ import {
 } from "@elizaos/core";
 import { listPool } from "../services/stakeService/fetchSuilend/listPools";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
-
 let redis = new RedisClient(REDIS_URL)
-
 const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools"]
-
 export async function filterByTagging(tag: string, agentName: string) {
     console.log(agentName)
     tag = tag.trim().toLowerCase();
@@ -342,6 +339,8 @@ export async function filterByTagging(tag: string, agentName: string) {
                 console.error("Error during token swap:", error);
                 return false;
             }
+            break;
+        case "cetus_liquidity_pools":
             break;
         default:
             responseData = null;

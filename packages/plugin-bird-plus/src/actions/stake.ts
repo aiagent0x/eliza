@@ -379,7 +379,8 @@ export const stake: Action = {
                             action_hint: getActionHint(
                                 "navi pools",
                                 "button_generate_text",
-                                "navi"
+                                "navi",
+                                "stake"
                             )
                         });
                         return true
@@ -465,7 +466,8 @@ export const stake: Action = {
                                 action_hint: getActionHint(
                                     "scallop pools",
                                     "button_generate_text",
-                                    "scallop"
+                                    "scallop",
+                                    "stake"
                                 )
                             });
                         }
@@ -515,7 +517,8 @@ export const stake: Action = {
                                 action_hint: getActionHint(
                                     "suilend pools",
                                     "button_generate_text",
-                                    "suilend"
+                                    "suilend",
+                                    "stake"
                                 )
                             });
                             return true
@@ -604,7 +607,8 @@ export const stake: Action = {
                             action_hint: getActionHint(
                                 "all stake pools",
                                 "button_generate_text",
-                                "all"
+                                "all",
+                                "stake"
                             )
                         });
                         return true;
