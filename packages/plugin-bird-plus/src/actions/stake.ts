@@ -18,6 +18,7 @@ import { RedisClient } from "@elizaos/adapter-redis";
 import { ScallopProvider } from "../providers/fetchScallop/scallopProvider";
 import { getDetail } from "../providers/fetchSuilend/getDetail";
 import { listPool } from "../providers/fetchSuilend/listPools";
+import getActionHint from "../utils/action_hint";
 // import { listPool } from "../providers/fetchSuilend/listPools";
 const suiClient = new SuiClient({
     url: "https://fullnode.mainnet.sui.io"
@@ -407,6 +408,19 @@ export const stake: Action = {
                         responseData.amount = content.amount;
                     }
                     try {
+                        if (!responseData) {
+                            callback({
+                                user: await runtime.character.name,
+                                text: "We couldn't find staking pools in Navi. You can search in list staking pools of Navi:",
+                                action: "STAKE_TOKEN",
+                                action_hint: getActionHint(
+                                    "navi pools",
+                                    "button_generate_text",
+                                    "navi"
+                                )
+                            });
+                            return true
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -446,12 +460,14 @@ export const stake: Action = {
                         if (!poolScallopInfo) {
                             callback({
                                 user: await runtime.character.name,
-                                text: "No valid staking pools found.",
+                                text: "We couldn't find staking pools in Scallop. You can search in list staking pools of Scallop:",
                                 action: "STAKE_TOKEN",
-
-
+                                action_hint: getActionHint(
+                                    "scallop pools",
+                                    "button_generate_text",
+                                    "scallop"
+                                )
                             });
-                            return true
                         }
                         callback({
                             user: await runtime.character.name,
@@ -489,15 +505,18 @@ export const stake: Action = {
                         });
                         return true;
                     }
-
                     poolSuilendInfo = await getDetail(content.pool_name);
                     try {
                         if (!poolSuilendInfo) {
                             callback({
                                 user: await runtime.character.name,
-                                text: "No valid staking pools found.",
+                                text: "We couldn't find staking pools in Suilend. You can search in list staking pools of Suilend:",
                                 action: "STAKE_TOKEN",
-
+                                action_hint: getActionHint(
+                                    "suilend pools",
+                                    "button_generate_text",
+                                    "suilend"
+                                )
                             });
                             return true
                         }
@@ -522,7 +541,6 @@ export const stake: Action = {
                     if (content.pool_name === null || content.pool_name === "null") {
                         content.pool_name = "Sui"
                     }
-
                     //Navi
                     responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
                     if (responseData) {
@@ -554,16 +572,13 @@ export const stake: Action = {
                             responseData.amount = content.amount;
                             data = responseData;
                         }
-
                     }
                     //Scallop 
                     dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
                     if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
                         dataScallop = { ...JSON.parse(dataScallop), amount: content.amount, protocol: "scallop" }
                     }
-
                     poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
-
                     dataScallop = poolScallopInfo;
                     //Suilend
                     dataSuilend = await redis.hGet("STAKE_POOLS_SUILEND", content.pool_name.toLowerCase());
@@ -575,7 +590,6 @@ export const stake: Action = {
                         dataSuilend = poolSuilendInfo;
                     }
                     //Map
-
                     const arrayMap = [data, dataScallop];
                     if (Array.isArray(dataSuilend)) {
                         arrayMap.push(...dataSuilend);
@@ -585,8 +599,14 @@ export const stake: Action = {
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,
-                            text: "No valid staking pools found.",
+                            text: "We couldn't find staking pools. You can search in the list of staking pools:",
                             action: "STAKE_TOKEN",
+                            action_hint: getActionHint(
+                                "all stake pools",
+                                "button_generate_text",
+                                "all"
+                            )
+
                         });
                         return true;
                     }

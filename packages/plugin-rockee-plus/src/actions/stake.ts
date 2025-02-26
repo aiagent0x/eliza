@@ -17,6 +17,7 @@ import { RedisClient } from "@elizaos/adapter-redis";
 import { ScallopProvider } from "../providers/fetchScallop/scallopProvider";
 import { listPool } from "../providers/fetchSuilend/listPools";
 import { getDetail } from "../providers/fetchSuilend/getDetail";
+import getActionHint from "../utils/action_hint";
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL);
@@ -56,7 +57,7 @@ Extract the staking parameters from the latest message only, following these rul
 
 export const stake: Action = {
     name: "STAKE_TOKEN",
-    similes: ["TOKEN_STAKE", "STAKE_{INPUT}", "STAKE_TOKEN", "STAKE_POOLS", "MY_STAKE", "SUPPLY_POOLS","SUPPLY_{INPUT}"],
+    similes: ["TOKEN_STAKE", "STAKE_{INPUT}", "STAKE_TOKEN", "STAKE_POOLS", "MY_STAKE", "SUPPLY_POOLS", "SUPPLY_{INPUT}"],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
@@ -240,7 +241,7 @@ export const stake: Action = {
                         return true;
                     }
                     listPoolSuilend = await listPool(message.userId);
-              
+
                     listPoolSuilend.sort(
                         (a, b) =>
                             b.total_supply_rate - a.total_supply_rate
@@ -365,7 +366,6 @@ export const stake: Action = {
                         content.pool_name = "Sui"
                     }
                     responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
-
                     for (let key in pool) {
                         if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
                             symbolOnPoolNavi = key;
@@ -402,6 +402,19 @@ export const stake: Action = {
                         responseData.amount = content.amount;
                     }
                     try {
+                        if (!responseData) {
+                            callback({
+                                user: await runtime.character.name,
+                                text: "We couldn't find staking pools in Navi. You can search in list staking pools of Navi:",
+                                action: "STAKE_TOKEN",
+                                action_hint: getActionHint(
+                                    "navi pools",
+                                    "button_generate_text",
+                                    "navi"
+                                )
+                            });
+                            return true
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
@@ -435,17 +448,18 @@ export const stake: Action = {
                         });
                         return true;
                     }
-
                     poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
-
-
                     try {
                         if (!poolScallopInfo) {
                             callback({
                                 user: await runtime.character.name,
-                                text: "No valid staking pools found.",
+                                text: "We couldn't find staking pools in Scallop. You can search in list staking pools of Scallop:",
                                 action: "STAKE_TOKEN",
-
+                                action_hint: getActionHint(
+                                    "scallop pools",
+                                    "button_generate_text",
+                                    "scallop"
+                                )
                             });
                             return true
                         }
@@ -456,6 +470,7 @@ export const stake: Action = {
                             result: {
                                 type: type_action === "stake" ? "stake_token" : "unstake_token",
                                 data: poolScallopInfo,
+                                
                             },
                         });
                         return true
@@ -483,14 +498,18 @@ export const stake: Action = {
                         });
                         return true;
                     }
-
                     poolSuilendInfo = await getDetail(content.pool_name);
                     try {
                         if (!poolSuilendInfo) {
                             callback({
                                 user: await runtime.character.name,
-                                text: "No valid staking pools found.",
+                                text: "We couldn't find staking pools in Suilend. You can search in list staking pools of Suilend:",
                                 action: "STAKE_TOKEN",
+                                action_hint: getActionHint(
+                                    "suilend pools",
+                                    "button_generate_text",
+                                    "suilend"
+                                )
 
                             });
                             return true
@@ -505,7 +524,6 @@ export const stake: Action = {
                             },
                         });
                         return true
-
                     } catch (error) {
                         console.error("Error during token swap:", error);
                         return false;
@@ -516,7 +534,6 @@ export const stake: Action = {
                     if (content.pool_name === null || content.pool_name === "null") {
                         content.pool_name = "Sui"
                     }
-
                     //Navi
                     responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
                     if (responseData) {
@@ -525,10 +542,7 @@ export const stake: Action = {
                                 symbolOnPoolNavi = key;
                             }
                         }
-
-
                         data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
-
                         if (data && typeof data === "string" && data !== null) {
                             data = { ...JSON.parse(data), amount: content.amount, protocol: "navi" }
                         }
@@ -563,7 +577,6 @@ export const stake: Action = {
                         poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
                         dataScallop = poolScallopInfo;
                     }
-
                     //Suilend
                     dataSuilend = await redis.hGet("STAKE_POOLS_SUILEND", content.pool_name.toLowerCase());
                     if (dataSuilend && typeof dataSuilend === "string" && dataSuilend !== null) {
@@ -574,7 +587,6 @@ export const stake: Action = {
                         dataSuilend = poolSuilendInfo;
                     }
                     //Map
-
                     const arrayMap = [data, dataScallop];
                     if (Array.isArray(dataSuilend)) {
                         arrayMap.push(...dataSuilend);
@@ -584,8 +596,14 @@ export const stake: Action = {
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,
-                            text: "No valid staking pools found.",
+                            text: "We couldn't find staking pools in Suilend. You can search in the list of staking pools:",
                             action: "STAKE_TOKEN",
+                            action_hint: getActionHint(
+                                "all stake pools",
+                                "button_generate_text",
+                                "all"
+                            )
+
                         });
                         return true;
                     }
@@ -635,7 +653,6 @@ export const stake: Action = {
                 return false;
             }
         }
-
     },
     examples: [
         [
