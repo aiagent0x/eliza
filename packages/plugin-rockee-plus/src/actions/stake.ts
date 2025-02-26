@@ -13,15 +13,10 @@ import {
 import { hashUserMsg } from "../utils/format";
 import { searchPoolInFileJson, listPoolsInFileJson, pool } from "../providers/searchPoolInFile";
 import { getPoolInfo, getAddressPortfolio } from "navi-sdk";
-import { SuiClient } from "@mysten/sui/client";
 import { RedisClient } from "@elizaos/adapter-redis";
 import { ScallopProvider } from "../providers/fetchScallop/scallopProvider";
 import { listPool } from "../providers/fetchSuilend/listPools";
 import { getDetail } from "../providers/fetchSuilend/getDetail";
-// import { listPool } from "../providers/fetchSuilend/listPools";
-const suiClient = new SuiClient({
-    url: "https://fullnode.mainnet.sui.io"
-});
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL);
@@ -38,7 +33,7 @@ Extract the staking parameters from the latest message only, following these rul
     {  
          "type_action": "stake" | "unstake",  
          "type": "list" | "pool_name" | "my_stake",  
-         "pool_name": string |  ,
+         "pool_name": string | null ,
          "amount": number | 0,
          "protocol": "navi" | "scallop"  | "suilend" | "all"
     }  
@@ -49,7 +44,7 @@ Extract the staking parameters from the latest message only, following these rul
 - Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
 - Use '"type_action": "stake"' when the request involves staking tokens.  
 - Use '"type_action": "unstake"' when the request involves unstaking tokens.  
-- **If the message explicitly mentions "Navi" or "Scallop" or Suilend, set '"protocol"'accordingly. Otherwise, set '"protocol": "all"'**.  
+- **If the message explicitly mentions "Navi" or "Scallop" or "Suilend" or "navi" or "scallop" or "suilend" , set '"protocol"'accordingly. Otherwise, set '"protocol": "all"'**.  
 - **Ensure '"pool_name"' is always a valid pool name or token symbol from the sample lists above. If an invalid name is detected, set it to 'null'.**  
 - Use 'null' for any values that cannot be determined.  
 - **Only return one JSON object, not an array.**  
@@ -61,7 +56,7 @@ Extract the staking parameters from the latest message only, following these rul
 
 export const stake: Action = {
     name: "STAKE_TOKEN",
-    similes: ["TOKEN_STAKE", "STAKE_{INPUT}", "STAKE_TOKEN", "STAKE_POOLS", "MY_STAKE"],
+    similes: ["TOKEN_STAKE", "STAKE_{INPUT}", "STAKE_TOKEN", "STAKE_POOLS", "MY_STAKE", "SUPPLY_POOLS","SUPPLY_{INPUT}"],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
@@ -100,91 +95,258 @@ export const stake: Action = {
         if (content.type === "list") {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
-
-            let data = await redis.hGetAll("STAKE_POOLS");
-            let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-            let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
-            if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
-                let parsedData: { [key: string]: string }[] = [];
-                for (let key in data) {
-                    parsedData.push(JSON.parse(data[key]));
-                }
-                let poolsScallopData: { [key: string]: string }[] = [];
-                for (let key in dataScallop) {
-                    poolsScallopData.push(JSON.parse(dataScallop[key]));
-                }
-                let poolsSuilendData: { [key: string]: string }[] = [];
-                for (let key in dataSuilend) {
-                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
-                }
-                parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-                parsedData.sort(
-                    (a: any, b: any) =>
-                        b.total_supply_rate - a.total_supply_rate
-                );
-                callback({
-                    user: await runtime.character.name,
-                    text: "Below is a list of stake pools:",
-                    action: "STAKE_POOLS",
-                    result: {
-                        type: "stake_pools",
-                        data: parsedData.slice(0, content.amount),
-                    },
-                });
-                return true;
-            }
-
-            const listPoolSuilend = await listPool(message.userId);
-            const listPoolsScallop = await scallopProvider.listPools();
-            let responseData = await listPoolsInFileJson();
-
-            let index = 0;
-            for (let key in pool) {
-                if (pool.hasOwnProperty(key)) {
-                    let poolInfo;
-                    if (pool[key]) {
-                        poolInfo = await getPoolInfo({
-                            symbol: key,
-                            address: pool[key].type,
-                            decimal: responseData[index].decimal,
+            let data;
+            let dataScallop;
+            let dataSuilend;
+            let listPoolsNavi;
+            let index;
+            let listPoolsScallop;
+            let listPoolSuilend;
+            switch (content.protocol) {
+                case "navi":
+                    data = await redis.hGetAll("STAKE_POOLS");
+                    if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
+                        let parsedData: { [key: string]: string }[] = [];
+                        for (let key in data) {
+                            parsedData.push(JSON.parse(data[key]));
+                        }
+                        parsedData.sort(
+                            (a: any, b: any) =>
+                                b.total_supply_rate - a.total_supply_rate
+                        );
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Below is a list of stake pools:",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: parsedData.slice(0, content.amount),
+                            },
                         });
-                        responseData[index].name = key;
-                        responseData[index].total_supply = poolInfo.total_supply;
-                        responseData[index].token_price = poolInfo.tokenPrice;
-                        responseData[index].total_borrow = poolInfo.total_borrow;
-                        responseData[index].base_supply_rate = poolInfo.base_supply_rate;
-                        responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                        responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                        responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                        responseData[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                        responseData[index].protocol = "navi";
-                    } else {
-                        elizaLogger.error(`Pool information for key ${key} is undefined.`);
+                        return true;
                     }
-                }
-                index++;
-            }
-            responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
-            responseData.sort(
-                (a, b) =>
-                    b.total_supply_rate - a.total_supply_rate
-            );
-            try {
-                callback({
-                    user: await runtime.character.name,
-                    text: "Below is a list of stake pools:",
-                    action: "STAKE_POOLS",
-                    result: {
-                        type: "stake_pools",
-                        data: responseData.slice(0, content.amount),
-                    },
-                });
-                return true;
-            } catch (error) {
-                console.error("Error during token swap:", error);
-                return false;
-            }
+                    listPoolsNavi = await listPoolsInFileJson();
+                    index = 0;
+                    for (let key in pool) {
+                        if (pool.hasOwnProperty(key)) {
+                            let poolInfo;
+                            if (pool[key]) {
+                                poolInfo = await getPoolInfo({
+                                    symbol: key,
+                                    address: pool[key].type,
+                                    decimal: listPoolsNavi[index].decimal,
+                                });
+                                listPoolsNavi[index].name = key;
+                                listPoolsNavi[index].total_supply = poolInfo.total_supply;
+                                listPoolsNavi[index].token_price = poolInfo.tokenPrice;
+                                listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
+                                listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
+                                listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
+                                listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
+                                listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                                listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                                listPoolsNavi[index].protocol = "navi";
+                            } else {
+                                elizaLogger.error(`Pool information for key ${key} is undefined.`);
+                            }
+                        }
+                        index++;
+                    }
+                    listPoolsNavi.sort(
+                        (a, b) =>
+                            b.total_supply_rate - a.total_supply_rate
+                    );
+                    try {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Below is a list of Navi staking pools.:",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: listPoolsNavi.slice(0, content.amount),
+                            },
+                        });
+                        return true;
+                    } catch (error) {
+                        console.error("Error during token swap:", error);
+                        return false;
+                    }
+                    break;
+                case "scallop":
+                    dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+                    if (dataScallop && Object.keys(dataScallop).length > 0) {
 
+                        let poolsScallopData: { [key: string]: string }[] = [];
+                        for (let key in dataScallop) {
+                            poolsScallopData.push(JSON.parse(dataScallop[key]));
+                        }
+
+                        poolsScallopData.sort(
+                            (a: any, b: any) =>
+                                b.total_supply_rate - a.total_supply_rate
+                        );
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Below is a list of stake pools:",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: poolsScallopData.slice(0, content.amount),
+                            },
+                        });
+                        return true;
+                    }
+                    listPoolsScallop = await scallopProvider.listPools();
+                    listPoolsScallop.sort(
+                        (a, b) =>
+                            b.total_supply_rate - a.total_supply_rate
+                    );
+                    try {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Below is a list of Scallop staking pools.:",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: listPoolsScallop.slice(0, content.amount),
+                            },
+                        });
+                        return true;
+                    } catch (error) {
+                        console.error("Error during token swap:", error);
+                        return false;
+                    }
+                    break;
+                case "suilend":
+                    dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+                    if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+                        let poolsSuilendData: { [key: string]: string }[] = [];
+                        for (let key in dataSuilend) {
+                            poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                        }
+                        poolsSuilendData.sort(
+                            (a: any, b: any) =>
+                                b.total_supply_rate - a.total_supply_rate
+                        );
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Below is a list of Suilend staking pools:",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: poolsSuilendData.slice(0, content.amount),
+                            },
+                        });
+                        return true;
+                    }
+                    listPoolSuilend = await listPool(message.userId);
+              
+                    listPoolSuilend.sort(
+                        (a, b) =>
+                            b.total_supply_rate - a.total_supply_rate
+                    );
+                    try {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Below is a list of staking pools:",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: listPoolSuilend.slice(0, content.amount),
+                            },
+                        });
+                        return true;
+                    } catch (error) {
+                        console.error("Error during token swap:", error);
+                        return false;
+                    }
+                    break;
+                default:
+                    data = await redis.hGetAll("STAKE_POOLS");
+                    dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+                    dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+                    if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
+                        let parsedData: { [key: string]: string }[] = [];
+                        for (let key in data) {
+                            parsedData.push(JSON.parse(data[key]));
+                        }
+                        let poolsScallopData: { [key: string]: string }[] = [];
+                        for (let key in dataScallop) {
+                            poolsScallopData.push(JSON.parse(dataScallop[key]));
+                        }
+                        let poolsSuilendData: { [key: string]: string }[] = [];
+                        for (let key in dataSuilend) {
+                            poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                        }
+                        parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+                        parsedData.sort(
+                            (a: any, b: any) =>
+                                b.total_supply_rate - a.total_supply_rate
+                        );
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Below is a list of stake pools:",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: parsedData.slice(0, content.amount),
+                            },
+                        });
+                        return true;
+                    }
+
+                    listPoolSuilend = await listPool(message.userId);
+                    listPoolsScallop = await scallopProvider.listPools();
+                    listPoolsNavi = await listPoolsInFileJson();
+
+                    index = 0;
+                    for (let key in pool) {
+                        if (pool.hasOwnProperty(key)) {
+                            let poolInfo;
+                            if (pool[key]) {
+                                poolInfo = await getPoolInfo({
+                                    symbol: key,
+                                    address: pool[key].type,
+                                    decimal: listPoolsNavi[index].decimal,
+                                });
+                                listPoolsNavi[index].name = key;
+                                listPoolsNavi[index].total_supply = poolInfo.total_supply;
+                                listPoolsNavi[index].token_price = poolInfo.tokenPrice;
+                                listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
+                                listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
+                                listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
+                                listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
+                                listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                                listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                                listPoolsNavi[index].protocol = "navi";
+                            } else {
+                                elizaLogger.error(`Pool information for key ${key} is undefined.`);
+                            }
+                        }
+                        index++;
+                    }
+                    listPoolsNavi = listPoolsNavi.concat(listPoolsScallop, listPoolSuilend);
+                    listPoolsNavi.sort(
+                        (a, b) =>
+                            b.total_supply_rate - a.total_supply_rate
+                    );
+                    try {
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Below is a list of stake pools:",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: listPoolsNavi.slice(0, content.amount),
+                            },
+                        });
+                        return true;
+                    } catch (error) {
+                        console.error("Error during token swap:", error);
+                        return false;
+                    }
+                    break;
+            }
         }
         if (content.type === "pool_name") {
             let type_action;
