@@ -206,7 +206,7 @@ export const projectInfo: Action = {
             infoPrice = { market_cap_rank: "N/A", price_change_24h: "N/A", price: tokenSuiInfo.tokenPrice, market_cap: tokenSuiInfo.marketCap };
             infoDetail = { market_cap_rank: "N/A", tickers: [] };
             const coinGecko = new CoingeckoProvider();
-            if (tokenSuiInfo.coingecko_coin_id && tokenObject.coinGeckoId) {
+            if (tokenSuiInfo.coingecko_coin_id || tokenObject.coinGeckoId) {
                 getToken = await coinGecko.getToken(tokenSuiInfo && tokenSuiInfo.coingecko_coin_id && tokenSuiInfo.coingecko_coin_id !== null ? tokenSuiInfo.coingecko_coin_id : tokenObject.coinGeckoId || "");
                 getDetail = await coinGecko.getCoinDataById(tokenSuiInfo && tokenSuiInfo.coingecko_coin_id && tokenSuiInfo.coingecko_coin_id !== null ? tokenSuiInfo.coingecko_coin_id : tokenObject.coinGeckoId || "");
             }
