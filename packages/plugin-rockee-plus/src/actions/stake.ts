@@ -441,9 +441,7 @@ export const stake: Action = {
                     if (content.pool_name === null || content.pool_name === "null") {
                         content.pool_name = "sui"
                     }
-                    console.log("dataScallop:", dataScallop);
                     dataScallop = await redis.hGet("STAKE_POOLS_SCALLOP", content.pool_name.toLowerCase());
-                    console.log("dataScallop:", dataScallop);
                     if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
                         callback({
                             user: await runtime.character.name,
