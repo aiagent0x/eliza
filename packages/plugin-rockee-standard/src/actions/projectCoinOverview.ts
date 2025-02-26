@@ -233,16 +233,11 @@ export const projectInfo: Action = {
                         .map(item => item.market.name)
                         .join(",") : ""},...`,
                     categories: projectObj && projectObj.categories ?projectObj.categories.join(", ") : "N/A",
-                    imgUrl: tokenSuiInfo && tokenSuiInfo.image_url ? tokenSuiInfo.image_url : "",
+                    imgUrl: tokenSuiInfo && tokenSuiInfo.image_url ? tokenSuiInfo.image_url : projectObj.img_url,
                     contract_address: tokenSuiInfo && tokenSuiInfo.address ? tokenSuiInfo.address : "",
                     ...infoPrice
                 },
-                action_hint: getActionHint(
-                    "Do you need any further assistance? Please let me know!",
-                    projectObj.symbol,
-                    tokenSuiInfo && tokenSuiInfo.address ? tokenSuiInfo.address : "",
-                    tokenSuiInfo && tokenSuiInfo.image_url ? tokenSuiInfo.image_url : ""
-                )
+                action_hint: getActionHint()
             }
         });
         return true;
