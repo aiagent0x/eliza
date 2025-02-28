@@ -2,7 +2,7 @@ import { RedisClient } from "@elizaos/adapter-redis";
 import { CmsProvider } from "../services/CMS/cmsProvider";
 import ScallopProvider from "../services/stakeService/stakeScallop";
 import { listPoolsInFileJson, pool } from "../services/stakeService/searchPoolInFile";
-import { getPoolInfo } from "navi-sdk";
+import { getPoolInfo, getPoolsInfo } from "navi-sdk";
 import {
     elizaLogger,
 } from "@elizaos/core";
@@ -24,6 +24,7 @@ export async function filterByTagging(tag: string, agentName: string) {
     let listPoolsScallop;
     let listPoolSuilend;
     let scallopProvider = new ScallopProvider();
+    let listPoolsNaviOnSite = await getPoolsInfo()
     if (!text) return null;
     switch (text) {
         case "swap_1_sui_to_usdc":
@@ -107,7 +108,6 @@ export async function filterByTagging(tag: string, agentName: string) {
                         price_change_24h: token.change24h,
                         type: token.address,
                         iconUrl: token.logo
-
                     }))
                 }
             }
@@ -147,8 +147,8 @@ export async function filterByTagging(tag: string, agentName: string) {
             }
             listPoolSuilend = await listPool()
             listPoolsScallop = await scallopProvider.listPools();
-            responseData = await listPoolsInFileJson();
 
+            responseData = await listPoolsInFileJson();
             index = 0;
             for (let key in pool) {
                 if (pool.hasOwnProperty(key)) {
@@ -174,6 +174,25 @@ export async function filterByTagging(tag: string, agentName: string) {
                     }
                 }
                 index++;
+            }
+            if (listPoolsNaviOnSite.length > 0 && listPoolsNaviOnSite) {
+                for (let i = 0; i < responseData.length; i++) {
+                    if (responseData[i].type === "0x2::sui::SUI") {
+                        responseData[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                    } else {
+                        responseData[i].typeCoin = responseData[i].type;
+                    }
+
+                    for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                        if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData[i].typeCoin) {
+                            delete responseData[i].base_supply_rate;
+                            delete responseData[i].total_supply_rate;
+                            responseData[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                            responseData[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                        }
+                    }
+                    delete responseData[i].typeCoin;
+                }
             }
             responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
             responseData.sort(
@@ -212,6 +231,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 };
             }
             listPoolsNavi = await listPoolsInFileJson();
+
             index = 0;
             for (let key in pool) {
                 if (pool.hasOwnProperty(key)) {
@@ -237,6 +257,25 @@ export async function filterByTagging(tag: string, agentName: string) {
                     }
                 }
                 index++;
+            }
+            if (listPoolsNaviOnSite) {
+                for (let i = 0; i < listPoolsNavi.length; i++) {
+                    if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                        listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                    } else {
+                        listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                    }
+                    for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                        if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                            delete listPoolsNavi[i].base_supply_rate;
+                            delete listPoolsNavi[i].total_supply_rate;
+                            listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                            listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                        }
+                    }
+                    delete listPoolsNavi[i].typeCoin;
+                }
+                
             }
             listPoolsNavi.sort(
                 (a, b) =>
