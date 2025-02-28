@@ -1,6 +1,7 @@
 [
 	{
-		"name": "NAVX",
+		"name": "NAVI",
+		"symbol": "NAVX",
 		"assetId": 7,
 		"poolId": "0xc0e02e7a245e855dd365422faf76f87d9f5b2148a26d48dda6e8253c3fe9fa60",
 		"type": "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX",

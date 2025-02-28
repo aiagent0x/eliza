@@ -403,6 +403,7 @@ export const stake: Action = {
                         });
                         return true
                     }
+
                     for (let key in pool) {
                         if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
                             symbolOnPoolNavi = key;
@@ -412,7 +413,7 @@ export const stake: Action = {
                     if (data && typeof data === "string" && data !== null) {
                         callback({
                             user: await runtime.character.name,
-                            text: "Double-check all the details before takeoff to dodge any turbulence!",
+                            text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
                             action: "STAKE_TOKEN",
                             result: {
                                 type: type_action === "stake" ? "stake_token" : "unstake_token",
@@ -434,15 +435,30 @@ export const stake: Action = {
                         responseData.base_borrow_rate = poolInfo.base_borrow_rate;
                         responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
                         responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                        responseData.total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                        responseData.total_supply_rate = 0;
                         responseData.protocol = "navi";
                         responseData.amount = content.amount;
+                        let listPoolsNaviOnSite = await getPoolsInfo()
+                        if (responseData.type === "0x2::sui::SUI") {
+                            responseData.typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                        } else {
+                            responseData.typeCoin = responseData.type;
+                        }
+                        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                            if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData.typeCoin) {
+                                delete responseData.base_supply_rate;
+                                delete responseData.total_supply_rate;
+                                responseData.base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                responseData.total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                            }
+                        }
+                        delete responseData.typeCoin;
                     }
                     try {
 
                         callback({
                             user: await runtime.character.name,
-                            text: "Double-check all the details before takeoff to dodge any turbulence!",
+                            text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
                             action: "STAKE_TOKEN",
                             result: {
                                 type: type_action === "stake" ? "stake_token" : "unstake_token",
