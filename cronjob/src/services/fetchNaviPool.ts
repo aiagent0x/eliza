@@ -1,4 +1,4 @@
-import { getPoolInfo } from "navi-sdk";
+import { getPoolInfo, getPoolsInfo } from "navi-sdk";
 import { elizaLogger } from "@elizaos/core"
 import { listPoolsInFileJson, pool } from "../helpers/searchPoolInFile";
 import { RedisClient } from "@elizaos/adapter-redis";
@@ -32,7 +32,24 @@ export const fetchNaviPool = async (job: any) => {
         }
         index++;
     }
- 
+    let listPoolsNaviOnSite = await getPoolsInfo()
+    for (let i = 0; i < responseData.length; i++) {
+        if (responseData[i].type === "0x2::sui::SUI") {
+            responseData[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+        } else {
+            responseData[i].typeCoin = responseData[i].type;
+        }
+
+        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+            if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData[i].typeCoin) {
+                delete responseData[i].base_supply_rate;
+                delete responseData[i].total_supply_rate;
+                responseData[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                responseData[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+            }
+        }
+        delete responseData[i].typeCoin;
+    } 
     for (let data of responseData) {
         const success = await redis.hSet("STAKE_POOLS", data.name.toLowerCase(), JSON.stringify(data), 300);
         if (!success) {

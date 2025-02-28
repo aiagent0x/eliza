@@ -12,7 +12,7 @@ import {
 } from "@elizaos/core";
 import { hashUserMsg } from "../utils/format";
 import { searchPoolInFileJson, listPoolsInFileJson, pool } from "../providers/searchPoolInFile";
-import { getPoolInfo, getAddressPortfolio } from "navi-sdk";
+import { getPoolInfo, getAddressPortfolio, getPoolsInfo } from "navi-sdk";
 import { RedisClient } from "@elizaos/adapter-redis";
 import { ScallopProvider } from "../providers/fetchScallop/scallopProvider";
 import { listPool } from "../providers/fetchSuilend/listPools";
@@ -156,6 +156,24 @@ export const stake: Action = {
                             }
                         }
                         index++;
+                    }
+                    let listPoolsNaviOnSite = await getPoolsInfo()
+                    for (let i = 0; i < listPoolsNavi.length; i++) {
+                        if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                            listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                        } else {
+                            listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                        }
+
+                        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                            if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                                delete listPoolsNavi[i].base_supply_rate;
+                                delete listPoolsNavi[i].total_supply_rate;
+                                listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                            }
+                        }
+                        delete listPoolsNavi[i].typeCoin;
                     }
                     listPoolsNavi.sort(
                         (a, b) =>

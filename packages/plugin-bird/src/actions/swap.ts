@@ -63,7 +63,7 @@ export const swapSui: Action = {
         const hasPriceKeyword = /\b(swap|buy|sell|transfer)\b/i.test(content.toLowerCase());
         return hasPriceKeyword;
     },
-    description: "Perform a token swap.",
+    description: "Perform a token swap or buy token or sell token.",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,

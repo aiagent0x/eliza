@@ -38,7 +38,7 @@ token_address:
 export const suiTokenPriceByAddress: Action = {
     name: "TOKEN_PRICE_INFO_BY_ADDRESS",
 
-    description: "price of token address on sui",
+    description: "price of token address",
 
     similes: [
         "{INPUT}_PRICE",

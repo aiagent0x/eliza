@@ -6,7 +6,7 @@ import {
     elizaLogger,
 } from "@elizaos/core";
 import { listPoolsInFileJson, pool } from "../../services/stakeService/searchPoolInFile";
-import { getPoolInfo } from "navi-sdk";
+import { getPoolInfo, getPoolsInfo } from "navi-sdk";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL);
 import { Request, Response } from "express";
@@ -46,6 +46,7 @@ export default async function listStakes(req: Request, res: Response) {
     const listSuilendPools = await listPool()
     const scallopProvider = new ScallopProvider();
     const listScallopPools = await scallopProvider.listPools();
+
     let responseData = await listPoolsInFileJson();
     let index = 0;
     for (let key in pool) {
@@ -73,6 +74,24 @@ export default async function listStakes(req: Request, res: Response) {
         }
         index++;
     }
+    let listPoolsNaviOnSite = await getPoolsInfo()
+    for (let i = 0; i < responseData.length; i++) {
+        if (responseData[i].type === "0x2::sui::SUI") {
+            responseData[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+        } else {
+            responseData[i].typeCoin = responseData[i].type;
+        }
+
+        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+            if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData[i].typeCoin) {
+                delete responseData[i].base_supply_rate;
+                delete responseData[i].total_supply_rate;
+                responseData[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                responseData[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+            }
+        }
+        delete responseData[i].typeCoin;
+    } 
     responseData = responseData.concat(listScallopPools, listSuilendPools);
     responseData.sort(
         (a, b) =>
