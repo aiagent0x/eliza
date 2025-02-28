@@ -97,6 +97,7 @@ export const stake: Action = {
         }
         elizaLogger.info("content:", content)
         const scallopProvider = new ScallopProvider();
+        let listPoolsNaviOnSite = await getPoolsInfo()
         if (content.type === "list") {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
@@ -157,7 +158,7 @@ export const stake: Action = {
                         }
                         index++;
                     }
-                    let listPoolsNaviOnSite = await getPoolsInfo()
+                    
                     for (let i = 0; i < listPoolsNavi.length; i++) {
                         if (listPoolsNavi[i].type === "0x2::sui::SUI") {
                             listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
@@ -348,6 +349,23 @@ export const stake: Action = {
                         }
                         index++;
                     }
+                    for (let i = 0; i < listPoolsNavi.length; i++) {
+                        if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                            listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                        } else {
+                            listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                        }
+
+                        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                            if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                                delete listPoolsNavi[i].base_supply_rate;
+                                delete listPoolsNavi[i].total_supply_rate;
+                                listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                            }
+                        }
+                        delete listPoolsNavi[i].typeCoin;
+                    }
                     listPoolsNavi = listPoolsNavi.concat(listPoolsScallop, listPoolSuilend);
                     listPoolsNavi.sort(
                         (a, b) =>
@@ -437,7 +455,6 @@ export const stake: Action = {
                         responseData.total_supply_rate = 0;
                         responseData.protocol = "navi";
                         responseData.amount = content.amount;
-                        let listPoolsNaviOnSite = await getPoolsInfo()
                         if (responseData.type === "0x2::sui::SUI") {
                             responseData.typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
                         } else {
@@ -607,6 +624,20 @@ export const stake: Action = {
                                 responseData.total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
                                 responseData.protocol = "navi";
                                 responseData.amount = content.amount;
+                                if (responseData.type === "0x2::sui::SUI") {
+                                    responseData.typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                                } else {
+                                    responseData.typeCoin = responseData.type;
+                                }
+                                for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                                    if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData.typeCoin) {
+                                        delete responseData.base_supply_rate;
+                                        delete responseData.total_supply_rate;
+                                        responseData.base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                        responseData.total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                    }
+                                }
+                                delete responseData.typeCoin;
                                 data = responseData;
                             }
                         }
