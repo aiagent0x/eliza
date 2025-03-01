@@ -101,6 +101,7 @@
         "@elizaos/plugin-di": "workspace:*",
         "@elizaos/plugin-bird": "workspace:*",
         "@elizaos/plugin-bird-plus": "workspace:*",
+        "@elizaos/plugin-bird-plus-v2": "workspace:*",
         "@elizaos/plugin-web-search": "workspace:*",
         "readline": "1.3.0",
         "ws": "8.18.0",
