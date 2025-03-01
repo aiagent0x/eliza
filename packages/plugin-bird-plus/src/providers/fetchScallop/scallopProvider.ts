@@ -102,7 +102,10 @@ export class ScallopProvider {
 
     constructor() { }
     async listPools() {
-        let marketPools: any = await scallopQuery.getMarketPools(listCoinName);
+        await scallopQuery.init();
+        let marketPools: any = await scallopQuery.getMarketPools(listCoinName,{
+            indexer: true,
+        });
         let marketPoolsArray: any = []
         marketPools = marketPools.pools;
         Object.keys(marketPools).forEach((key, index) => {

@@ -10,7 +10,7 @@
     "@elizaos/plugin-tee": "^0.1.7",
     "@mysten/sui": "1.20.0",
     "@mysten/sui.js": "^0.53.0",
-    "@scallop-io/sui-scallop-sdk": "^1.4.23",
+    "@scallop-io/sui-scallop-sdk": "^1.4.28",
     "@suilend/sdk": "1.1.36",
     "@suilend/springsui-sdk": "1.0.19",
     "axios": "^1.7.9",

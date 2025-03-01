@@ -102,12 +102,16 @@ export class ScallopProvider {
 
     constructor() { }
     async listPools() {
-        let marketPools: any = await scallopQuery.getMarketPools(listCoinName);
+        await scallopQuery.init();
+        let marketPools: any = await scallopQuery.getMarketPools(listCoinName, {
+            indexer: true,
+        });
+
         let marketPoolsArray: any = []
         marketPools = marketPools.pools;
         Object.keys(marketPools).forEach((key, index) => {
             const coin = listCoins.find((c: any) => c.coin_name === marketPools[key].coinName);
-            marketPoolsArray[index] = {
+            marketPoolsArray[index] = { 
                 img_icon: coin.img_icon,
                 coin_name: marketPools[key].coinName,
                 symbol: marketPools[key].symbol,

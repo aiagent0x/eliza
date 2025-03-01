@@ -103,7 +103,10 @@ const listCoins: any = [{
 },
 ];
 export async function listPoolScallop() {
-    let marketPools: any = await scallopQuery.getMarketPools(listCoinName);
+    await scallopQuery.init();
+    let marketPools: any = await scallopQuery.getMarketPools(listCoinName,{
+        indexer: true,
+    });
     let marketPoolsArray: any = []
     marketPools = marketPools.pools;
     Object.keys(marketPools).forEach((key, index) => {
@@ -155,7 +158,9 @@ export async function listPoolScallop() {
 
         };
     });
+
     for (let data of marketPoolsArray) {
+
         const success = await redis.hSet("STAKE_POOLS_SCALLOP", data.coin_name.toLowerCase(), JSON.stringify(data), 300);
         if (!success) {
             elizaLogger.error(`Failed to set data for pool ${data.name} in Redis.`);
