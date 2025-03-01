@@ -1,11 +1,12 @@
 import {
     Scallop,
+    SUPPORT_POOLS
 } from '@scallop-io/sui-scallop-sdk'
 const scallopSDK = new Scallop({
     networkType: 'mainnet'
 });
 const scallopQuery = await scallopSDK.createScallopQuery();
-const listCoinName: any = ["usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd"];
+const listCoinName: any = ["usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd", "ns", "usdy"];
 const listCoins: any = [{
     coin_name: "usdc",
     img_icon: "https://www.circle.com/hubfs/Brand/USDC/USDC_icon_32x32.png"
@@ -58,10 +59,6 @@ const listCoins: any = [{
     coin_name: "afsui",
     img_icon: "https://aftermath.finance/coins/afsui.svg"
 },
-{
-    coin_name: "afsui",
-    img_icon: "https://aftermath.finance/coins/afsui.svg"
-},
 
 {
     coin_name: "hasui",
@@ -97,6 +94,14 @@ const listCoins: any = [{
     coin_name: "musd",
     img_icon: "https://app.scallop.io/assets/musd-BdCCBMx9.webp"
 },
+{
+    coin_name: "ns",
+    img_icon: "https://token-image.suins.io/icon.svg"
+},
+{
+    coin_name: "usdy",
+    img_icon: "https://ondo.finance/images/tokens/usdy.svg"
+}
 ]
 export class ScallopProvider {
 
@@ -110,9 +115,11 @@ export class ScallopProvider {
         let marketPoolsArray: any = []
         marketPools = marketPools.pools;
         Object.keys(marketPools).forEach((key, index) => {
-            const coin = listCoins.find((c: any) => c.coin_name === marketPools[key].coinName);
-            marketPoolsArray[index] = { 
-                img_icon: coin.img_icon,
+            const coin = listCoins.find((c: any) => {
+                return c.coin_name === marketPools[key].coinName;
+            });
+            marketPoolsArray[index] = {
+                img_icon: coin ? coin.img_icon : "",
                 coin_name: marketPools[key].coinName,
                 symbol: marketPools[key].symbol,
                 market_coin_type: marketPools[key].marketCoinType,
