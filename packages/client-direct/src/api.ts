@@ -650,5 +650,12 @@ export function createApiRouter(
     }
     })
     router.post("/agents/examples", listCharactorExample)
+    router.post("/agents/stringToUuid", async (req,res)=>{
+        let {text} = req.body
+        res.status(200).json({
+            success: false,
+            message: stringToUuid(text),
+        });
+    })
     return router;
 }

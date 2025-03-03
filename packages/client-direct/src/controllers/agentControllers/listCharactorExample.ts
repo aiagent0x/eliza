@@ -7,7 +7,7 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const samplesDir = path.join(__dirname, '../../../characters/samples');
-const mapDataPath = path.join(__dirname, '../../../characters/samples/mapData.json')
+const mapDataPath = path.join(__dirname, '../../../characters/samples/listExample.json')
 export default async function index(req,res){
 
     await updateFileMapData();
