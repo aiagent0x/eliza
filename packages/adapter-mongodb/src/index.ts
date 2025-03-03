@@ -37,8 +37,7 @@ interface KnowledgeDocument {
 
 export class MongoDBDatabaseAdapter
     extends DatabaseAdapter<MongoClient>
-    implements IDatabaseCacheAdapter
-{
+    implements IDatabaseCacheAdapter {
     private database: any;
     private databaseName: string;
     private hasVectorSearch: boolean;
@@ -393,12 +392,14 @@ export class MongoDBDatabaseAdapter
     }
 
     async createMemory(memory: Memory, tableName: string): Promise<void> {
-
+       
         await this.ensureConnection();
+    
         try {
             let isUnique = true;
-
+       
             if (memory.embedding) {
+                
                 const similarMemories = await this.searchMemories(
                     {
                         tableName,
@@ -410,6 +411,7 @@ export class MongoDBDatabaseAdapter
                         unique: isUnique
                     }
                 )
+               
                 // const similarMemories = await this.searchMemoriesByEmbedding(
                 //     memory.embedding,
                 //     {
@@ -425,8 +427,9 @@ export class MongoDBDatabaseAdapter
 
 
             const content = JSON.stringify(memory.content);
+           
             const createdAt = memory.createdAt ?? Date.now();
-
+            
             await this.database.collection('memories').insertOne({
                 id: memory.id ?? v4(),
                 type: tableName,
@@ -438,7 +441,7 @@ export class MongoDBDatabaseAdapter
                 unique: isUnique,
                 createdAt: new Date(createdAt)
             });
-        }catch (e) {
+        } catch (e) {
             elizaLogger.error(e);
         }
     }
@@ -450,19 +453,20 @@ export class MongoDBDatabaseAdapter
     }): Promise<Memory[]> {
         await this.ensureConnection();
         // Implement a basic similarity search using standard MongoDB operations
+        
         const memories = await this.database.collection('memories')
             .find(params.query)
             .limit(params.limit || 10)
             .toArray();
-
+      
         // Sort by cosine similarity computed in application
         return memories
-            .map(memory => ({
+            .map((memory: any) => ({
                 ...memory,
                 similarity: this.cosineSimilarity(params.embedding, memory.embedding)
             }))
-            .sort((a, b) => b.similarity - a.similarity)
-            .map(memory => ({
+            .sort((a: any, b: any) => b.similarity - a.similarity)
+            .map((memory: any) => ({
                 ...memory,
                 createdAt: typeof memory.createdAt === "string" ?
                     Date.parse(memory.createdAt) : memory.createdAt,
@@ -472,11 +476,13 @@ export class MongoDBDatabaseAdapter
     }
 
     private cosineSimilarity(a: Float32Array | number[], b: Float32Array | number[]): number {
+      
         const aArr = Array.from(a);
         const bArr = Array.from(b);
         const dotProduct = aArr.reduce((sum, val, i) => sum + val * bArr[i], 0);
         const magnitudeA = Math.sqrt(aArr.reduce((sum, val) => sum + val * val, 0));
         const magnitudeB = Math.sqrt(bArr.reduce((sum, val) => sum + val * val, 0));
+       
         return dotProduct / (magnitudeA * magnitudeB);
     }
 
@@ -496,8 +502,10 @@ export class MongoDBDatabaseAdapter
             ...(params.unique && { unique: true }),
             ...(params.agentId && { agentId: params.agentId })
         };
-
+       
         if (this.hasVectorSearch) {
+            
+
             const pipeline = [
                 {
                     $search: {
@@ -512,7 +520,7 @@ export class MongoDBDatabaseAdapter
                 },
                 { $match: query }
             ];
-
+         
             try {
                 const memories = await this.database.collection('memories')
                     .aggregate(pipeline)
@@ -534,7 +542,7 @@ export class MongoDBDatabaseAdapter
                 });
             }
         }
-
+       
         return this.searchMemoriesFallback({
             embedding: params.embedding,
             query,
@@ -696,13 +704,13 @@ export class MongoDBDatabaseAdapter
         // Calculate minimum edit distance
         for (let i = 1; i <= str1.length; i++) {
             for (let j = 1; j <= str2.length; j++) {
-                if (str1[i-1] === str2[j-1]) {
-                    matrix[i][j] = matrix[i-1][j-1];
+                if (str1[i - 1] === str2[j - 1]) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
                 } else {
                     matrix[i][j] = Math.min(
-                        matrix[i-1][j-1] + 1,  // substitution
-                        matrix[i][j-1] + 1,    // insertion
-                        matrix[i-1][j] + 1     // deletion
+                        matrix[i - 1][j - 1] + 1,  // substitution
+                        matrix[i][j - 1] + 1,    // insertion
+                        matrix[i - 1][j] + 1     // deletion
                     );
                 }
             }
@@ -711,7 +719,7 @@ export class MongoDBDatabaseAdapter
         return matrix[str1.length][str2.length];
     }
 
-// Cache for reusing Levenshtein distance matrix
+    // Cache for reusing Levenshtein distance matrix
     private levenshteinMatrix: number[][] = [];
     private maxMatrixSize = 0;
 
@@ -1285,11 +1293,15 @@ export class MongoDBDatabaseAdapter
                                         {
                                             $divide: [
                                                 1,
-                                                { $add: [1, { $function: {
+                                                {
+                                                    $add: [1, {
+                                                        $function: {
                                                             body: this.cosineSimilarity.toString(),
                                                             args: [params.embedding, "$$embedding"],
                                                             lang: "js"
-                                                        }}] }
+                                                        }
+                                                    }]
+                                                }
                                             ]
                                         }
                                     ]

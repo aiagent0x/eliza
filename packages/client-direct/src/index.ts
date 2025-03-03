@@ -209,12 +209,12 @@ export class DirectClient {
                             agentId.toLowerCase()
                     );
                 }
-
+                
                 if (!runtime) {
                     res.status(404).send("Agent not found");
                     return;
                 }
-
+                
                 await runtime.ensureConnection(
                     userId,
                     roomId,
@@ -222,16 +222,16 @@ export class DirectClient {
                     req.body.name,
                     "direct"
                 );
-
+                console.log("ensureConnection")
                 const text = req.body.text;
                 // if empty text, directly return
                 if (!text) {
                     res.json([]);
                     return;
                 }
-
+                
                 const messageId = stringToUuid(Date.now().toString());
-
+                console.log("messageId")
                 const attachments: Media[] = [];
                 if (req.file) {
                     const filePath = path.join(
@@ -257,14 +257,12 @@ export class DirectClient {
                     source: "direct",
                     inReplyTo: undefined,
                 };
-
                 const userMessage = {
                     content,
                     userId,
                     roomId,
                     agentId: runtime.agentId,
                 };
-
                 const memory: Memory = {
                     id: stringToUuid(messageId + "-" + userId),
                     ...userMessage,
@@ -274,25 +272,24 @@ export class DirectClient {
                     content,
                     createdAt: Date.now(),
                 };
-
-                // await runtime.messageManager.addEmbeddingToMemory(memory);
+                await runtime.messageManager.addEmbeddingToMemory(memory);
                 await runtime.messageManager.createMemory(memory);
-
+             
                 let state = await runtime.composeState(userMessage, {
                     agentName: runtime.character.name,
                 });
-
+           
                 const context = composeContext({
                     state,
                     template: messageHandlerTemplate,
                 });
-
+           
                 const response = await generateMessageResponse({
                     runtime: runtime,
                     context,
                     modelClass: ModelClass.SMALL,
                 });
-
+         
                 if (!response) {
                     res.status(500).send(
                         "No response from generateMessageResponse"
@@ -309,11 +306,11 @@ export class DirectClient {
                     embedding: getEmbeddingZeroVector(),
                     createdAt: Date.now(),
                 };
-
+               
                 await runtime.messageManager.createMemory(responseMessage);
-
+                
                 state = await runtime.updateRecentMessageState(state);
-
+        
                 let message = null as Content | null;
 
                 await runtime.processActions(
@@ -325,7 +322,7 @@ export class DirectClient {
                         return [memory];
                     }
                 );
-
+      
                 await runtime.evaluate(memory, state);
 
                 // Check if we should suppress the initial message
