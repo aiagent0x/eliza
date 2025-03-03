@@ -216,34 +216,34 @@ export function createApiRouter(
     });
     router.post("/agents/new", async (req, res) => {
         // load character from body
-        elizaLogger.error(`1`);
+       
         const character = req.body;
-        const dataDir = path.join(__dirname, '../../../characters/data1');
+        // const dataDir = path.join(__dirname, '../../../characters/data1');
 
-        await fs.promises.mkdir(dataDir, { recursive: true });
-        const files = await fs.promises.readdir(dataDir);
-        const existingCharacterFile = files.find(file => file.startsWith(`${stringToUuid(character.id)}.`) && file.endsWith('.character.json'));
-        if (existingCharacterFile) {
-            res.status(400).json({
-            message: "This name already exists, please choose a different name",
-            });
-            return;
-        }
+        // await fs.promises.mkdir(dataDir, { recursive: true });
+        // const files = await fs.promises.readdir(dataDir);
+        // const existingCharacterFile = files.find(file => file.startsWith(`${stringToUuid(character.id)}.`) && file.endsWith('.character.json'));
+        // if (existingCharacterFile) {
+        //     res.status(400).json({
+        //     message: "This name already exists, please choose a different name",
+        //     });
+        //     return;
+        // }
 
-        try {
-            validateCharacterConfig(character);
-            const pathCharacter = `../../../characters/data1/${character.id}.character.json`;
-            const  newCharacterPath= path.join(__dirname, pathCharacter);
-            await fs.promises.writeFile(newCharacterPath, JSON.stringify(character, null, 2), 'utf8');
+        // try {
+        //     validateCharacterConfig(character);
+        //     const pathCharacter = `../../../characters/data1/${character.id}.character.json`;
+        //     const  newCharacterPath= path.join(__dirname, pathCharacter);
+        //     await fs.promises.writeFile(newCharacterPath, JSON.stringify(character, null, 2), 'utf8');
 
-        } catch (e) {
-            elizaLogger.error(`Error parsing character: ${e}`);
-            res.status(400).json({
-                success: false,
-                message: e.message,
-            });
-            return;
-        }
+        // } catch (e) {
+        //     elizaLogger.error(`Error parsing character: ${e}`);
+        //     res.status(400).json({
+        //         success: false,
+        //         message: e.message,
+        //     });
+        //     return;
+        // }
 
         // start it up (and register it)
         await directClient.startAgent(character);
