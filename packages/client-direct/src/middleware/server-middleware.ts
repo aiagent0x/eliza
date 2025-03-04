@@ -1,12 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
-
+const auth_key = "73947db7-8515-4191-bf0d-64fdd8c5b902"
 const serverMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
-    
-    // Add custom headers or perform other middleware tasks here
-    res.setHeader('Authorization', '73947db7-8515-4191-bf0d-64fdd8c5b902');
 
-    // Call the next middleware in the stack
+    let headers = req.headers["authorization"];
+    if(!headers || headers ===""){
+        res.status(403).json({
+            message: "Unauthorized"
+        })
+    }
+    let auth;
+    if (typeof headers === 'string') {
+        auth = headers.split(" ");
+    }
+    if (auth[1] !== auth_key) {
+        res.status(403).json({
+            message: "Unauthorized"
+        })
+    }
+
     next();
 };
 
