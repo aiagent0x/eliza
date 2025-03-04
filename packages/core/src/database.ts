@@ -447,21 +447,21 @@ export abstract class DatabaseAdapter<DB = any> implements IDatabaseAdapter {
         skip?: number
     )
 
-   
+
     /**
      * get Memories By AgentId and RoomID and UserId
      * @param agentId The Agent ID of the knowledge items to remove
      * @returns Promise resolving when removal is complete
      */
 
-    abstract getAccountInfo(accountId: string) 
+    abstract getAccountInfo(accountId: string);
     /**
      * get Memories By AgentId and RoomID and UserId
      * @param agentId The Agent ID of the knowledge items to remove
      * @returns Promise resolving when removal is complete
      */
 
-
+    abstract createAgent(character: any);
     /**
      * Executes an operation with circuit breaker protection.
      * @param operation A function that returns a Promise to be executed with circuit breaker protection

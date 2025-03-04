@@ -11,6 +11,7 @@ import {
     type Memory,
     type Relationship,
     type UUID, elizaLogger,
+    stringToUuid
 } from "@elizaos/core";
 import { v4 } from "uuid";
 
@@ -1490,7 +1491,30 @@ export class MongoDBDatabaseAdapter
             elizaLogger.error("getAccountInfo-Mongo", error);
         }
     }
-
+    async createAgent(character:any){
+        try {
+            const idAgent = stringToUuid(character.name);
+            const parentId = character.parentId
+            let accountInfo = await this.getAccountInfo(idAgent);
+            if(accountInfo) throw Error("account existed");
+            delete character.parentId;
+            // delete character.id;
+            await this.database.collection("accounts").insertOne({
+                id: idAgent,
+                name: character.name,
+                username: character.name,
+                email: idAgent,
+                parentId: parentId,
+                details: JSON.stringify(character)
+            });
+            accountInfo = await this.getAccountInfo(idAgent);
+            // console.log("accountInfo:",accountInfo)
+            character.id = accountInfo.id;
+            return character;
+        } catch (error) {
+            elizaLogger.error("createAgent-Mongo", error);
+        }
+    }
 
 
 }

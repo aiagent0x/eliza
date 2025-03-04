@@ -1142,6 +1142,7 @@ export interface IDatabaseAdapter {
         skip?: number
     )
     getAccountInfo(accountId: string) 
+    createAgent(character:any)
     createKnowledge(knowledge: RAGKnowledgeItem): Promise<void>;
     removeKnowledge(id: UUID): Promise<void>;
     clearKnowledge(agentId: UUID, shared?: boolean): Promise<void>;

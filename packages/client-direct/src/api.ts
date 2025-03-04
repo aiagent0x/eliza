@@ -215,46 +215,71 @@ export function createApiRouter(
             character: character,
         });
     });
+    // router.post("/agents/new", async (req, res) => {
+    //     // load character from body
+
+    //     const character = req.body;
+    //     // const dataDir = path.join(__dirname, '../../../characters/data1');
+
+    //     // await fs.promises.mkdir(dataDir, { recursive: true });
+    //     // const files = await fs.promises.readdir(dataDir);
+    //     // const existingCharacterFile = files.find(file => file.startsWith(`${stringToUuid(character.id)}.`) && file.endsWith('.character.json'));
+    //     // if (existingCharacterFile) {
+    //     //     res.status(400).json({
+    //     //     message: "This name already exists, please choose a different name",
+    //     //     });
+    //     //     return;
+    //     // }
+
+    //     // try {
+    //     //     validateCharacterConfig(character);
+    //     //     const pathCharacter = `../../../characters/data1/${character.id}.character.json`;
+    //     //     const  newCharacterPath= path.join(__dirname, pathCharacter);
+    //     //     await fs.promises.writeFile(newCharacterPath, JSON.stringify(character, null, 2), 'utf8');
+
+    //     // } catch (e) {
+    //     //     elizaLogger.error(`Error parsing character: ${e}`);
+    //     //     res.status(400).json({
+    //     //         success: false,
+    //     //         message: e.message,
+    //     //     });
+    //     //     return;
+    //     // }
+
+    //     // start it up (and register it)
+    //     await directClient.startAgent(character);
+    //     elizaLogger.info(`${character.name} started`);
+
+    //     res.json({
+    //         id: character.id,
+    //         character: character,
+    //     });
+    // });
     router.post("/agents/new", async (req, res) => {
-        // load character from body
-
         const character = req.body;
-        // const dataDir = path.join(__dirname, '../../../characters/data1');
-
-        // await fs.promises.mkdir(dataDir, { recursive: true });
-        // const files = await fs.promises.readdir(dataDir);
-        // const existingCharacterFile = files.find(file => file.startsWith(`${stringToUuid(character.id)}.`) && file.endsWith('.character.json'));
-        // if (existingCharacterFile) {
-        //     res.status(400).json({
-        //     message: "This name already exists, please choose a different name",
-        //     });
-        //     return;
-        // }
-
-        // try {
-        //     validateCharacterConfig(character);
-        //     const pathCharacter = `../../../characters/data1/${character.id}.character.json`;
-        //     const  newCharacterPath= path.join(__dirname, pathCharacter);
-        //     await fs.promises.writeFile(newCharacterPath, JSON.stringify(character, null, 2), 'utf8');
-
-        // } catch (e) {
-        //     elizaLogger.error(`Error parsing character: ${e}`);
-        //     res.status(400).json({
-        //         success: false,
-        //         message: e.message,
-        //     });
-        //     return;
-        // }
-
-        // start it up (and register it)
-        await directClient.startAgent(character);
-        elizaLogger.info(`${character.name} started`);
-
-        res.json({
-            id: character.id,
-            character: character,
+        const parentId = character.parentId;
+        const runtime = agents.get(AGENTIDDEFAUT);
+        const parrentInfo = await runtime.databaseAdapter.getAccountInfo(parentId);
+        if(!parrentInfo){
+            res.status(400).json({
+                message:"Dont have parrentId"
+            });
+            return;
+        }
+        let accountInfo = await runtime.databaseAdapter.createAgent(character);
+        if(!accountInfo){
+            res.status(400).json({
+                message:"Agent existed",
+            });
+            return;
+        }
+        res.status(200).json({
+            message:"success",
+            id: accountInfo.id,
+            character: accountInfo,
         });
-    });
+        return;
+    })
     router.get("/agents/:agentId/channels", async (req, res) => {
         const { agentId } = validateUUIDParams(req.params, res) ?? {
             agentId: null,

@@ -196,7 +196,7 @@ export class DirectClient {
 
 
                 let agentId = req.params.agentId;
-
+                let sessionId: any = req.params.agentId
                 const roomId = stringToUuid(
                     req.body.roomId ?? "default-room-" + agentId
                 );
@@ -265,16 +265,17 @@ export class DirectClient {
                     source: "direct",
                     inReplyTo: undefined,
                 };
+                console.log("runtime.agentId:", runtime.agentId)
                 const userMessage = {
                     content,
                     userId,
                     roomId,
-                    agentId: runtime.agentId,
+                    agentId: sessionId,
                 };
                 const memory: Memory = {
                     id: stringToUuid(messageId + "-" + userId),
                     ...userMessage,
-                    agentId: runtime.agentId,
+                    agentId: sessionId,
                     userId,
                     roomId,
                     content,
@@ -307,9 +308,9 @@ export class DirectClient {
 
                 // save response to memory
                 const responseMessage: Memory = {
-                    id: stringToUuid(messageId + "-" + runtime.agentId),
+                    id: stringToUuid(messageId + "-" + sessionId),
                     ...userMessage,
-                    userId: runtime.agentId,
+                    userId: sessionId,
                     content: response,
                     embedding: getEmbeddingZeroVector(),
                     createdAt: Date.now(),
@@ -984,8 +985,8 @@ export class DirectClient {
             const { agentId, roomId, userId, skip, limit } = req.body;
             let runtimeDefault = this.agents.get(AGENTIDDEFAUT);
             let memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomIDUserId(agentId, roomId, userId, limit, skip);
-            memories.map((memory)=>{
-                memory.content = JSON.parse(memory.content )
+            memories.map((memory) => {
+                memory.content = JSON.parse(memory.content)
             })
             res.status(200).json({
                 message: "success",
