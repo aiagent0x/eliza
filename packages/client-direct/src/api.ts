@@ -20,6 +20,7 @@ import { REST, Routes } from "discord.js";
 import type { DirectClient } from ".";
 import { validateUuid } from "@elizaos/core";
 import listCharactorExample from "./controllers/agentControllers/listCharactorExample";
+const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 interface UUIDParams {
@@ -216,7 +217,7 @@ export function createApiRouter(
     });
     router.post("/agents/new", async (req, res) => {
         // load character from body
-       
+
         const character = req.body;
         // const dataDir = path.join(__dirname, '../../../characters/data1');
 
@@ -249,7 +250,7 @@ export function createApiRouter(
         await directClient.startAgent(character);
         elizaLogger.info(`${character.name} started`);
 
-       res.json({
+        res.json({
             id: character.id,
             character: character,
         });
@@ -289,6 +290,8 @@ export function createApiRouter(
             agentId: null,
             roomId: null,
         };
+        console.log("agentId:", agentId);
+        console.log("roomId:", roomId);
         if (!agentId || !roomId) return;
 
         let runtime = agents.get(agentId);
@@ -308,7 +311,9 @@ export function createApiRouter(
         try {
             const memories = await runtime.messageManager.getMemories({
                 roomId,
+                count: 10
             });
+            console.log("memories:", memories)
             const response = {
                 agentId,
                 roomId,
@@ -497,7 +502,7 @@ export function createApiRouter(
     });
     router.post("/agents/new2", async (req, res) => {
 
-        const {sampleAgentId, name, adjectives, bio, lore, knowledge, style, plugins, clients, modelProvider, settings} = req.body;
+        const { sampleAgentId, name, adjectives, bio, lore, knowledge, style, plugins, clients, modelProvider, settings } = req.body;
 
         const mapDataPath = path.join(__dirname, '../../../characters/samples/mapData.json');
         let sampleAgents;
@@ -507,7 +512,7 @@ export function createApiRouter(
         const existingCharacterFile = files.find(file => file.startsWith(`${stringToUuid(name)}.`) && file.endsWith('.character.json'));
         if (existingCharacterFile) {
             res.status(400).json({
-            message: "This name already exists, please choose a different name",
+                message: "This name already exists, please choose a different name",
             });
             return;
         }
@@ -544,7 +549,7 @@ export function createApiRouter(
 
         // start it up (and register it)
         const pathCharacter = `../../../characters/data/${Date.now()}.${sampleAgentInfo.name}.character.json`;
-        const  newCharacterPath= path.join(__dirname, pathCharacter);
+        const newCharacterPath = path.join(__dirname, pathCharacter);
         await fs.promises.writeFile(newCharacterPath, JSON.stringify(sampleAgentWriteFile, null, 2), 'utf8');
 
         await directClient.startAgent(sampleAgentCharacterData);
@@ -576,15 +581,15 @@ export function createApiRouter(
             character: sampleAgentCharacterData,
         });
     });
-    router.post("/agents/plugins", async(req,res)=>{
+    router.post("/agents/plugins", async (req, res) => {
         const packagesPath = path.join(__dirname, '../../../packages');
         try {
             const packageFolders = await fs.promises.readdir(packagesPath, { withFileTypes: true });
             const moduleNames = packageFolders
                 .filter(dirent => dirent.isDirectory())
                 .map(dirent => dirent.name)
-                .filter(name => !name.startsWith('adapter-') && !['core', 
-                    'debug-audio', 
+                .filter(name => !name.startsWith('adapter-') && !['core',
+                    'debug-audio',
                     'create-eliza-app',
                     '_examples',
                     'content_cache',
@@ -603,11 +608,11 @@ export function createApiRouter(
                     "client-eliza-home",
                     "client-github",
                     "client-lens",
-		            "client-simsai",
+                    "client-simsai",
                     "plugin-agentkit",
                     "plugin-bootstrap",
                     "plugin-asterai",
-                    ].includes(name));
+                ].includes(name));
 
             res.status(200).json({ plugins: moduleNames });
         } catch (error) {
@@ -615,43 +620,33 @@ export function createApiRouter(
             res.status(500).json({ error: "Failed to fetch modules" });
         }
     })
-    router.post("/agents/start", async (req, res) =>{
-        const {agentId} = req.body;
+    router.post("/agents/start", async (req, res) => {
+        const { agentId } = req.body;
+        try {
+            const runtimeDefault = this.agents.get(AGENTIDDEFAUT);
+            const accountInfo = await runtimeDefault.databaseAdapter.getAccountInfo(agentId)
+            const character = JSON.parse(accountInfo.details);
+            validateCharacterConfig(character);
 
-        // const mapDataPath = path.join(__dirname, `../../../characters/data/${agentId}.xxx`);
-    try {
-        const files = await fs.promises.readdir(path.join(__dirname, '../../../characters/data'));
-        const characterFile = files.find(file => file.startsWith(`${agentId}.`) && file.endsWith('.character.json'));
+            // start it up (and register it)
+            await directClient.startAgent(character);
+            elizaLogger.info(`${character.name} started`);
 
-        if (!characterFile) {
-            throw new Error("Character file not found");
+            res.json({
+                id: character.id,
+                character: character,
+            });
+        } catch (error) {
+            elizaLogger.error(`Error starting agent: ${error}`);
+            res.status(404).json({
+                success: false,
+                message: "Character file not found",
+            });
         }
-
-        const characterFilePath = path.join(__dirname, '../../../characters/data', characterFile);
-        const data = await fs.promises.readFile(characterFilePath, 'utf8');
-        const character = JSON.parse(data);
-
-        validateCharacterConfig(character);
-
-        // start it up (and register it)
-        await directClient.startAgent(character);
-        elizaLogger.info(`${character.name} started`);
-
-        res.json({
-            id: character.id,
-            character: character,
-        });
-    } catch (error) {
-        elizaLogger.error(`Error starting agent: ${error}`);
-        res.status(404).json({
-            success: false,
-            message: "Character file not found",
-        });
-    }
     })
     router.post("/agents/examples", listCharactorExample)
-    router.post("/agents/stringToUuid", async (req,res)=>{
-        let {text} = req.body
+    router.post("/agents/stringToUuid", async (req, res) => {
+        let { text } = req.body
         res.status(200).json({
             success: false,
             message: stringToUuid(text),

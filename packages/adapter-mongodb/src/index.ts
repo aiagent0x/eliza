@@ -392,14 +392,14 @@ export class MongoDBDatabaseAdapter
     }
 
     async createMemory(memory: Memory, tableName: string): Promise<void> {
-       
+
         await this.ensureConnection();
-    
+
         try {
             let isUnique = true;
-       
+
             if (memory.embedding) {
-                
+
                 const similarMemories = await this.searchMemories(
                     {
                         tableName,
@@ -411,7 +411,7 @@ export class MongoDBDatabaseAdapter
                         unique: isUnique
                     }
                 )
-               
+
                 // const similarMemories = await this.searchMemoriesByEmbedding(
                 //     memory.embedding,
                 //     {
@@ -427,9 +427,9 @@ export class MongoDBDatabaseAdapter
 
 
             const content = JSON.stringify(memory.content);
-           
+
             const createdAt = memory.createdAt ?? Date.now();
-            
+
             await this.database.collection('memories').insertOne({
                 id: memory.id ?? v4(),
                 type: tableName,
@@ -453,12 +453,12 @@ export class MongoDBDatabaseAdapter
     }): Promise<Memory[]> {
         await this.ensureConnection();
         // Implement a basic similarity search using standard MongoDB operations
-        
+
         const memories = await this.database.collection('memories')
             .find(params.query)
             .limit(params.limit || 10)
             .toArray();
-      
+
         // Sort by cosine similarity computed in application
         return memories
             .map((memory: any) => ({
@@ -476,13 +476,13 @@ export class MongoDBDatabaseAdapter
     }
 
     private cosineSimilarity(a: Float32Array | number[], b: Float32Array | number[]): number {
-      
+
         const aArr = Array.from(a);
         const bArr = Array.from(b);
         const dotProduct = aArr.reduce((sum, val, i) => sum + val * bArr[i], 0);
         const magnitudeA = Math.sqrt(aArr.reduce((sum, val) => sum + val * val, 0));
         const magnitudeB = Math.sqrt(bArr.reduce((sum, val) => sum + val * val, 0));
-       
+
         return dotProduct / (magnitudeA * magnitudeB);
     }
 
@@ -502,9 +502,9 @@ export class MongoDBDatabaseAdapter
             ...(params.unique && { unique: true }),
             ...(params.agentId && { agentId: params.agentId })
         };
-       
+
         if (this.hasVectorSearch) {
-            
+
 
             const pipeline = [
                 {
@@ -520,7 +520,7 @@ export class MongoDBDatabaseAdapter
                 },
                 { $match: query }
             ];
-         
+
             try {
                 const memories = await this.database.collection('memories')
                     .aggregate(pipeline)
@@ -542,7 +542,7 @@ export class MongoDBDatabaseAdapter
                 });
             }
         }
-       
+
         return this.searchMemoriesFallback({
             embedding: params.embedding,
             query,
@@ -1452,6 +1452,46 @@ export class MongoDBDatabaseAdapter
             return [];
         }
     }
+    async getMemoriesByAgentIdRoomIDUserId(
+        agentId: string,
+        roomId: string,
+        userId: string,
+        limit: number = 10,
+        skip: number = 0
+    ) {
+        try {
+            const accountInfo = await this.database.collection("memories")
+                .find({ userId: userId, roomId: roomId, agentId: agentId })
+                .sort({ createdAt: -1 })
+                .skip((skip) * limit)
+                .limit(limit || 0)
+                .project({
+                    id: 1,
+                    type: 1,
+                    content: 1,
+                    userId: 1,
+                    roomId: 1,
+                    agentId: 1,
+                    unique: 1,
+                    createdAt: 1
+                })
+                .toArray();
+            return accountInfo;
+        } catch (error) {
+            elizaLogger.error("getMemoriesByAgentIdRoomIDUserId-Mongo", error);
+        }
+
+    }
+    async getAccountInfo(accountId: string){
+        try {
+             const accountInfo = await this.database.collection("accounts").findOne({ id: accountId });
+             return accountInfo;
+        } catch (error) {
+            elizaLogger.error("getAccountInfo-Mongo", error);
+        }
+    }
+
+
 
 }
 

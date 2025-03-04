@@ -434,6 +434,33 @@ export abstract class DatabaseAdapter<DB = any> implements IDatabaseAdapter {
      * @returns Promise resolving when removal is complete
      */
     abstract clearKnowledge(agentId: UUID, shared?: boolean): Promise<void>;
+    /**
+     * Removes an agents full knowledge database and its associated chunks from the database.
+     * @param agentId The Agent ID of the knowledge items to remove
+     * @returns Promise resolving when removal is complete
+     */
+    abstract getMemoriesByAgentIdRoomIDUserId(
+        agentId: string,
+        roomId: string,
+        userId: string,
+        limit?: number,
+        skip?: number
+    )
+
+   
+    /**
+     * get Memories By AgentId and RoomID and UserId
+     * @param agentId The Agent ID of the knowledge items to remove
+     * @returns Promise resolving when removal is complete
+     */
+
+    abstract getAccountInfo(accountId: string) 
+    /**
+     * get Memories By AgentId and RoomID and UserId
+     * @param agentId The Agent ID of the knowledge items to remove
+     * @returns Promise resolving when removal is complete
+     */
+
 
     /**
      * Executes an operation with circuit breaker protection.
