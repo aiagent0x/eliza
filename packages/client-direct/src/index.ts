@@ -27,6 +27,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
+import serverMiddleware from "./middleware/server-middleware.ts";
 const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -124,7 +125,7 @@ export class DirectClient {
 
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-
+        this.app.use(serverMiddleware)
         // Serve both uploads and generated images
         this.app.use(
             "/media/uploads",
