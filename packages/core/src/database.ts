@@ -439,10 +439,9 @@ export abstract class DatabaseAdapter<DB = any> implements IDatabaseAdapter {
      * @param agentId The Agent ID of the knowledge items to remove
      * @returns Promise resolving when removal is complete
      */
-    abstract getMemoriesByAgentIdRoomIDUserId(
+    abstract getMemoriesByAgentIdRoomId(
         agentId: string,
         roomId: string,
-        userId: string,
         limit?: number,
         skip?: number
     )

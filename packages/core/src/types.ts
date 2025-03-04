@@ -1134,10 +1134,9 @@ export interface IDatabaseAdapter {
         match_count: number;
         searchText?: string;
     }): Promise<RAGKnowledgeItem[]>;
-    getMemoriesByAgentIdRoomIDUserId(
+    getMemoriesByAgentIdRoomId(
         agentId: string,
         roomId: string,
-        userId: string,
         limit?: number,
         skip?: number
     )

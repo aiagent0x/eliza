@@ -1453,17 +1453,16 @@ export class MongoDBDatabaseAdapter
             return [];
         }
     }
-    async getMemoriesByAgentIdRoomIDUserId(
+    async getMemoriesByAgentIdRoomId(
         agentId: string,
         roomId: string,
-        userId: string,
         limit: number = 10,
         skip: number = 0
     ) {
         try {
             const accountInfo = await this.database.collection("memories")
-                .find({ userId: userId, roomId: roomId, agentId: agentId })
-                .sort({ createdAt: -1 })
+                .find({roomId: roomId, agentId: agentId })
+                .sort({ createdAt: 1 })
                 .skip((skip) * limit)
                 .limit(limit || 0)
                 .project({

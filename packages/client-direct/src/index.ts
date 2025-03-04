@@ -985,7 +985,7 @@ export class DirectClient {
         this.app.post("/memories", async (req, res) => {
             const { agentId, roomId, userId, skip, limit } = req.body;
             let runtimeDefault = this.agents.get(AGENTIDDEFAUT);
-            let memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomIDUserId(agentId, roomId, userId, limit, skip);
+            let memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomId(agentId, roomId, limit, skip);
             memories.map((memory) => {
                 memory.content = JSON.parse(memory.content)
             })
