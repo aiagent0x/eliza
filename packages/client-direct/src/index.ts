@@ -987,7 +987,6 @@ export class DirectClient {
             memories.map((memory)=>{
                 memory.content = JSON.parse(memory.content )
             })
-            console.log("memories:",memories)
             res.status(200).json({
                 message: "success",
                 data: memories
