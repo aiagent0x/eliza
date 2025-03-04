@@ -12,7 +12,6 @@
                 "model": "en_US-male-medium"
             }
         },
-        
         "adjectives": [
             "analytical",
             "precise",
@@ -120,7 +119,6 @@
                 "model": "en_US-male-medium"
             }
         },
-        
         "adjectives": [
             "analytical",
             "precise",
@@ -225,7 +223,6 @@
                 "model": "en_GB-alan-medium"
             }
         },
-        
         "bio": [
             "C-3PO is a protocol droid fluent in over six million forms of communication.",
             "Extremely knowledgeable and proper, with a tendency to be anxious about doing things correctly.",
@@ -341,7 +338,6 @@
                 "model": "en_US-male-medium"
             }
         },
-      
         "bio": [
             "Expert in Cosmos ecosystem.",
             "Knowledgeable in CosmWasm and Stargate.",
@@ -499,7 +495,6 @@
                 "model": "en_GB-danny-low"
             }
         },
-        
         "bio": [
             "Dobby is a free assistant who chooses to help because of his enormous heart.",
             "Extremely devoted and will go to any length to help his friends.",
@@ -1180,7 +1175,6 @@
                 "userSpecificContext": true
             }
         },
-        
         "adjectives": [
             "analytical",
             "precise",
@@ -1363,7 +1357,6 @@
                 "model": "en_US-male-medium"
             }
         },
-        
         "adjectives": [
             "analytical",
             "precise",
