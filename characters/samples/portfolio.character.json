@@ -12,7 +12,7 @@
             "userSpecificContext": true
           }
     },
-    "plugins": ["@elizaos/plugin-suimarket"],
+    "plugins": [],
     "adjectives": [
       "analytical",
       "precise",

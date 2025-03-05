@@ -1,3 +1,3 @@
 #!/bin/bash
-pm2 stop 1
-pm2 stop 2
+pm2 stop 5sonai-server
+pm2 stop 5sonai-client

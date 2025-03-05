@@ -14,12 +14,11 @@ import {
     type Character,
     stringToUuid,
 } from "@elizaos/core";
-
-import type { TeeLogQuery, TeeLogService } from "@elizaos/plugin-tee-log";
 import { REST, Routes } from "discord.js";
 import type { DirectClient } from ".";
 import { validateUuid } from "@elizaos/core";
 import listCharactorExample from "./controllers/agentControllers/listCharactorExample";
+const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 interface UUIDParams {
@@ -214,30 +213,71 @@ export function createApiRouter(
             character: character,
         });
     });
+    // router.post("/agents/new", async (req, res) => {
+    //     // load character from body
+
+    //     const character = req.body;
+    //     // const dataDir = path.join(__dirname, '../../../characters/data1');
+
+    //     // await fs.promises.mkdir(dataDir, { recursive: true });
+    //     // const files = await fs.promises.readdir(dataDir);
+    //     // const existingCharacterFile = files.find(file => file.startsWith(`${stringToUuid(character.id)}.`) && file.endsWith('.character.json'));
+    //     // if (existingCharacterFile) {
+    //     //     res.status(400).json({
+    //     //     message: "This name already exists, please choose a different name",
+    //     //     });
+    //     //     return;
+    //     // }
+
+    //     // try {
+    //     //     validateCharacterConfig(character);
+    //     //     const pathCharacter = `../../../characters/data1/${character.id}.character.json`;
+    //     //     const  newCharacterPath= path.join(__dirname, pathCharacter);
+    //     //     await fs.promises.writeFile(newCharacterPath, JSON.stringify(character, null, 2), 'utf8');
+
+    //     // } catch (e) {
+    //     //     elizaLogger.error(`Error parsing character: ${e}`);
+    //     //     res.status(400).json({
+    //     //         success: false,
+    //     //         message: e.message,
+    //     //     });
+    //     //     return;
+    //     // }
+
+    //     // start it up (and register it)
+    //     await directClient.startAgent(character);
+    //     elizaLogger.info(`${character.name} started`);
+
+    //     res.json({
+    //         id: character.id,
+    //         character: character,
+    //     });
+    // });
     router.post("/agents/new", async (req, res) => {
-        // load character from body
-      
         const character = req.body;
-        try {
-            validateCharacterConfig(character);
-        } catch (e) {
-            elizaLogger.error(`Error parsing character: ${e}`);
+        const parentId = character.parentId;
+        const runtime = agents.get(AGENTIDDEFAUT);
+        const parrentInfo = await runtime.databaseAdapter.getAccountInfo(parentId);
+        if (!parrentInfo) {
             res.status(400).json({
-                success: false,
-                message: e.message,
+                message: "Don't have parrentId"
             });
             return;
         }
-
-        // start it up (and register it)
-        await directClient.startAgent(character);
-        elizaLogger.info(`${character.name} started`);
-
-        res.json({
-            id: character.id,
-            character: character,
+        let accountInfo = await runtime.databaseAdapter.createAgent(character, parentId);
+        if (!accountInfo) {
+            res.status(400).json({
+                message: "Agent existed",
+            });
+            return;
+        }
+        res.status(200).json({
+            message: "success",
+            id: accountInfo.id,
+            character: accountInfo,
         });
-    });
+        return;
+    })
     router.get("/agents/:agentId/channels", async (req, res) => {
         const { agentId } = validateUUIDParams(req.params, res) ?? {
             agentId: null,
@@ -273,6 +313,8 @@ export function createApiRouter(
             agentId: null,
             roomId: null,
         };
+        console.log("agentId:", agentId);
+        console.log("roomId:", roomId);
         if (!agentId || !roomId) return;
 
         let runtime = agents.get(agentId);
@@ -292,7 +334,9 @@ export function createApiRouter(
         try {
             const memories = await runtime.messageManager.getMemories({
                 roomId,
+                count: 10
             });
+            console.log("memories:", memories)
             const response = {
                 agentId,
                 roomId,
@@ -332,103 +376,6 @@ export function createApiRouter(
             res.status(500).json({ error: "Failed to fetch memories" });
         }
     });
-
-    router.get("/tee/agents", async (req, res) => {
-        try {
-            const allAgents = [];
-
-            for (const agentRuntime of agents.values()) {
-                const teeLogService = agentRuntime
-                    .getService<TeeLogService>(ServiceType.TEE_LOG)
-                    .getInstance();
-
-                const agents = await teeLogService.getAllAgents();
-                allAgents.push(...agents);
-            }
-
-            const runtime: AgentRuntime = agents.values().next().value;
-            const teeLogService = runtime
-                .getService<TeeLogService>(ServiceType.TEE_LOG)
-                .getInstance();
-            const attestation = await teeLogService.generateAttestation(
-                JSON.stringify(allAgents)
-            );
-            res.json({ agents: allAgents, attestation: attestation });
-        } catch (error) {
-            elizaLogger.error("Failed to get TEE agents:", error);
-            res.status(500).json({
-                error: "Failed to get TEE agents",
-            });
-        }
-    });
-
-    router.get("/tee/agents/:agentId", async (req, res) => {
-        try {
-            const agentId = req.params.agentId;
-            const agentRuntime = agents.get(agentId);
-            if (!agentRuntime) {
-                res.status(404).json({ error: "Agent not found" });
-                return;
-            }
-
-            const teeLogService = agentRuntime
-                .getService<TeeLogService>(ServiceType.TEE_LOG)
-                .getInstance();
-
-            const teeAgent = await teeLogService.getAgent(agentId);
-            const attestation = await teeLogService.generateAttestation(
-                JSON.stringify(teeAgent)
-            );
-            res.json({ agent: teeAgent, attestation: attestation });
-        } catch (error) {
-            elizaLogger.error("Failed to get TEE agent:", error);
-            res.status(500).json({
-                error: "Failed to get TEE agent",
-            });
-        }
-    });
-
-    router.post(
-        "/tee/logs",
-        async (req: express.Request, res: express.Response) => {
-            try {
-                const query = req.body.query || {};
-                const page = Number.parseInt(req.body.page) || 1;
-                const pageSize = Number.parseInt(req.body.pageSize) || 10;
-
-                const teeLogQuery: TeeLogQuery = {
-                    agentId: query.agentId || "",
-                    roomId: query.roomId || "",
-                    userId: query.userId || "",
-                    type: query.type || "",
-                    containsContent: query.containsContent || "",
-                    startTimestamp: query.startTimestamp || undefined,
-                    endTimestamp: query.endTimestamp || undefined,
-                };
-                const agentRuntime: AgentRuntime = agents.values().next().value;
-                const teeLogService = agentRuntime
-                    .getService<TeeLogService>(ServiceType.TEE_LOG)
-                    .getInstance();
-                const pageQuery = await teeLogService.getLogs(
-                    teeLogQuery,
-                    page,
-                    pageSize
-                );
-                const attestation = await teeLogService.generateAttestation(
-                    JSON.stringify(pageQuery)
-                );
-                res.json({
-                    logs: pageQuery,
-                    attestation: attestation,
-                });
-            } catch (error) {
-                elizaLogger.error("Failed to get TEE logs:", error);
-                res.status(500).json({
-                    error: "Failed to get TEE logs",
-                });
-            }
-        }
-    );
 
     // router.post("/agent/start", async (req, res) => {
     //     const { characterPath, characterJson } = req.body;
@@ -481,15 +428,17 @@ export function createApiRouter(
     });
     router.post("/agents/new2", async (req, res) => {
 
-        const {sampleAgentId, name, adjectives, bio, lore, knowledge, style, plugins, clients, modelProvider, settings} = req.body;
+        const { sampleAgentId, name, adjectives, bio, lore, knowledge, style, plugins, clients, modelProvider, settings } = req.body;
 
         const mapDataPath = path.join(__dirname, '../../../characters/samples/mapData.json');
         let sampleAgents;
-        const files = await fs.promises.readdir(path.join(__dirname, '../../../characters/data'));
+        const dataDir = path.join(__dirname, '../../../characters/data');
+        await fs.promises.mkdir(dataDir, { recursive: true });
+        const files = await fs.promises.readdir(dataDir);
         const existingCharacterFile = files.find(file => file.startsWith(`${stringToUuid(name)}.`) && file.endsWith('.character.json'));
         if (existingCharacterFile) {
             res.status(400).json({
-            message: "This name already exists, please choose a different name",
+                message: "This name already exists, please choose a different name",
             });
             return;
         }
@@ -503,7 +452,6 @@ export function createApiRouter(
         const agentSamplePath = path.join(__dirname, `../../../characters/samples/${sampleAgentInfo.name}.character.json`);
         let sampleAgentCharacterData;
         let sampleAgentWriteFile;
-
         const data = await fs.promises.readFile(agentSamplePath, 'utf8');
         sampleAgentCharacterData = JSON.parse(data);
 
@@ -527,7 +475,7 @@ export function createApiRouter(
 
         // start it up (and register it)
         const pathCharacter = `../../../characters/data/${Date.now()}.${sampleAgentInfo.name}.character.json`;
-        const  newCharacterPath= path.join(__dirname, pathCharacter);
+        const newCharacterPath = path.join(__dirname, pathCharacter);
         await fs.promises.writeFile(newCharacterPath, JSON.stringify(sampleAgentWriteFile, null, 2), 'utf8');
 
         await directClient.startAgent(sampleAgentCharacterData);
@@ -559,15 +507,30 @@ export function createApiRouter(
             character: sampleAgentCharacterData,
         });
     });
-    router.post("/agents/plugins", async(req,res)=>{
+    router.post("/agents/v3/new", async (req, res) => {
+        const character = req.body;
+        try {
+            validateCharacterConfig(character);
+            await directClient.startAgent(character);
+            elizaLogger.info(`${character.name} started`);
+            res.json({
+                id: character.id,
+                character: character,
+            });
+        } catch (error) {
+            console.log("new-agents:", error)
+        }
+
+    })
+    router.post("/agents/plugins", async (req, res) => {
         const packagesPath = path.join(__dirname, '../../../packages');
         try {
             const packageFolders = await fs.promises.readdir(packagesPath, { withFileTypes: true });
             const moduleNames = packageFolders
                 .filter(dirent => dirent.isDirectory())
                 .map(dirent => dirent.name)
-                .filter(name => !name.startsWith('adapter-') && !['core', 
-                    'debug-audio', 
+                .filter(name => !name.startsWith('adapter-') && !['core',
+                    'debug-audio',
                     'create-eliza-app',
                     '_examples',
                     'content_cache',
@@ -586,11 +549,11 @@ export function createApiRouter(
                     "client-eliza-home",
                     "client-github",
                     "client-lens",
-		            "client-simsai",
+                    "client-simsai",
                     "plugin-agentkit",
                     "plugin-bootstrap",
                     "plugin-asterai",
-                    ].includes(name));
+                ].includes(name));
 
             res.status(200).json({ plugins: moduleNames });
         } catch (error) {
@@ -598,40 +561,101 @@ export function createApiRouter(
             res.status(500).json({ error: "Failed to fetch modules" });
         }
     })
-    router.post("/agents/start", async (req, res) =>{
-        const {agentId} = req.body;
+    router.post("/agents/start", async (req, res) => {
+        const { agentId } = req.body;
+        try {
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
+            const accountInfo = await runtimeDefault.databaseAdapter.getAccountInfo(agentId)
+            const character = JSON.parse(accountInfo.details);
+            validateCharacterConfig(character);
+            // start it up (and register it)
+            await directClient.startAgent(character);
+            elizaLogger.info(`${character.name} started`);
 
-        // const mapDataPath = path.join(__dirname, `../../../characters/data/${agentId}.xxx`);
-    try {
-        const files = await fs.promises.readdir(path.join(__dirname, '../../../characters/data'));
-        const characterFile = files.find(file => file.startsWith(`${agentId}.`) && file.endsWith('.character.json'));
-
-        if (!characterFile) {
-            throw new Error("Character file not found");
+            res.json({
+                id: character.id,
+                character: character,
+            });
+        } catch (error) {
+            elizaLogger.error(`Error starting agent: ${error}`);
+            res.status(404).json({
+                success: false,
+                message: "Character file not found",
+            });
         }
-
-        const characterFilePath = path.join(__dirname, '../../../characters/data', characterFile);
-        const data = await fs.promises.readFile(characterFilePath, 'utf8');
-        const character = JSON.parse(data);
-
-        validateCharacterConfig(character);
-
-        // start it up (and register it)
-        await directClient.startAgent(character);
-        elizaLogger.info(`${character.name} started`);
-
-        res.json({
-            id: character.id,
-            character: character,
-        });
-    } catch (error) {
-        elizaLogger.error(`Error starting agent: ${error}`);
-        res.status(404).json({
-            success: false,
-            message: "Character file not found",
-        });
-    }
     })
     router.post("/agents/examples", listCharactorExample)
+    router.post("/agents/stringToUuid", async (req, res) => {
+        let { text } = req.body
+        res.status(200).json({
+            success: false,
+            message: stringToUuid(text),
+        });
+    })
+    router.post("/agent-samples/new", async (req, res) => {
+        const character = req.body;
+        try {
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
+            await runtimeDefault.databaseAdapter.createAgentSample(character);
+            res.status(200).json({
+                message: "success",
+            })
+            return;
+        } catch (error) {
+            console.error(`Error create sample agent: ${error}`);
+            res.status(404).json({
+                success: false,
+                message: "create sample-agent fail",
+            });
+            return;
+        }
+    })
+    router.get("/agent-samples", async (req, res) => {
+        try {
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
+            const agentsSample = await runtimeDefault.databaseAdapter.getAgentsSample();
+
+            res.status(200).json({
+                message: "success",
+                data: agentsSample
+            })
+            return;
+        } catch (error) {
+            elizaLogger.error(`Error list sample agent: ${error}`);
+            res.status(404).json({
+                success: false,
+                message: "get list sample-agent fail",
+            });
+            return;
+        }
+    })
+    router.post("/agent-samples/set", async (req, res) => {
+        try {
+            const character = req.body;
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
+            await runtimeDefault.databaseAdapter.updateAgentSample(character);
+            res.status(200).json({
+                message: "success"
+            });
+            return;
+        } catch (error) {
+            switch (error.message) {
+                case "SAMPLE_AGENT_EXISTED":
+                    res.status(404).json({
+                        message: "Sample agent existed",
+                    })
+                    return;
+                    break;
+
+                default:
+                    console.log("Error set sample agent:", error)
+                    res.status(404).json({
+                        message: "Set sample agent error:",
+                    })
+                    return;
+                    break;
+            }
+        }
+    })
     return router;
 }

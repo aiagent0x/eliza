@@ -27,7 +27,8 @@ import * as fs from "fs";
 import * as path from "path";
 import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
-
+import serverMiddleware from "./middleware/server-middleware.ts";
+const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");
@@ -124,7 +125,7 @@ export class DirectClient {
 
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-
+        this.app.use(serverMiddleware)
         // Serve both uploads and generated images
         this.app.use(
             "/media/uploads",
@@ -193,14 +194,18 @@ export class DirectClient {
             "/:agentId/message",
             upload.single("file"),
             async (req: express.Request, res: express.Response) => {
-                const agentId = req.params.agentId;
+                let agentId = req.params.agentId;
+                let sessionId: any = req.params.agentId
                 const roomId = stringToUuid(
                     req.body.roomId ?? "default-room-" + agentId
                 );
                 const userId = stringToUuid(req.body.userId ?? "user");
-
+                let runtimeDefault = this.agents.get(AGENTIDDEFAUT)
+                let accountInfo = await runtimeDefault.databaseAdapter.getAccountInfo(agentId);
+                if (accountInfo && accountInfo.parentId) {
+                    agentId = accountInfo.parentId
+                }
                 let runtime = this.agents.get(agentId);
-
                 // if runtime is null, look for runtime with the same name
                 if (!runtime) {
                     runtime = Array.from(this.agents.values()).find(
@@ -209,7 +214,6 @@ export class DirectClient {
                             agentId.toLowerCase()
                     );
                 }
-
                 if (!runtime) {
                     res.status(404).send("Agent not found");
                     return;
@@ -257,25 +261,23 @@ export class DirectClient {
                     source: "direct",
                     inReplyTo: undefined,
                 };
-
+                console.log("runtime.agentId:", runtime.agentId)
                 const userMessage = {
                     content,
                     userId,
                     roomId,
-                    agentId: runtime.agentId,
+                    agentId: sessionId,
                 };
-
                 const memory: Memory = {
                     id: stringToUuid(messageId + "-" + userId),
                     ...userMessage,
-                    agentId: runtime.agentId,
+                    agentId: sessionId,
                     userId,
                     roomId,
                     content,
                     createdAt: Date.now(),
                 };
-
-                // await runtime.messageManager.addEmbeddingToMemory(memory);
+                await runtime.messageManager.addEmbeddingToMemory(memory);
                 await runtime.messageManager.createMemory(memory);
 
                 let state = await runtime.composeState(userMessage, {
@@ -302,9 +304,9 @@ export class DirectClient {
 
                 // save response to memory
                 const responseMessage: Memory = {
-                    id: stringToUuid(messageId + "-" + runtime.agentId),
+                    id: stringToUuid(messageId + "-" + sessionId),
                     ...userMessage,
-                    userId: runtime.agentId,
+                    userId: sessionId,
                     content: response,
                     embedding: getEmbeddingZeroVector(),
                     createdAt: Date.now(),
@@ -455,34 +457,34 @@ export class DirectClient {
                     const lookAtSchema =
                         nearby.length > 1
                             ? z
-                                  .union(
-                                      nearby.map((item) => z.literal(item)) as [
-                                          z.ZodLiteral<string>,
-                                          z.ZodLiteral<string>,
-                                          ...z.ZodLiteral<string>[],
-                                      ]
-                                  )
-                                  .nullable()
+                                .union(
+                                    nearby.map((item) => z.literal(item)) as [
+                                        z.ZodLiteral<string>,
+                                        z.ZodLiteral<string>,
+                                        ...z.ZodLiteral<string>[],
+                                    ]
+                                )
+                                .nullable()
                             : nearby.length === 1
-                              ? z.literal(nearby[0]).nullable()
-                              : z.null(); // Fallback for empty array
+                                ? z.literal(nearby[0]).nullable()
+                                : z.null(); // Fallback for empty array
 
                     const emoteSchema =
                         availableEmotes.length > 1
                             ? z
-                                  .union(
-                                      availableEmotes.map((item) =>
-                                          z.literal(item)
-                                      ) as [
-                                          z.ZodLiteral<string>,
-                                          z.ZodLiteral<string>,
-                                          ...z.ZodLiteral<string>[],
-                                      ]
-                                  )
-                                  .nullable()
+                                .union(
+                                    availableEmotes.map((item) =>
+                                        z.literal(item)
+                                    ) as [
+                                        z.ZodLiteral<string>,
+                                        z.ZodLiteral<string>,
+                                        ...z.ZodLiteral<string>[],
+                                    ]
+                                )
+                                .nullable()
                             : availableEmotes.length === 1
-                              ? z.literal(availableEmotes[0]).nullable()
-                              : z.null(); // Fallback for empty array
+                                ? z.literal(availableEmotes[0]).nullable()
+                                : z.null(); // Fallback for empty array
 
                     return z.object({
                         lookAt: lookAtSchema,
@@ -863,7 +865,7 @@ export class DirectClient {
                             ),
                             similarity_boost: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_SIMILARITY_BOOST ||
-                                    "0.9"
+                                "0.9"
                             ),
                             style: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_STYLE || "0.66"
@@ -937,7 +939,7 @@ export class DirectClient {
                             ),
                             similarity_boost: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_SIMILARITY_BOOST ||
-                                    "0.9"
+                                "0.9"
                             ),
                             style: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_STYLE || "0.66"
@@ -975,6 +977,19 @@ export class DirectClient {
                 });
             }
         });
+        this.app.post("/memories", async (req, res) => {
+            const { agentId, roomId, userId, skip, limit } = req.body;
+            let runtimeDefault = this.agents.get(AGENTIDDEFAUT);
+            let memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomId(agentId, roomId, limit, skip);
+            memories.map((memory) => {
+                memory.content = JSON.parse(memory.content)
+            })
+            res.status(200).json({
+                message: "success",
+                data: memories
+            });
+            return
+        })
     }
 
     // agent/src/index.ts:startAgent calls this

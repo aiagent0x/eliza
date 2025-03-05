@@ -11,6 +11,7 @@ import {
     type Memory,
     type Relationship,
     type UUID, elizaLogger,
+    stringToUuid
 } from "@elizaos/core";
 import { v4 } from "uuid";
 
@@ -37,8 +38,7 @@ interface KnowledgeDocument {
 
 export class MongoDBDatabaseAdapter
     extends DatabaseAdapter<MongoClient>
-    implements IDatabaseCacheAdapter
-{
+    implements IDatabaseCacheAdapter {
     private database: any;
     private databaseName: string;
     private hasVectorSearch: boolean;
@@ -65,7 +65,8 @@ export class MongoDBDatabaseAdapter
             'accounts',
             'goals',
             'logs',
-            'relationships'
+            'relationships',
+            'agents'
         ];
 
         for (const collectionName of collections) {
@@ -395,10 +396,12 @@ export class MongoDBDatabaseAdapter
     async createMemory(memory: Memory, tableName: string): Promise<void> {
 
         await this.ensureConnection();
+
         try {
             let isUnique = true;
 
             if (memory.embedding) {
+
                 const similarMemories = await this.searchMemories(
                     {
                         tableName,
@@ -410,6 +413,7 @@ export class MongoDBDatabaseAdapter
                         unique: isUnique
                     }
                 )
+
                 // const similarMemories = await this.searchMemoriesByEmbedding(
                 //     memory.embedding,
                 //     {
@@ -425,6 +429,7 @@ export class MongoDBDatabaseAdapter
 
 
             const content = JSON.stringify(memory.content);
+
             const createdAt = memory.createdAt ?? Date.now();
 
             await this.database.collection('memories').insertOne({
@@ -438,7 +443,7 @@ export class MongoDBDatabaseAdapter
                 unique: isUnique,
                 createdAt: new Date(createdAt)
             });
-        }catch (e) {
+        } catch (e) {
             elizaLogger.error(e);
         }
     }
@@ -450,6 +455,7 @@ export class MongoDBDatabaseAdapter
     }): Promise<Memory[]> {
         await this.ensureConnection();
         // Implement a basic similarity search using standard MongoDB operations
+
         const memories = await this.database.collection('memories')
             .find(params.query)
             .limit(params.limit || 10)
@@ -457,12 +463,12 @@ export class MongoDBDatabaseAdapter
 
         // Sort by cosine similarity computed in application
         return memories
-            .map(memory => ({
+            .map((memory: any) => ({
                 ...memory,
                 similarity: this.cosineSimilarity(params.embedding, memory.embedding)
             }))
-            .sort((a, b) => b.similarity - a.similarity)
-            .map(memory => ({
+            .sort((a: any, b: any) => b.similarity - a.similarity)
+            .map((memory: any) => ({
                 ...memory,
                 createdAt: typeof memory.createdAt === "string" ?
                     Date.parse(memory.createdAt) : memory.createdAt,
@@ -472,11 +478,13 @@ export class MongoDBDatabaseAdapter
     }
 
     private cosineSimilarity(a: Float32Array | number[], b: Float32Array | number[]): number {
+
         const aArr = Array.from(a);
         const bArr = Array.from(b);
         const dotProduct = aArr.reduce((sum, val, i) => sum + val * bArr[i], 0);
         const magnitudeA = Math.sqrt(aArr.reduce((sum, val) => sum + val * val, 0));
         const magnitudeB = Math.sqrt(bArr.reduce((sum, val) => sum + val * val, 0));
+
         return dotProduct / (magnitudeA * magnitudeB);
     }
 
@@ -498,6 +506,8 @@ export class MongoDBDatabaseAdapter
         };
 
         if (this.hasVectorSearch) {
+
+
             const pipeline = [
                 {
                     $search: {
@@ -696,13 +706,13 @@ export class MongoDBDatabaseAdapter
         // Calculate minimum edit distance
         for (let i = 1; i <= str1.length; i++) {
             for (let j = 1; j <= str2.length; j++) {
-                if (str1[i-1] === str2[j-1]) {
-                    matrix[i][j] = matrix[i-1][j-1];
+                if (str1[i - 1] === str2[j - 1]) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
                 } else {
                     matrix[i][j] = Math.min(
-                        matrix[i-1][j-1] + 1,  // substitution
-                        matrix[i][j-1] + 1,    // insertion
-                        matrix[i-1][j] + 1     // deletion
+                        matrix[i - 1][j - 1] + 1,  // substitution
+                        matrix[i][j - 1] + 1,    // insertion
+                        matrix[i - 1][j] + 1     // deletion
                     );
                 }
             }
@@ -711,7 +721,7 @@ export class MongoDBDatabaseAdapter
         return matrix[str1.length][str2.length];
     }
 
-// Cache for reusing Levenshtein distance matrix
+    // Cache for reusing Levenshtein distance matrix
     private levenshteinMatrix: number[][] = [];
     private maxMatrixSize = 0;
 
@@ -1285,11 +1295,15 @@ export class MongoDBDatabaseAdapter
                                         {
                                             $divide: [
                                                 1,
-                                                { $add: [1, { $function: {
+                                                {
+                                                    $add: [1, {
+                                                        $function: {
                                                             body: this.cosineSimilarity.toString(),
                                                             args: [params.embedding, "$$embedding"],
                                                             lang: "js"
-                                                        }}] }
+                                                        }
+                                                    }]
+                                                }
                                             ]
                                         }
                                     ]
@@ -1440,6 +1454,166 @@ export class MongoDBDatabaseAdapter
             return [];
         }
     }
+    async getMemoriesByAgentIdRoomId(
+        agentId: string,
+        roomId: string,
+        limit: number = 10,
+        skip: number = 0
+    ) {
+        try {
+            const accountInfo = await this.database.collection("memories")
+                .find({ roomId: roomId, agentId: agentId })
+                .sort({ createdAt: 1 })
+                .skip((skip) * limit)
+                .limit(limit || 0)
+                .project({
+                    id: 1,
+                    type: 1,
+                    content: 1,
+                    userId: 1,
+                    roomId: 1,
+                    agentId: 1,
+                    unique: 1,
+                    createdAt: 1
+                })
+                .toArray();
+            return accountInfo;
+        } catch (error) {
+            elizaLogger.error("getMemoriesByAgentIdRoomIDUserId-Mongo", error);
+        }
 
+    }
+    async getAccountInfo(accountId: string) {
+        try {
+            const accountInfo = await this.database.collection("accounts").findOne({ id: accountId });
+            return accountInfo;
+        } catch (error) {
+            elizaLogger.error("getAccountInfo-Mongo", error);
+        }
+    }
+    async createAgent(character: any, agentSampleId: string) {
+        try {
+            const idAgent = stringToUuid(character.name);
+            const parentId = character.parentId
+            let accountInfo = await this.getAccountInfo(idAgent);
+            if (accountInfo) throw Error("account existed");
+            delete character.parentId;
+            // delete character.id;
+            await this.database.collection("accounts").insertOne({
+                id: idAgent,
+                name: character.name,
+                username: character.name,
+                email: idAgent,
+                parentId: parentId,
+                details: JSON.stringify(character),
+                agentSampleId: agentSampleId,
+                createdAt: new Date()
+            });
+            accountInfo = await this.getAccountInfo(idAgent);
+            // console.log("accountInfo:",accountInfo)
+            character.id = accountInfo.id;
+            return character;
+        } catch (error) {
+            elizaLogger.error("createAgent-Mongo", error);
+        }
+    }
+    async getSamples() {
+        try {
+            let sampleInfos = await this.database.collection("accounts").find({
+                $or: [
+                    { parentId: { $exists: false } },
+                    { parentId: "" },
+                    { parentId: null }
+                ]
+            }).project({
+                id: 1,
+                details: 1
+            }).toArray();
+
+            sampleInfos = sampleInfos.map(sample => ({
+                ...JSON.parse(sample.details),
+                id: sample.id
+            }));
+            return sampleInfos;
+        } catch (error) {
+            elizaLogger.error("getSamples-Mongo", error);
+        }
+    }
+    async createAgentSample(character: any) {
+        try {
+            const idAgent = stringToUuid(character.name);
+            console.log(idAgent);
+            const agentInfo = await this.getAgentSample(idAgent);
+            if (agentInfo) throw Error("AGENT_EXISTED");
+            await this.database.collection("agents").insertOne({
+                id: idAgent,
+                name: character.name,
+                clients: character.clients,
+                settings: character.settings,
+                plugins: character.plugins,
+                bio: character.bio,
+                lore: character.lore,
+                knowledge: character.knowledge,
+                messageExamples: character.messageExamples,
+                postExamples: character.postExamples,
+                topics: character.topics,
+                style: character.style,
+                adjectives: character.adjectives,
+                updatedAt: new Date(),
+                createdAt: new Date()
+            });
+            return;
+        } catch (error) {
+            console.log("createAgentSample-Mongo", error);
+        }
+
+    }
+    async getAgentsSample() {
+        try {
+            let agentsSample = await this.database.collection("agents").find().project({ _id: 0 }).toArray();
+            return agentsSample
+        } catch (error) {
+            elizaLogger.error("getAgentsSample-Mongo", error);
+        }
+    }
+    async updateAgentSample(character: any) {
+        try {
+            const idAgent = stringToUuid(character.name);
+            const sampleAgent = await this.getAgentSample(idAgent);
+            if (!sampleAgent) {
+                throw new Error("SAMPLE_AGENT_NOT_EXISTED")
+            }
+            await this.database.collection("agents").updateOne({ id: idAgent }, {
+                $set: {
+                    id: idAgent,
+                    name: character.name,
+                    clients: character.clients,
+                    settings: character.settings,
+                    plugins: character.plugins,
+                    bio: character.bio,
+                    lore: character.lore,
+                    knowledge: character.knowledge,
+                    messageExamples: character.messageExamples,
+                    postExamples: character.postExamples,
+                    topics: character.topics,
+                    style: character.style,
+                    adjectives: character.adjectives,
+                    updatedAt: new Date(),
+                }
+            })
+            return;
+        } catch (error) {
+            console.log("updateAgentSample-Mongo", error);
+            return error
+        }
+    }
+    async getAgentSample(idAgent: string) {
+        try {
+            let agentSample = await this.database.collection("agents").findOne({ id: idAgent });
+            return agentSample
+        } catch (error) {
+            elizaLogger.error("getAgentSample-Mongo", error);
+        }
+    }
 }
 

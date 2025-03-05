@@ -18,12 +18,8 @@
         "exec": "node --enable-source-maps --loader ts-node/esm src/index.ts"
     },
     "dependencies": {
-        "@elizaos/adapter-supabase": "workspace:*",
-        "@elizaos/adapter-pglite": "workspace:*",
-        "@elizaos/adapter-postgres": "workspace:*",
+        "@elizaos/adapter-bullmq":"workspace:*",
         "@elizaos/adapter-redis": "workspace:*",
-        "@elizaos/adapter-sqlite": "workspace:*",
-        "@elizaos/adapter-qdrant": "workspace:*",
         "@elizaos/adapter-mongodb": "workspace:*",
         "@elizaos/client-auto": "workspace:*",
         "@elizaos/client-direct": "workspace:*",

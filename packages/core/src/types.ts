@@ -648,7 +648,7 @@ export type Plugin = {
  * Available client platforms
  */
 export enum Clients {
-    ALEXA= "alexa",
+    ALEXA = "alexa",
     DISCORD = "discord",
     DIRECT = "direct",
     TWITTER = "twitter",
@@ -1134,7 +1134,19 @@ export interface IDatabaseAdapter {
         match_count: number;
         searchText?: string;
     }): Promise<RAGKnowledgeItem[]>;
-
+    getMemoriesByAgentIdRoomId(
+        agentId: string,
+        roomId: string,
+        limit?: number,
+        skip?: number
+    )
+    getAccountInfo(accountId: string)
+    createAgent(character: any, agentSampleId: string)
+    getSamples()
+    createAgentSample(character: any)
+    getAgentsSample()
+    updateAgentSample(character: any)
+    getAgentSample(idAgent: string)
     createKnowledge(knowledge: RAGKnowledgeItem): Promise<void>;
     removeKnowledge(id: UUID): Promise<void>;
     clearKnowledge(agentId: UUID, shared?: boolean): Promise<void>;
