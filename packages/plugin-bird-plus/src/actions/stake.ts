@@ -102,6 +102,7 @@ export const stake: Action = {
         if (content.type === "list") {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
+            let responseData = [];
             let data;
             let dataScallop;
             let dataSuilend;
@@ -112,7 +113,7 @@ export const stake: Action = {
             switch (content.protocol) {
                 case "navi":
                     data = await redis.hGetAll("STAKE_POOLS");
-                    if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
+                    if (data && Object.keys(data).length > 0) {
                         let parsedData: { [key: string]: string }[] = [];
                         for (let key in data) {
                             parsedData.push(JSON.parse(data[key]));
@@ -123,7 +124,7 @@ export const stake: Action = {
                         );
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of stake pools:",
+                            text: "Below is a list of Navi staking pools:",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -132,34 +133,36 @@ export const stake: Action = {
                         });
                         return true;
                     }
-                    listPoolsNavi = await listPoolsInFileJson();
-                    index = 0;
-                    for (let key in pool) {
-                        if (pool.hasOwnProperty(key)) {
-                            let poolInfo;
-                            if (pool[key]) {
-                                poolInfo = await getPoolInfo({
-                                    symbol: key,
-                                    address: pool[key].type,
-                                    decimal: listPoolsNavi[index].decimal,
-                                });
-                                listPoolsNavi[index].name = key;
-                                listPoolsNavi[index].total_supply = poolInfo.total_supply;
-                                listPoolsNavi[index].token_price = poolInfo.tokenPrice;
-                                listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
-                                listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
-                                listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                                listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                                listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                                listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                                listPoolsNavi[index].protocol = "navi";
-                            } else {
-                                elizaLogger.error(`Pool information for key ${key} is undefined.`);
+
+                    if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
+                        listPoolsNavi = await listPoolsInFileJson();
+                        index = 0;
+                        for (let key in pool) {
+                            if (pool.hasOwnProperty(key)) {
+                                let poolInfo;
+                                if (pool[key]) {
+                                    poolInfo = await getPoolInfo({
+                                        symbol: key,
+                                        address: pool[key].type,
+                                        decimal: listPoolsNavi[index].decimal,
+                                    });
+                                    listPoolsNavi[index].name = key;
+                                    listPoolsNavi[index].total_supply = poolInfo.total_supply;
+                                    listPoolsNavi[index].token_price = poolInfo.tokenPrice;
+                                    listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
+                                    listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
+                                    listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
+                                    listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
+                                    listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                                    listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                                    listPoolsNavi[index].protocol = "navi";
+                                } else {
+                                    elizaLogger.error(`Pool information for key ${key} is undefined.`);
+                                }
                             }
+                            index++;
                         }
-                        index++;
-                    }
-                    if (listPoolsNaviOnSite.length > 0 && listPoolsNaviOnSite) {
+
                         for (let i = 0; i < listPoolsNavi.length; i++) {
                             if (listPoolsNavi[i].type === "0x2::sui::SUI") {
                                 listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
@@ -177,6 +180,10 @@ export const stake: Action = {
                             }
                             delete listPoolsNavi[i].typeCoin;
                         }
+
+                    }
+                    else {
+                        listPoolsNavi = [];
                     }
                     listPoolsNavi.sort(
                         (a, b) =>
@@ -185,7 +192,7 @@ export const stake: Action = {
                     try {
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of Navi staking pools.:",
+                            text: "Below is a list of Navi staking pools:",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -287,111 +294,119 @@ export const stake: Action = {
                         return false;
                     }
                     break;
-                default:
-                    data = await redis.hGetAll("STAKE_POOLS");
-                    dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-                    dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
-                    if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
+                    default:
                         let parsedData: { [key: string]: string }[] = [];
-                        for (let key in data) {
-                            parsedData.push(JSON.parse(data[key]));
-                        }
                         let poolsScallopData: { [key: string]: string }[] = [];
-                        for (let key in dataScallop) {
-                            poolsScallopData.push(JSON.parse(dataScallop[key]));
-                        }
                         let poolsSuilendData: { [key: string]: string }[] = [];
-                        for (let key in dataSuilend) {
-                            poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                        data = await redis.hGetAll("STAKE_POOLS");
+                        dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+                        dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+                        if (data && Object.keys(data).length > 0) {
+                            for (let key in data) {
+                                parsedData.push(JSON.parse(data[key]));
+                            }
                         }
-                        parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-                        parsedData.sort(
-                            (a: any, b: any) =>
+                        if (dataScallop && Object.keys(dataScallop).length > 0) {
+                            for (let key in dataScallop) {
+                                poolsScallopData.push(JSON.parse(dataScallop[key]));
+                            }
+                        }
+                        if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+                            for (let key in dataSuilend) {
+                                poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                            }
+                        }
+                        if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
+                            parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+                            parsedData.sort(
+                                (a: any, b: any) =>
+                                    b.total_supply_rate - a.total_supply_rate
+                            );
+                            callback({
+                                user: await runtime.character.name,
+                                text: "Below is a list of staking pools:",
+                                action: "STAKE_POOLS",
+                                result: {
+                                    type: "stake_pools",
+                                    data: parsedData.slice(0, content.amount),
+                                },
+                            });
+                            return true;
+                        }
+    
+                        listPoolSuilend = await listPool();
+                        listPoolsScallop = await scallopProvider.listPools();
+                        listPoolsNavi = await listPoolsInFileJson();
+                        if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
+                            index = 0;
+                            for (let key in pool) {
+                                if (pool.hasOwnProperty(key)) {
+                                    let poolInfo;
+                                    if (pool[key]) {
+                                        poolInfo = await getPoolInfo({
+                                            symbol: key,
+                                            address: pool[key].type,
+                                            decimal: listPoolsNavi[index].decimal,
+                                        });
+                                        listPoolsNavi[index].name = key;
+                                        listPoolsNavi[index].total_supply = poolInfo.total_supply;
+                                        listPoolsNavi[index].token_price = poolInfo.tokenPrice;
+                                        listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
+                                        listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
+                                        listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
+                                        listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
+                                        listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                                        listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                                        listPoolsNavi[index].protocol = "navi";
+                                    } else {
+                                        elizaLogger.error(`Pool information for key ${key} is undefined.`);
+                                    }
+                                }
+                                index++;
+                            }
+                            for (let i = 0; i < listPoolsNavi.length; i++) {
+                                if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                                    listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                                } else {
+                                    listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                                }
+    
+                                for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                                    if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                                        delete listPoolsNavi[i].base_supply_rate;
+                                        delete listPoolsNavi[i].total_supply_rate;
+                                        listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                        listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                    }
+                                }
+                                delete listPoolsNavi[i].typeCoin;
+                            }
+    
+                        }
+                        else {
+                            listPoolsNavi = [];
+                        }
+                        responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
+                        responseData.sort(
+                            (a, b) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Below is a list of stake pools:",
-                            action: "STAKE_POOLS",
-                            result: {
-                                type: "stake_pools",
-                                data: parsedData.slice(0, content.amount),
-                            },
-                        });
-                        return true;
-                    }
-
-                    listPoolSuilend = await listPool();
-                    listPoolsScallop = await scallopProvider.listPools();
-                    listPoolsNavi = await listPoolsInFileJson();
-
-                    index = 0;
-                    for (let key in pool) {
-                        if (pool.hasOwnProperty(key)) {
-                            let poolInfo;
-                            if (pool[key]) {
-                                poolInfo = await getPoolInfo({
-                                    symbol: key,
-                                    address: pool[key].type,
-                                    decimal: listPoolsNavi[index].decimal,
-                                });
-                                listPoolsNavi[index].name = key;
-                                listPoolsNavi[index].total_supply = poolInfo.total_supply;
-                                listPoolsNavi[index].token_price = poolInfo.tokenPrice;
-                                listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
-                                listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
-                                listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                                listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                                listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                                listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                                listPoolsNavi[index].protocol = "navi";
-                            } else {
-                                elizaLogger.error(`Pool information for key ${key} is undefined.`);
-                            }
+                        try {
+                            callback({
+                                user: await runtime.character.name,
+                                text: "Below is a list of stake pools:",
+                                action: "STAKE_POOLS",
+                                result: {
+                                    type: "stake_pools",
+                                    data: responseData.slice(0, content.amount),
+                                },
+                            });
+                            return true;
+                        } catch (error) {
+                            console.error("Error during token swap:", error);
+                            return false;
                         }
-                        index++;
-                    }
-                    if (listPoolsNaviOnSite && listPoolsNaviOnSite.length > 0) {
-                        for (let i = 0; i < listPoolsNavi.length; i++) {
-                            if (listPoolsNavi[i].type === "0x2::sui::SUI") {
-                                listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
-                            } else {
-                                listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
-                            }
-
-                            for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
-                                if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                                    delete listPoolsNavi[i].base_supply_rate;
-                                    delete listPoolsNavi[i].total_supply_rate;
-                                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                                }
-                            }
-                            delete listPoolsNavi[i].typeCoin;
-                        }
-                    }
-
-                    listPoolsNavi = listPoolsNavi.concat(listPoolsScallop, listPoolSuilend);
-                    listPoolsNavi.sort(
-                        (a, b) =>
-                            b.total_supply_rate - a.total_supply_rate
-                    );
-                    try {
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Below is a list of stake pools:",
-                            action: "STAKE_POOLS",
-                            result: {
-                                type: "stake_pools",
-                                data: listPoolsNavi.slice(0, content.amount),
-                            },
-                        });
-                        return true;
-                    } catch (error) {
-                        console.error("Error during token swap:", error);
-                        return false;
-                    }
-                    break;
+                        break;
             }
         }
         if (content.type === "pool_name") {
