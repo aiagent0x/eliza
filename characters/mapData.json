@@ -1,0 +1,85 @@
+[
+    {
+        "id": 1,
+        "name": "advisor",
+        "clone": [
+            "c6d2f67b-ec45-0a23-add0-21d187086e82",
+            "3ebbca3f-67b7-09bc-963c-eed9c8521687",
+            "f6780e1b-f99c-0196-bbd3-c681b6d72695",
+            "82a8847e-9539-0a04-b3df-8f06b74b1612",
+            "724d55d6-2a39-0200-8336-9e6cf727bef2",
+            "bbb23d39-1010-0df4-92b2-0951ce571a1c"
+        ]
+    },
+    {
+        "id": 2,
+        "name": "baby",
+        "clone": [
+            1
+        ]
+    },
+    {
+        "id": 3,
+        "name": "c3po",
+        "clone": []
+    },
+    {
+        "id": 4,
+        "name": "cosmosHelper",
+        "clone": []
+    },
+    {
+        "id": 5,
+        "name": "dobby",
+        "clone": []
+    },
+    {
+        "id": 6,
+        "name": "eternalai",
+        "clone": []
+    },
+    {
+        "id": 7,
+        "name": "lpmanager",
+        "clone": []
+    },
+    {
+        "id": 8,
+        "name": "portfolio",
+        "clone": []
+    },
+    {
+        "id": 9,
+        "name": "tate",
+        "clone": []
+    },
+    {
+        "id": 10,
+        "name": "trader",
+        "clone": []
+    },
+    {
+        "id": "c6d2f67b-ec45-0a23-add0-21d187086e82",
+        "name": "hello222"
+    },
+    {
+        "id": "3ebbca3f-67b7-09bc-963c-eed9c8521687",
+        "name": "762b3740-0f15-4579-8a66-f8624d625a2a"
+    },
+    {
+        "id": "f6780e1b-f99c-0196-bbd3-c681b6d72695",
+        "name": "762b3740-0f15-4579-8a66-f8624d625a1a"
+    },
+    {
+        "id": "82a8847e-9539-0a04-b3df-8f06b74b1612",
+        "name": "hello25"
+    },
+    {
+        "id": "724d55d6-2a39-0200-8336-9e6cf727bef2",
+        "name": "hello24"
+    },
+    {
+        "id": "bbb23d39-1010-0df4-92b2-0951ce571a1c",
+        "name": "hello200"
+    }
+]

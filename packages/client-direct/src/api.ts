@@ -14,8 +14,6 @@ import {
     type Character,
     stringToUuid,
 } from "@elizaos/core";
-
-import type { TeeLogQuery, TeeLogService } from "@elizaos/plugin-tee-log";
 import { REST, Routes } from "discord.js";
 import type { DirectClient } from ".";
 import { validateUuid } from "@elizaos/core";
@@ -260,21 +258,21 @@ export function createApiRouter(
         const parentId = character.parentId;
         const runtime = agents.get(AGENTIDDEFAUT);
         const parrentInfo = await runtime.databaseAdapter.getAccountInfo(parentId);
-        if(!parrentInfo){
+        if (!parrentInfo) {
             res.status(400).json({
-                message:"Dont have parrentId"
+                message: "Don't have parrentId"
             });
             return;
         }
-        let accountInfo = await runtime.databaseAdapter.createAgent(character);
-        if(!accountInfo){
+        let accountInfo = await runtime.databaseAdapter.createAgent(character, parentId);
+        if (!accountInfo) {
             res.status(400).json({
-                message:"Agent existed",
+                message: "Agent existed",
             });
             return;
         }
         res.status(200).json({
-            message:"success",
+            message: "success",
             id: accountInfo.id,
             character: accountInfo,
         });
@@ -378,103 +376,6 @@ export function createApiRouter(
             res.status(500).json({ error: "Failed to fetch memories" });
         }
     });
-
-    router.get("/tee/agents", async (req, res) => {
-        try {
-            const allAgents = [];
-
-            for (const agentRuntime of agents.values()) {
-                const teeLogService = agentRuntime
-                    .getService<TeeLogService>(ServiceType.TEE_LOG)
-                    .getInstance();
-
-                const agents = await teeLogService.getAllAgents();
-                allAgents.push(...agents);
-            }
-
-            const runtime: AgentRuntime = agents.values().next().value;
-            const teeLogService = runtime
-                .getService<TeeLogService>(ServiceType.TEE_LOG)
-                .getInstance();
-            const attestation = await teeLogService.generateAttestation(
-                JSON.stringify(allAgents)
-            );
-            res.json({ agents: allAgents, attestation: attestation });
-        } catch (error) {
-            elizaLogger.error("Failed to get TEE agents:", error);
-            res.status(500).json({
-                error: "Failed to get TEE agents",
-            });
-        }
-    });
-
-    router.get("/tee/agents/:agentId", async (req, res) => {
-        try {
-            const agentId = req.params.agentId;
-            const agentRuntime = agents.get(agentId);
-            if (!agentRuntime) {
-                res.status(404).json({ error: "Agent not found" });
-                return;
-            }
-
-            const teeLogService = agentRuntime
-                .getService<TeeLogService>(ServiceType.TEE_LOG)
-                .getInstance();
-
-            const teeAgent = await teeLogService.getAgent(agentId);
-            const attestation = await teeLogService.generateAttestation(
-                JSON.stringify(teeAgent)
-            );
-            res.json({ agent: teeAgent, attestation: attestation });
-        } catch (error) {
-            elizaLogger.error("Failed to get TEE agent:", error);
-            res.status(500).json({
-                error: "Failed to get TEE agent",
-            });
-        }
-    });
-
-    router.post(
-        "/tee/logs",
-        async (req: express.Request, res: express.Response) => {
-            try {
-                const query = req.body.query || {};
-                const page = Number.parseInt(req.body.page) || 1;
-                const pageSize = Number.parseInt(req.body.pageSize) || 10;
-
-                const teeLogQuery: TeeLogQuery = {
-                    agentId: query.agentId || "",
-                    roomId: query.roomId || "",
-                    userId: query.userId || "",
-                    type: query.type || "",
-                    containsContent: query.containsContent || "",
-                    startTimestamp: query.startTimestamp || undefined,
-                    endTimestamp: query.endTimestamp || undefined,
-                };
-                const agentRuntime: AgentRuntime = agents.values().next().value;
-                const teeLogService = agentRuntime
-                    .getService<TeeLogService>(ServiceType.TEE_LOG)
-                    .getInstance();
-                const pageQuery = await teeLogService.getLogs(
-                    teeLogQuery,
-                    page,
-                    pageSize
-                );
-                const attestation = await teeLogService.generateAttestation(
-                    JSON.stringify(pageQuery)
-                );
-                res.json({
-                    logs: pageQuery,
-                    attestation: attestation,
-                });
-            } catch (error) {
-                elizaLogger.error("Failed to get TEE logs:", error);
-                res.status(500).json({
-                    error: "Failed to get TEE logs",
-                });
-            }
-        }
-    );
 
     // router.post("/agent/start", async (req, res) => {
     //     const { characterPath, characterJson } = req.body;
@@ -606,6 +507,21 @@ export function createApiRouter(
             character: sampleAgentCharacterData,
         });
     });
+    router.post("/agents/v3/new", async (req, res) => {
+        const character = req.body;
+        try {
+            validateCharacterConfig(character);
+            await directClient.startAgent(character);
+            elizaLogger.info(`${character.name} started`);
+            res.json({
+                id: character.id,
+                character: character,
+            });
+        } catch (error) {
+            console.log("new-agents:", error)
+        }
+
+    })
     router.post("/agents/plugins", async (req, res) => {
         const packagesPath = path.join(__dirname, '../../../packages');
         try {
@@ -648,11 +564,10 @@ export function createApiRouter(
     router.post("/agents/start", async (req, res) => {
         const { agentId } = req.body;
         try {
-            const runtimeDefault = this.agents.get(AGENTIDDEFAUT);
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
             const accountInfo = await runtimeDefault.databaseAdapter.getAccountInfo(agentId)
             const character = JSON.parse(accountInfo.details);
             validateCharacterConfig(character);
-
             // start it up (and register it)
             await directClient.startAgent(character);
             elizaLogger.info(`${character.name} started`);
@@ -676,6 +591,71 @@ export function createApiRouter(
             success: false,
             message: stringToUuid(text),
         });
+    })
+    router.post("/agent-samples/new", async (req, res) => {
+        const character = req.body;
+        try {
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
+            await runtimeDefault.databaseAdapter.createAgentSample(character);
+            res.status(200).json({
+                message: "success",
+            })
+            return;
+        } catch (error) {
+            console.error(`Error create sample agent: ${error}`);
+            res.status(404).json({
+                success: false,
+                message: "create sample-agent fail",
+            });
+            return;
+        }
+    })
+    router.get("/agent-samples", async (req, res) => {
+        try {
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
+            const agentsSample = await runtimeDefault.databaseAdapter.getAgentsSample();
+
+            res.status(200).json({
+                message: "success",
+                data: agentsSample
+            })
+            return;
+        } catch (error) {
+            elizaLogger.error(`Error list sample agent: ${error}`);
+            res.status(404).json({
+                success: false,
+                message: "get list sample-agent fail",
+            });
+            return;
+        }
+    })
+    router.post("/agent-samples/set", async (req, res) => {
+        try {
+            const character = req.body;
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
+            await runtimeDefault.databaseAdapter.updateAgentSample(character);
+            res.status(200).json({
+                message: "success"
+            });
+            return;
+        } catch (error) {
+            switch (error.message) {
+                case "SAMPLE_AGENT_EXISTED":
+                    res.status(404).json({
+                        message: "Sample agent existed",
+                    })
+                    return;
+                    break;
+
+                default:
+                    console.log("Error set sample agent:", error)
+                    res.status(404).json({
+                        message: "Set sample agent error:",
+                    })
+                    return;
+                    break;
+            }
+        }
     })
     return router;
 }

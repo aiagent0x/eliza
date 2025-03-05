@@ -65,7 +65,8 @@ export class MongoDBDatabaseAdapter
             'accounts',
             'goals',
             'logs',
-            'relationships'
+            'relationships',
+            'agents'
         ];
 
         for (const collectionName of collections) {
@@ -1461,7 +1462,7 @@ export class MongoDBDatabaseAdapter
     ) {
         try {
             const accountInfo = await this.database.collection("memories")
-                .find({roomId: roomId, agentId: agentId })
+                .find({ roomId: roomId, agentId: agentId })
                 .sort({ createdAt: 1 })
                 .skip((skip) * limit)
                 .limit(limit || 0)
@@ -1482,20 +1483,20 @@ export class MongoDBDatabaseAdapter
         }
 
     }
-    async getAccountInfo(accountId: string){
+    async getAccountInfo(accountId: string) {
         try {
-             const accountInfo = await this.database.collection("accounts").findOne({ id: accountId });
-             return accountInfo;
+            const accountInfo = await this.database.collection("accounts").findOne({ id: accountId });
+            return accountInfo;
         } catch (error) {
             elizaLogger.error("getAccountInfo-Mongo", error);
         }
     }
-    async createAgent(character:any){
+    async createAgent(character: any, agentSampleId: string) {
         try {
             const idAgent = stringToUuid(character.name);
             const parentId = character.parentId
             let accountInfo = await this.getAccountInfo(idAgent);
-            if(accountInfo) throw Error("account existed");
+            if (accountInfo) throw Error("account existed");
             delete character.parentId;
             // delete character.id;
             await this.database.collection("accounts").insertOne({
@@ -1504,7 +1505,9 @@ export class MongoDBDatabaseAdapter
                 username: character.name,
                 email: idAgent,
                 parentId: parentId,
-                details: JSON.stringify(character)
+                details: JSON.stringify(character),
+                agentSampleId: agentSampleId,
+                createdAt: new Date()
             });
             accountInfo = await this.getAccountInfo(idAgent);
             // console.log("accountInfo:",accountInfo)
@@ -1514,7 +1517,103 @@ export class MongoDBDatabaseAdapter
             elizaLogger.error("createAgent-Mongo", error);
         }
     }
+    async getSamples() {
+        try {
+            let sampleInfos = await this.database.collection("accounts").find({
+                $or: [
+                    { parentId: { $exists: false } },
+                    { parentId: "" },
+                    { parentId: null }
+                ]
+            }).project({
+                id: 1,
+                details: 1
+            }).toArray();
 
+            sampleInfos = sampleInfos.map(sample => ({
+                ...JSON.parse(sample.details),
+                id: sample.id
+            }));
+            return sampleInfos;
+        } catch (error) {
+            elizaLogger.error("getSamples-Mongo", error);
+        }
+    }
+    async createAgentSample(character: any) {
+        try {
+            const idAgent = stringToUuid(character.name);
+            console.log(idAgent);
+            const agentInfo = await this.getAgentSample(idAgent);
+            if (agentInfo) throw Error("AGENT_EXISTED");
+            await this.database.collection("agents").insertOne({
+                id: idAgent,
+                name: character.name,
+                clients: character.clients,
+                settings: character.settings,
+                plugins: character.plugins,
+                bio: character.bio,
+                lore: character.lore,
+                knowledge: character.knowledge,
+                messageExamples: character.messageExamples,
+                postExamples: character.postExamples,
+                topics: character.topics,
+                style: character.style,
+                adjectives: character.adjectives,
+                updatedAt: new Date(),
+                createdAt: new Date()
+            });
+            return;
+        } catch (error) {
+            console.log("createAgentSample-Mongo", error);
+        }
 
+    }
+    async getAgentsSample() {
+        try {
+            let agentsSample = await this.database.collection("agents").find().project({ _id: 0 }).toArray();
+            return agentsSample
+        } catch (error) {
+            elizaLogger.error("getAgentsSample-Mongo", error);
+        }
+    }
+    async updateAgentSample(character: any) {
+        try {
+            const idAgent = stringToUuid(character.name);
+            const sampleAgent = await this.getAgentSample(idAgent);
+            if (!sampleAgent) {
+                throw new Error("SAMPLE_AGENT_NOT_EXISTED")
+            }
+            await this.database.collection("agents").updateOne({ id: idAgent }, {
+                $set: {
+                    id: idAgent,
+                    name: character.name,
+                    clients: character.clients,
+                    settings: character.settings,
+                    plugins: character.plugins,
+                    bio: character.bio,
+                    lore: character.lore,
+                    knowledge: character.knowledge,
+                    messageExamples: character.messageExamples,
+                    postExamples: character.postExamples,
+                    topics: character.topics,
+                    style: character.style,
+                    adjectives: character.adjectives,
+                    updatedAt: new Date(),
+                }
+            })
+            return;
+        } catch (error) {
+            console.log("updateAgentSample-Mongo", error);
+            return error
+        }
+    }
+    async getAgentSample(idAgent: string) {
+        try {
+            let agentSample = await this.database.collection("agents").findOne({ id: idAgent });
+            return agentSample
+        } catch (error) {
+            elizaLogger.error("getAgentSample-Mongo", error);
+        }
+    }
 }
 

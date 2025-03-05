@@ -1,6 +1,6 @@
 {
     "name": "Michael Learn to Trade",
-    "clients": ["direct","telegram"],
+    "clients": ["direct"],
     "modelProvider": "openai",
     "settings": {
         "secrets": {},

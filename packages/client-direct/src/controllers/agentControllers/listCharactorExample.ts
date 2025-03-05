@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const samplesDir = path.join(__dirname, '../../../characters/samples');
 const mapDataPath = path.join(__dirname, '../../../characters/samples/listExample.json')
-export default async function index(req,res){
+export default async function index(req, res) {
 
     await updateFileMapData();
     fs.readFile(mapDataPath, 'utf8', (readErr, data) => {
@@ -25,7 +25,7 @@ export default async function index(req,res){
         try {
             // return JSON.parse(data)
             return res.status(200).json({
-                data:mapData
+                data: mapData
             })
         } catch (parseErr) {
             elizaLogger.info('error parse JSON:', parseErr);
@@ -34,7 +34,7 @@ export default async function index(req,res){
     });
 }
 
-async function updateFileMapData(){
+async function updateFileMapData() {
     fs.readdir(samplesDir, (err, files) => {
         if (err) {
             elizaLogger.info('Error read folder:', err);

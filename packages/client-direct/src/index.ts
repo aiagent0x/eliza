@@ -194,8 +194,6 @@ export class DirectClient {
             "/:agentId/message",
             upload.single("file"),
             async (req: express.Request, res: express.Response) => {
-
-
                 let agentId = req.params.agentId;
                 let sessionId: any = req.params.agentId
                 const roomId = stringToUuid(
@@ -203,9 +201,7 @@ export class DirectClient {
                 );
                 const userId = stringToUuid(req.body.userId ?? "user");
                 let runtimeDefault = this.agents.get(AGENTIDDEFAUT)
-                // let memoryDefault = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomIDUserId(AGENTIDDEFAUT, roomId, userId, 10, 0);
                 let accountInfo = await runtimeDefault.databaseAdapter.getAccountInfo(agentId);
-                console.log("accountInfo:", accountInfo);
                 if (accountInfo && accountInfo.parentId) {
                     agentId = accountInfo.parentId
                 }
@@ -218,7 +214,6 @@ export class DirectClient {
                             agentId.toLowerCase()
                     );
                 }
-
                 if (!runtime) {
                     res.status(404).send("Agent not found");
                     return;
