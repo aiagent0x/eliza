@@ -6,7 +6,7 @@ import {
     elizaLogger,
 } from "@elizaos/core";
 import { listPoolsInFileJson, pool } from "../../services/stakeService/searchPoolInFile";
-import { getPoolInfo, getPoolsInfo } from "navi-sdk";
+import { getPoolInfo, getPoolsInfo, getPoolApy } from "navi-sdk";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL);
 import { Request, Response } from "express";
@@ -14,23 +14,28 @@ import ScallopProvider from "../../services/stakeService/stakeScallop";
 import { listPool } from "../../services/stakeService/fetchSuilend/listPools";
 
 export default async function listStakes(req: Request, res: Response) {
-
+    let parsedData: { [key: string]: string }[] = [];
+    let poolsScallopData: { [key: string]: string }[] = [];
+    let poolsSuilendData: { [key: string]: string }[] = [];
     let data = await redis.hGetAll("STAKE_POOLS");
     let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
     let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND")
-    if (data && Object.keys(data).length > 0 && dataScallop && Object.keys(dataScallop).length > 0 && dataSuilend && Object.keys(dataSuilend).length > 0) {
-        let parsedData: { [key: string]: string }[] = [];
+    if (data && Object.keys(data).length > 0) {
         for (let key in data) {
             parsedData.push(JSON.parse(data[key]));
         }
-        let poolsScallopData: { [key: string]: string }[] = [];
+    }
+    if (dataScallop && Object.keys(dataScallop).length > 0) {
         for (let key in dataScallop) {
             poolsScallopData.push(JSON.parse(dataScallop[key]));
         }
-        let poolsSuilendData: { [key: string]: string }[] = [];
+    }
+    if (dataSuilend && Object.keys(dataSuilend).length > 0) {
         for (let key in dataSuilend) {
             poolsSuilendData.push(JSON.parse(dataSuilend[key]));
         }
+    }
+    if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
         parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
         parsedData.sort(
             (a: any, b: any) =>
@@ -42,58 +47,63 @@ export default async function listStakes(req: Request, res: Response) {
         });
         return
     }
+    let responseData = [];
     const listSuilendPools = await listPool()
     const scallopProvider = new ScallopProvider();
     const listScallopPools = await scallopProvider.listPools();
-
-    let responseData = await listPoolsInFileJson();
-    let index = 0;
-    for (let key in pool) {
-        if (pool.hasOwnProperty(key)) {
-            let poolInfo;
-            if (pool[key]) {
-                poolInfo = await getPoolInfo({
-                    symbol: key,
-                    address: pool[key].type,
-                    decimal: responseData[index].decimal,
-                });
-                responseData[index].name = key;
-                responseData[index].total_supply = poolInfo.total_supply;
-                responseData[index].token_price = poolInfo.tokenPrice;
-                responseData[index].total_borrow = poolInfo.total_borrow;
-                responseData[index].base_supply_rate = poolInfo.base_supply_rate;
-                responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                responseData[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                responseData[index].protocol = "navi";
-            } else {
-                elizaLogger.error(`Pool information for key ${key} is undefined.`);
-            }
-        }
-        index++;
-    }
     let listPoolsNaviOnSite = await getPoolsInfo();
-    if (listPoolsNaviOnSite.length>0 && listPoolsNaviOnSite) {
-        for (let i = 0; i < responseData.length; i++) {
-            if (responseData[i].type === "0x2::sui::SUI") {
-                responseData[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
-            } else {
-                responseData[i].typeCoin = responseData[i].type;
-            }
-
-            for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
-                if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData[i].typeCoin) {
-                    delete responseData[i].base_supply_rate;
-                    delete responseData[i].total_supply_rate;
-                    responseData[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                    responseData[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+    let listPoolsNavi = await listPoolsInFileJson();
+    console.log("listPoolsNaviOnSite:", listPoolsNaviOnSite);
+    if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
+        let index = 0;
+        for (let key in pool) {
+            if (pool.hasOwnProperty(key)) {
+                let poolInfo;
+                if (pool[key]) {
+                    poolInfo = await getPoolInfo({
+                        symbol: key,
+                        address: pool[key].type,
+                        decimal: listPoolsNavi[index].decimal,
+                    });
+                    listPoolsNavi[index].name = key;
+                    listPoolsNavi[index].total_supply = poolInfo.total_supply;
+                    listPoolsNavi[index].token_price = poolInfo.tokenPrice;
+                    listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
+                    listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
+                    listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
+                    listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
+                    listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                    listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                    listPoolsNavi[index].protocol = "navi";
+                } else {
+                    elizaLogger.error(`Pool information for key ${key} is undefined.`);
                 }
             }
-            delete responseData[i].typeCoin;
+            index++;
         }
+        if (listPoolsNaviOnSite.length > 0 && listPoolsNaviOnSite) {
+            for (let i = 0; i < listPoolsNavi.length; i++) {
+                if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                    listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                } else {
+                    listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                }
+
+                for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                    if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                        delete listPoolsNavi[i].base_supply_rate;
+                        delete listPoolsNavi[i].total_supply_rate;
+                        listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                        listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                    }
+                }
+                delete listPoolsNavi[i].typeCoin;
+            }
+        }
+    } else {
+        listPoolsNavi = [];
     }
-    responseData = responseData.concat(listScallopPools, listSuilendPools);
+    responseData = responseData.concat(listScallopPools, listSuilendPools, listPoolsNavi);
     responseData.sort(
         (a, b) =>
             b.total_supply_rate - a.total_supply_rate
