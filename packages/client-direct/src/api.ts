@@ -257,14 +257,22 @@ export function createApiRouter(
         const character = req.body;
         const parentId = character.parentId;
         const runtime = agents.get(AGENTIDDEFAUT);
-        const parrentInfo = await runtime.databaseAdapter.getAccountInfo(parentId);
-        if (!parrentInfo) {
+        // let parentInfo = await runtime.databaseAdapter.getAccountInfo(parentId);
+        let parentInfo = await runtime.databaseAdapter.getAgentSample(parentId)
+        delete parentInfo._id;
+        delete parentInfo.id;
+        delete parentInfo.updatedAt;
+        delete parentInfo.createdAt;
+        delete parentInfo.name;
+        parentInfo.name = character.name;
+        parentInfo.parentId = parentId;
+        if (!parentInfo) {
             res.status(400).json({
                 message: "Don't have parrentId"
             });
             return;
         }
-        let accountInfo = await runtime.databaseAdapter.createAgent(character, parentId);
+        let accountInfo = await runtime.databaseAdapter.createAgent(parentInfo, parentId);
         if (!accountInfo) {
             res.status(400).json({
                 message: "Agent existed",
@@ -584,7 +592,14 @@ export function createApiRouter(
             });
         }
     })
-    router.post("/agents/examples", listCharactorExample)
+    router.post("/agents/examples", async (req, res) => {
+        const runtimeDefault = agents.get(AGENTIDDEFAUT);
+        let agentsSample = await runtimeDefault.databaseAdapter.getAgentsSample()
+        res.status(200).json({
+            message: "success",
+            data: agentsSample,
+        });
+    })
     router.post("/agents/stringToUuid", async (req, res) => {
         let { text } = req.body
         res.status(200).json({

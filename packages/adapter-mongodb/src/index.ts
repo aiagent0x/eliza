@@ -1494,7 +1494,7 @@ export class MongoDBDatabaseAdapter
     async createAgent(character: any, agentSampleId: string) {
         try {
             const idAgent = stringToUuid(character.name);
-            const parentId = character.parentId
+            // const parentId = character.parentId
             let accountInfo = await this.getAccountInfo(idAgent);
             if (accountInfo) throw Error("account existed");
             delete character.parentId;
@@ -1504,7 +1504,7 @@ export class MongoDBDatabaseAdapter
                 name: character.name,
                 username: character.name,
                 email: idAgent,
-                parentId: parentId,
+                parentId: agentSampleId,
                 details: JSON.stringify(character),
                 agentSampleId: agentSampleId,
                 createdAt: new Date()

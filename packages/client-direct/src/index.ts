@@ -202,8 +202,8 @@ export class DirectClient {
                 const userId = stringToUuid(req.body.userId ?? "user");
                 let runtimeDefault = this.agents.get(AGENTIDDEFAUT)
                 let accountInfo = await runtimeDefault.databaseAdapter.getAccountInfo(agentId);
-                if (accountInfo && accountInfo.parentId) {
-                    agentId = accountInfo.parentId
+                if (accountInfo && accountInfo.agentSampleId) {
+                    agentId = accountInfo.agentSampleId
                 }
                 let runtime = this.agents.get(agentId);
                 // if runtime is null, look for runtime with the same name
