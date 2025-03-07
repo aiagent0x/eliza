@@ -59,6 +59,51 @@ export class RedisClient implements IDatabaseCacheAdapter {
         }
     }
 
+    async hget(params: {
+        agentId: string;
+        key: string;
+        field: string;
+    }): Promise<string | undefined> {
+        try {
+            const redisKey = this.buildKey(params.agentId, params.key);
+            const value = await this.client.hget(redisKey, params.field);
+            return value || undefined;
+        } catch (err) {
+            elizaLogger.error("Error getting hash field:", err);
+            return undefined;
+        }
+    }
+
+    async hset(params: {
+        agentId: string;
+        key: string;
+        field: string;
+        value: string;
+    }): Promise<boolean> {
+        try {
+            const redisKey = this.buildKey(params.agentId, params.key);
+            await this.client.hset(redisKey, params.field, params.value);
+            return true;
+        } catch (err) {
+            elizaLogger.error("Error setting hash field:", err);
+            return false;
+        }
+    }
+
+    async expire(params: {
+        agentId: string;
+        key: string;
+        seconds: number;
+    }): Promise<boolean> {
+        try {
+            const redisKey = this.buildKey(params.agentId, params.key);
+            const result = await this.client.expire(redisKey, params.seconds);
+            return result === 1;
+        } catch (err) {
+            elizaLogger.error("Error setting expiration:", err);
+            return false;
+        }
+    }
     async disconnect(): Promise<void> {
         try {
             await this.client.quit();
@@ -68,7 +113,7 @@ export class RedisClient implements IDatabaseCacheAdapter {
         }
     }
 
-    private buildKey(agentId: UUID, key: string): string {
+    private buildKey(agentId: string, key: string): string {
         return `${agentId}:${key}`; // Constructs a unique key based on agentId and key
     }
 }

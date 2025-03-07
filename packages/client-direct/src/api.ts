@@ -18,6 +18,7 @@ import { REST, Routes } from "discord.js";
 import type { DirectClient } from ".";
 import { validateUuid } from "@elizaos/core";
 import listCharactorExample from "./controllers/agentControllers/listCharactorExample";
+import validateInputCharacter from "./validate/validateCharacter";
 const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -257,14 +258,23 @@ export function createApiRouter(
         const character = req.body;
         const parentId = character.parentId;
         const runtime = agents.get(AGENTIDDEFAUT);
-        const parrentInfo = await runtime.databaseAdapter.getAccountInfo(parentId);
-        if (!parrentInfo) {
+        // let parentInfo = await runtime.databaseAdapter.getAccountInfo(parentId);
+        let parentInfo = await runtime.databaseAdapter.getAgentSample(parentId)
+        if (!parentInfo) {
             res.status(400).json({
                 message: "Don't have parrentId"
             });
             return;
         }
-        let accountInfo = await runtime.databaseAdapter.createAgent(character, parentId);
+        delete parentInfo._id;
+        delete parentInfo.id;
+        delete parentInfo.updatedAt;
+        delete parentInfo.createdAt;
+        delete parentInfo.name;
+        parentInfo.name = character.name;
+        parentInfo.parentId = parentId;
+        
+        let accountInfo = await runtime.databaseAdapter.createAgent(parentInfo, parentId);
         if (!accountInfo) {
             res.status(400).json({
                 message: "Agent existed",
@@ -584,7 +594,14 @@ export function createApiRouter(
             });
         }
     })
-    router.post("/agents/examples", listCharactorExample)
+    router.post("/agents/examples", async (req, res) => {
+        const runtimeDefault = agents.get(AGENTIDDEFAUT);
+        let agentsSample = await runtimeDefault.databaseAdapter.getAgentsSample()
+        res.status(200).json({
+            message: "success",
+            data: agentsSample,
+        });
+    })
     router.post("/agents/stringToUuid", async (req, res) => {
         let { text } = req.body
         res.status(200).json({
@@ -595,6 +612,13 @@ export function createApiRouter(
     router.post("/agent-samples/new", async (req, res) => {
         const character = req.body;
         try {
+            const validateData = await validateInputCharacter(character);
+            if (validateData === false) {
+                res.status(400).json({
+                    message: "Please check the information to ensure that nothing is missing: name, clients, modelProvider, settings, plugins, bio, lore, knowledge, messageExamples, postExamples, topics, style, and adjectives."
+                });
+                return;
+            }
             const runtimeDefault = agents.get(AGENTIDDEFAUT);
             await runtimeDefault.databaseAdapter.createAgentSample(character);
             res.status(200).json({
@@ -603,11 +627,25 @@ export function createApiRouter(
             return;
         } catch (error) {
             console.error(`Error create sample agent: ${error}`);
-            res.status(404).json({
-                success: false,
-                message: "create sample-agent fail",
-            });
-            return;
+            // console.log(error)
+            switch (error.message) {
+                
+                case "AGENT_EXISTED":
+                    res.status(404).json({
+                        success: "fail",
+                        message: "Agent already exists, please change the agent's name.",
+                    });
+                    return;
+                    break;
+                default:
+                    res.status(404).json({
+                        success: "fail",
+                        message: "Create sample agent error",
+                    });
+                    return;
+                    break;
+            }
+
         }
     })
     router.get("/agent-samples", async (req, res) => {
@@ -632,6 +670,13 @@ export function createApiRouter(
     router.post("/agent-samples/set", async (req, res) => {
         try {
             const character = req.body;
+            const validateData = await validateInputCharacter(character);
+            if (validateData === false) {
+                res.status(400).json({
+                    message: "Please check the information to ensure that nothing is missing: name, clients, modelProvider, settings, plugins, bio, lore, knowledge, messageExamples, postExamples, topics, style, and adjectives."
+                });
+                return;
+            }
             const runtimeDefault = agents.get(AGENTIDDEFAUT);
             await runtimeDefault.databaseAdapter.updateAgentSample(character);
             res.status(200).json({
