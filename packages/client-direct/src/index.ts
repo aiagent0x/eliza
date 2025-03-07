@@ -28,6 +28,7 @@ import * as path from "path";
 import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
 import serverMiddleware from "./middleware/server-middleware.ts";
+import { getMessages, saveMessage } from "./services/memoryService/cacheMessage.ts";
 const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -281,7 +282,9 @@ export class DirectClient {
                 };
                 await runtime.messageManager.addEmbeddingToMemory(memory);
                 await runtime.messageManager.createMemory(memory);
-
+                let saveMessageToRedis:any = memory;
+                delete saveMessageToRedis.embedding
+                await saveMessage(sessionId, roomId, memory)
                 let state = await runtime.composeState(userMessage, {
                     agentName: runtime.character.name,
                 });
@@ -315,7 +318,9 @@ export class DirectClient {
                 };
 
                 await runtime.messageManager.createMemory(responseMessage);
-
+                saveMessageToRedis = responseMessage;
+                delete saveMessageToRedis.embedding;
+                await saveMessage(sessionId, roomId, saveMessageToRedis)
                 state = await runtime.updateRecentMessageState(state);
 
                 let message = null as Content | null;
@@ -329,18 +334,18 @@ export class DirectClient {
                         return [memory];
                     }
                 );
-
                 await runtime.evaluate(memory, state);
-
                 // Check if we should suppress the initial message
                 const action = runtime.actions.find(
                     (a) => a.name === response.action
                 );
                 const shouldSuppressInitialMessage =
                     action?.suppressInitialMessage;
-
                 if (!shouldSuppressInitialMessage) {
                     if (message) {
+                        saveMessageToRedis = message;
+                        delete saveMessageToRedis.embedding;
+                        await saveMessage(sessionId, roomId, message)
                         res.json([response, message]);
                     } else {
                         res.json([response]);
@@ -982,7 +987,15 @@ export class DirectClient {
         this.app.post("/memories", async (req, res) => {
             const { agentId, roomId, userId, skip, limit } = req.body;
             let runtimeDefault = this.agents.get(AGENTIDDEFAUT);
-            let memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomId(agentId, roomId, limit, skip);
+            let memories = await getMessages(agentId, roomId, skip);
+            if (memories) {
+                res.status(200).json({
+                    message: "success",
+                    data: memories
+                });
+                return
+            }
+            memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomId(agentId, roomId, limit, skip);
             memories.map((memory) => {
                 memory.content = JSON.parse(memory.content)
             })
