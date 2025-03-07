@@ -196,10 +196,12 @@ export class DirectClient {
             async (req: express.Request, res: express.Response) => {
                 let agentId = req.params.agentId;
                 let sessionId: any = req.params.agentId
-                const roomId = stringToUuid(
-                    req.body.roomId ?? "default-room-" + agentId
-                );
-                const userId = stringToUuid(req.body.userId ?? "user");
+                // const roomId = stringToUuid(
+                //     req.body.roomId ?? "default-room-" + agentId
+                // );
+                // const userId = stringToUuid(req.body.userId ?? "user");
+                const roomId = req.body.roomId;
+                const userId = req.body.userId;
                 let runtimeDefault = this.agents.get(AGENTIDDEFAUT)
                 let accountInfo = await runtimeDefault.databaseAdapter.getAccountInfo(agentId);
                 if (accountInfo && accountInfo.agentSampleId) {

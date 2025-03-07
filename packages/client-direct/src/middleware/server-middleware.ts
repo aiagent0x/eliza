@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 const auth_key = "73947db7-8515-4191-bf0d-64fdd8c5b902"
 const serverMiddleware = (req: Request, res: Response, next: NextFunction) => {
-
     let headers = req.headers["authorization"];
-    console.log("headers:", headers)
-    if (!headers || headers === "") {
+    if (!headers || headers === "" || headers === null) {
         res.status(403).json({
             message: "Unauthorized"
         })
