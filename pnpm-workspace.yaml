@@ -5,3 +5,4 @@ packages:
     - "agent"
     - "cronjob"
     - "write-message"
+    - "hub-agent"

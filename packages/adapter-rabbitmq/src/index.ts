@@ -8,7 +8,7 @@ export class RabbitMQ {
     private url: string;
     private prefetch: number;
 
-    constructor(url: string = 'amqp://localhost', queues: string[] = ['default_queue'], prefetch: number = 1) {
+    constructor(url: string = 'amqp://localhost', queues: string[] = ['default_queue', 'agent_swam_traning'], prefetch: number = 1) {
         this.url = url;
         this.queues = queues;
         this.prefetch = prefetch;
