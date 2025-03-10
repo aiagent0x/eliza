@@ -113,7 +113,7 @@ export const liquidityCetus: Action = {
                 })
                 return true;
             } catch (error) {
-                console.error("Error during token swap:", error);
+                console.error("Error during token add liquidity:", error);
                 return false;
             }
         }
@@ -157,7 +157,7 @@ export const liquidityCetus: Action = {
             try {
                 callback({
                     user: await runtime.character.name,
-                    text: "Please ensure all details are correct before proceeding with the swap to prevent any losses:",
+                    text: "Please ensure all details are correct before adding liquidity to prevent any potential losses.",
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "add_liquidity",
@@ -166,7 +166,7 @@ export const liquidityCetus: Action = {
                 })
                 return true;
             } catch (error) {
-                console.error("Error during token swap:", error);
+                console.error("Error during token add:", error);
                 return false;
             }
         }
