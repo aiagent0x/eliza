@@ -1,0 +1,13 @@
+*.ts
+!index.ts
+!character.ts
+.env
+*.env
+.env*
+/data
+/generatedImages
+!src/utils/*
+!src/services/*
+!src/helpers/*
+!src/data/*
+certificate.json

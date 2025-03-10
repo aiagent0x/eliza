@@ -30,6 +30,9 @@ import OpenAI from "openai";
 import serverMiddleware from "./middleware/server-middleware.ts";
 import { getMessages, saveMessage } from "./services/memoryService/cacheMessage.ts";
 const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
+import { RabbitMQ } from "@elizaos/adapter-rabbitmq"
+import { buffer } from "stream/consumers";
+const rabbitMQ = new RabbitMQ();
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");
@@ -195,6 +198,14 @@ export class DirectClient {
             "/:agentId/message",
             upload.single("file"),
             async (req: express.Request, res: express.Response) => {
+
+                // let messageHash = JSON.stringify({
+                //     hello:1,
+                //     hello2:2
+                // });
+                // messageHash = Buffer.from(messageHash).toString('base64')
+                // rabbitMQ.publish("default_queue", messageHash);
+
                 let agentId = req.params.agentId;
                 let sessionId: any = req.params.agentId
                 // const roomId = stringToUuid(
@@ -282,9 +293,9 @@ export class DirectClient {
                 };
                 await runtime.messageManager.addEmbeddingToMemory(memory);
                 await runtime.messageManager.createMemory(memory);
-                let saveMessageToRedis:any = memory;
+                let saveMessageToRedis: any = memory;
                 delete saveMessageToRedis.embedding
-                await saveMessage(sessionId, roomId, memory)
+                await saveMessage(sessionId, roomId, saveMessageToRedis)
                 let state = await runtime.composeState(userMessage, {
                     agentName: runtime.character.name,
                 });

@@ -21,6 +21,7 @@
     "dependencies": {
         "@elizaos/core": "workspace:*",
         "@elizaos/adapter-redis": "workspace:*",
+        "@elizaos/adapter-rabbitmq":"workspace:*",
         "@elizaos/plugin-image-generation": "workspace:*",
         "@elizaos/plugin-tee-log": "workspace:*",
         "@elizaos/plugin-tee-verifiable-log": "workspace:*",

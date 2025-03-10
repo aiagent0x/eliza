@@ -18,7 +18,8 @@
         "exec": "node --enable-source-maps --loader ts-node/esm src/index.ts"
     },
     "dependencies": {
-        "@elizaos/adapter-bullmq":"workspace:*",
+        "@elizaos/adapter-rabbitmq": "workspace:*",
+        "@elizaos/adapter-bullmq": "workspace:*",
         "@elizaos/adapter-redis": "workspace:*",
         "@elizaos/adapter-mongodb": "workspace:*",
         "@elizaos/client-auto": "workspace:*",
