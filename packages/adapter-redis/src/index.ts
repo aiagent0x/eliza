@@ -116,6 +116,64 @@ export class RedisClient implements IDatabaseCacheAdapter {
     private buildKey(agentId: string, key: string): string {
         return `${agentId}:${key}`; // Constructs a unique key based on agentId and key
     }
+    async publish(params: {
+        channel: string;
+        message: string;
+    }): Promise<void> {
+        try {
+            await this.client.publish(params.channel, params.message);
+            elizaLogger.success(`Message published to channel ${params.channel}`);
+        } catch (err) {
+            elizaLogger.error("Error publishing message:", err);
+        }
+    }
+
+    async subscribe(params: {
+        channel: string;
+        onMessage: (channel: string, message: string) => void;
+    }): Promise<void> {
+        try {
+            await this.client.subscribe(params.channel);
+            this.client.on("message", params.onMessage);
+            elizaLogger.success(`Subscribed to channel ${params.channel}`);
+        } catch (err) {
+            elizaLogger.error("Error subscribing to channel:", err);
+        }
+    }
+
+    async unsubscribe(params: {
+        channel: string;
+    }): Promise<void> {
+        try {
+            await this.client.unsubscribe(params.channel);
+            elizaLogger.success(`Unsubscribed from channel ${params.channel}`);
+        } catch (err) {
+            elizaLogger.error("Error unsubscribing from channel:", err);
+        }
+    }
+    async psubscribe(params: {
+        pattern: string;
+        onMessage: (pattern: string, channel: string, message: string) => void;
+    }): Promise<void> {
+        try {
+            await this.client.psubscribe(params.pattern);
+            this.client.on("pmessage", params.onMessage);
+            elizaLogger.success(`Pattern subscribed to ${params.pattern}`);
+        } catch (err) {
+            elizaLogger.error("Error pattern subscribing:", err);
+        }
+    }
+
+    async punsubscribe(params: {
+        pattern: string;
+    }): Promise<void> {
+        try {
+            await this.client.punsubscribe(params.pattern);
+            elizaLogger.success(`Pattern unsubscribed from ${params.pattern}`);
+        } catch (err) {
+            elizaLogger.error("Error pattern unsubscribing:", err);
+        }
+    }
 }
 
 export default RedisClient;

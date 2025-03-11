@@ -20,10 +20,12 @@
     "dependencies": {
         "@elizaos/adapter-bullmq": "workspace:*",
         "@elizaos/adapter-mongodb": "workspace:*",
+        "@elizaos/adapter-rabbitmq": "workspace:*",
         "@elizaos/adapter-redis": "workspace:*",
         "@elizaos/core": "workspace:*",
         "@types/node": "^22.13.1",
-        "bullmq": "^5.37.0"
+        "bullmq": "^5.37.0",
+        "uuid": "^11.1.0"
     },
     "devDependencies": {
         "@types/jest": "^29.5.14",

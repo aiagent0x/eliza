@@ -1,31 +1,33 @@
-import axios from 'axios';
-import { Queue, Worker } from 'bullmq';
+import { RabbitMQ } from "@elizaos/adapter-rabbitmq";
+import dotenv from "dotenv";
+// import { MongoDBDatabaseAdapter } from "@elizaos/adapter-mongodb"
+// import {
+//     elizaLogger
+// } from "@elizaos/core"
 
-const API_URL = 'http://localhost:3002';
-const AUTH_TOKEN = '73947db7-8515-4191-bf0d-64fdd8c5b902';
+import { sendMessage } from "./helpers/axios";
 
-const chatQueue = new Queue('chat-queue');
-const inputQueue = new Queue('input-queue');
 
-async function sendMessage(sender: string, receiver: string, message: string, roomId: string) {
-    try {
-        const response = await axios.post(
-            `${API_URL}/${sender}/message`,
-            {
-                text: message,
-                userId: receiver,
-                roomId: roomId,
-            },
-            {
-                headers: {
-                    'Authorization': `Bearer ${AUTH_TOKEN}`,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
-        return response.data;
-    } catch (error) {
-        console.error(`Error sending message from ${sender} to ${receiver}:`, error);
-    }
+dotenv.config();
+const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue", "agent_swam_traning"], 10);
+async function main() {
+    rabbitMQ.consume("agent_swam_traning", async (msg) => {
+        const buffer = Buffer.from(msg, 'base64');
+        const utf8Message = buffer.toString('utf-8');
+        const data = JSON.parse(utf8Message)
+        const { agentA, agentB, countMessage, topic, roomId } = data;
+        let sender = agentA;
+        let receiver = agentB;
+        let message = topic;
+        let index = 0
+        while (index < countMessage) {
+            console.log(`${sender} -> ${receiver}: ${message}`);
+            let messages = await sendMessage(sender, receiver, message, roomId);
+            message = messages.data[0].text;
+            [sender, receiver] = [receiver, sender];
+            index++;
+        }
+    })
 }
 
+await main();

@@ -31,8 +31,8 @@ import serverMiddleware from "./middleware/server-middleware.ts";
 import { getMessages, saveMessage } from "./services/memoryService/cacheMessage.ts";
 const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
 import { RabbitMQ } from "@elizaos/adapter-rabbitmq"
-import { buffer } from "stream/consumers";
-const rabbitMQ = new RabbitMQ();
+import { v4 as uuidv4 } from 'uuid';
+const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue","agent_swam_traning"], 10);
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");
@@ -1017,16 +1017,23 @@ export class DirectClient {
             return
         })
         this.app.post("/swarm-tranning/start", async (req, res) => {
-            const { agentA, agentB } = req.body;
+            const { agentA, agentB, countMessage, topic } = req.body;
+            let roomId = `swarm_training_${uuidv4()}`
             let dataHash = JSON.stringify({
                 agentA: agentA,
                 agentB: agentB,
-                status: "start"
+                countMessage: countMessage,
+                topic: topic,
+                roomId: roomId
             });
+
             dataHash = Buffer.from(dataHash).toString('base64')
             rabbitMQ.publish("agent_swam_traning", dataHash);
             res.status(200).json({
                 message: "Start swarm tranning",
+                data: {
+                    roomId
+                }
             });
             return;
         })
