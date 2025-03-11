@@ -1,12 +1,7 @@
 import { RabbitMQ } from "@elizaos/adapter-rabbitmq";
 import dotenv from "dotenv";
-// import { MongoDBDatabaseAdapter } from "@elizaos/adapter-mongodb"
-// import {
-//     elizaLogger
-// } from "@elizaos/core"
 
 import { sendMessage } from "./helpers/axios";
-
 
 dotenv.config();
 const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue", "agent_swam_traning"], 10);

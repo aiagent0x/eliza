@@ -1147,6 +1147,7 @@ export interface IDatabaseAdapter {
     getAgentsSample()
     updateAgentSample(character: any)
     getAgentSample(idAgent: string)
+    createUpdateUser(input: any)
     createKnowledge(knowledge: RAGKnowledgeItem): Promise<void>;
     removeKnowledge(id: UUID): Promise<void>;
     clearKnowledge(agentId: UUID, shared?: boolean): Promise<void>;

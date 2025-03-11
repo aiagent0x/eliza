@@ -273,7 +273,7 @@ export function createApiRouter(
         delete parentInfo.name;
         parentInfo.name = character.name;
         parentInfo.parentId = parentId;
-        
+
         let accountInfo = await runtime.databaseAdapter.createAgent(parentInfo, parentId);
         if (!accountInfo) {
             res.status(400).json({
@@ -629,7 +629,7 @@ export function createApiRouter(
             console.error(`Error create sample agent: ${error}`);
             // console.log(error)
             switch (error.message) {
-                
+
                 case "AGENT_EXISTED":
                     res.status(404).json({
                         success: "fail",
@@ -701,6 +701,23 @@ export function createApiRouter(
                     break;
             }
         }
+    })
+    router.post("/user/set", async (req, res) => {
+        try {
+            let inputs = req.body;
+            const runtimeDefault = agents.get(AGENTIDDEFAUT);
+            await runtimeDefault.databaseAdapter.createUpdateUser(inputs);
+            res.status(200).json({
+                message: "success"
+            });
+            return;
+        } catch (error) {
+            res.status(404).json({
+                message: "Sample agent existed",
+            })
+            return;
+        }
+
     })
     return router;
 }

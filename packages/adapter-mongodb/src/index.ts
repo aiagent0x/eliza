@@ -1494,10 +1494,11 @@ export class MongoDBDatabaseAdapter
     async createAgent(character: any, agentSampleId: string) {
         try {
             const idAgent = stringToUuid(character.name);
-            // const parentId = character.parentId
+            const avatar = character.avatar;
             let accountInfo = await this.getAccountInfo(idAgent);
             if (accountInfo) throw Error("account existed");
             delete character.parentId;
+            delete character.avatar;
             // delete character.id;
             await this.database.collection("accounts").insertOne({
                 id: idAgent,
@@ -1507,6 +1508,7 @@ export class MongoDBDatabaseAdapter
                 parentId: agentSampleId,
                 details: JSON.stringify(character),
                 agentSampleId: agentSampleId,
+                avatar: avatar,
                 createdAt: new Date()
             });
             accountInfo = await this.getAccountInfo(idAgent);
@@ -1563,19 +1565,19 @@ export class MongoDBDatabaseAdapter
                 createdAt: new Date()
             });
             return;
-        } catch (error:any) {
+        } catch (error: any) {
             console.log("createAgentSample-Mongo", error);
-          
+
             switch (error.message) {
                 case "AGENT_EXISTED":
                     throw new Error("AGENT_EXISTED")
                     break;
-            
+
                 default:
                     throw new Error("Another Bug")
                     break;
             }
-            
+
         }
 
     }
@@ -1624,6 +1626,34 @@ export class MongoDBDatabaseAdapter
             return agentSample
         } catch (error) {
             elizaLogger.error("getAgentSample-Mongo", error);
+        }
+    }
+    async createUpdateUser(input: any) {
+        try {
+            let accountInfo = await this.getAccountInfo(input.id);
+            if (accountInfo) {
+                await this.database.collection("accounts").updateOne({ id: input.id }, {
+                    $set: {
+                        name: input.name ?? "User" + input.id,
+                        username: input.name ?? "User" + input.id,
+                        email: input.email ?? "",
+                        avatar: input.avatar ?? "",
+                        createdAt: new Date()
+                    }
+                })
+                return;
+            }
+            await this.database.collection("accounts").insertOne({
+                id: input.id,
+                name: input.name ?? "User" + input.id,
+                username: input.name ?? "User" + input.id,
+                email: input.email ?? "",
+                avatar: input.avatar ?? "",
+                createdAt: new Date()
+            })
+            return;
+        } catch (error) {
+            console.log("createUser-Mongo", error);
         }
     }
 }
