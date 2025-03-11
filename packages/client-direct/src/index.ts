@@ -32,7 +32,7 @@ import { getMessages, saveMessage } from "./services/memoryService/cacheMessage.
 const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
 import { RabbitMQ } from "@elizaos/adapter-rabbitmq"
 import { v4 as uuidv4 } from 'uuid';
-const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue","agent_swam_traning"], 10);
+const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue", "agent_swam_traning"], 10);
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");
@@ -999,7 +999,8 @@ export class DirectClient {
             const { agentId, roomId, userId, skip, limit } = req.body;
             let runtimeDefault = this.agents.get(AGENTIDDEFAUT);
             let memories = await getMessages(agentId, roomId, skip);
-            if (memories) {
+            if (memories && memories.length > 0) {
+             
                 res.status(200).json({
                     message: "success",
                     data: memories
