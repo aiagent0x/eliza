@@ -32,6 +32,7 @@ import { getMessages, saveMessage } from "./services/memoryService/cacheMessage.
 const AGENTIDDEFAUT = "95654c56-888a-0d17-bc32-57df8d1dedc3";
 import { RabbitMQ } from "@elizaos/adapter-rabbitmq"
 import { v4 as uuidv4 } from 'uuid';
+import { hashUserMsg } from "./utilities/format.ts";
 const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue", "agent_swam_traning"], 10);
 console.log("process.env.RABBITMQ_CONNECTION_STRING:", process.env.RABBITMQ_CONNECTION_STRING)
 const storage = multer.diskStorage({
@@ -292,32 +293,45 @@ export class DirectClient {
                     content,
                     createdAt: Date.now(),
                 };
+                elizaLogger.info("addEmbeddingToMemory:-> start");
                 await runtime.messageManager.addEmbeddingToMemory(memory);
+                elizaLogger.info("addEmbeddingToMemory:-> end");
+                elizaLogger.info("createMemory:-> start");
                 await runtime.messageManager.createMemory(memory);
+                elizaLogger.info("createMemory:-> end");
                 let saveMessageToRedis: any = memory;
                 delete saveMessageToRedis.embedding
                 await saveMessage(sessionId, roomId, saveMessageToRedis)
+                let msgHash = hashUserMsg(userMessage, "direct_client:");
+                let response: Content = await runtime.cacheManager.get(msgHash);
+
                 let state = await runtime.composeState(userMessage, {
                     agentName: runtime.character.name,
                 });
 
-                const context = composeContext({
-                    state,
-                    template: messageHandlerTemplate,
-                });
-
-                const response = await generateMessageResponse({
-                    runtime: runtime,
-                    context,
-                    modelClass: ModelClass.SMALL,
-                });
-
+                
+                elizaLogger.info("generateMessageResponse:-> start");
                 if (!response) {
-                    res.status(500).send(
-                        "No response from generateMessageResponse"
-                    );
-                    return;
+                    const context = composeContext({
+                        state,
+                        template: messageHandlerTemplate,
+                    });
+                    response = await generateMessageResponse({
+                        runtime: runtime,
+                        context,
+                        modelClass: ModelClass.SMALL,
+                    });
+                    if (!response) {
+                        res.status(500).send(
+                            "No response from generateMessageResponse"
+                        );
+                        return;
+                    }
+                    await runtime.cacheManager.set(msgHash, response, { expires: Date.now() + 300000 });
                 }
+                
+                elizaLogger.info("generateMessageResponse:-> end");
+                
 
                 // save response to memory
                 const responseMessage: Memory = {
