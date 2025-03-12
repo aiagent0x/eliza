@@ -19,7 +19,7 @@ import type { DirectClient } from ".";
 import { validateUuid } from "@elizaos/core";
 import listCharactorExample from "./controllers/agentControllers/listCharactorExample";
 import validateInputCharacter from "./validate/validateCharacter";
-const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
+const AGENTIDDEFAUT = "95654c56-888a-0d17-bc32-57df8d1dedc3";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 interface UUIDParams {

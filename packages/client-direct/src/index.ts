@@ -29,7 +29,7 @@ import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
 import serverMiddleware from "./middleware/server-middleware.ts";
 import { getMessages, saveMessage } from "./services/memoryService/cacheMessage.ts";
-const AGENTIDDEFAUT = "e61b079d-5226-06e9-9763-a33094aa8d82";
+const AGENTIDDEFAUT = "95654c56-888a-0d17-bc32-57df8d1dedc3";
 import { RabbitMQ } from "@elizaos/adapter-rabbitmq"
 import { v4 as uuidv4 } from 'uuid';
 const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue", "agent_swam_traning"], 10);
