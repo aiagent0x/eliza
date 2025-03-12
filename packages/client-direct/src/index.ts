@@ -294,7 +294,7 @@ export class DirectClient {
                     createdAt: Date.now(),
                 };
                 elizaLogger.info("addEmbeddingToMemory:-> start");
-                await runtime.messageManager.addEmbeddingToMemory(memory);
+                // await runtime.messageManager.addEmbeddingToMemory(memory);
                 elizaLogger.info("addEmbeddingToMemory:-> end");
                 elizaLogger.info("createMemory:-> start");
                 await runtime.messageManager.createMemory(memory);
