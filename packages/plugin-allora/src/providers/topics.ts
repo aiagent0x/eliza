@@ -39,14 +39,14 @@ export class TopicsProvider implements Provider {
     private async getAlloraTopics(
         runtime: IAgentRuntime
     ): Promise<AlloraTopic[]> {
-        const cacheKey = "allora-topics";
-        const cachedValue = this.cache.get<AlloraTopic[]>(cacheKey);
+        // const cacheKey = "allora-topics";
+        // const cachedValue = this.cache.get<AlloraTopic[]>(cacheKey);
 
-        // If the topics are aready cached, return them
-        if (cachedValue) {
-            elizaLogger.info("Retrieving Allora topics from cache");
-            return cachedValue;
-        }
+        // // If the topics are aready cached, return them
+        // if (cachedValue) {
+        //     elizaLogger.info("Retrieving Allora topics from cache");
+        //     return cachedValue;
+        // }
 
         // If the topics are not cached, retrieve them from the Allora API
         const alloraApiKey = runtime.getSetting("ALLORA_API_KEY");
@@ -57,9 +57,9 @@ export class TopicsProvider implements Provider {
             apiKey: alloraApiKey as string,
         });
         const alloraTopics = await alloraApiClient.getAllTopics();
-
+        console.log("alloraTopics:", alloraTopics)
         // Cache the retrieved topics
-        this.cache.set(cacheKey, alloraTopics);
+        // this.cache.set(cacheKey, alloraTopics);
 
         return alloraTopics;
     }

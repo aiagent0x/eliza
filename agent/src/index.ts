@@ -1218,7 +1218,7 @@ export async function createAgent(
             // getSecret(character, "ARTHERA_PRIVATE_KEY")?.startsWith("0x")
             //     ? artheraPlugin
             //     : null,
-            // getSecret(character, "ALLORA_API_KEY") ? alloraPlugin : null,
+            getSecret(character, "ALLORA_API_KEY") ? alloraPlugin : null,
             // getSecret(character, "HYPERLIQUID_PRIVATE_KEY")
             //     ? hyperliquidPlugin
             //     : null,
