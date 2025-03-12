@@ -10,7 +10,6 @@ Example response:
 Recent messages:
 {{recentMessages}}
 
-Allora Network Topics:
 {{alloraTopics}}
 
 Given the recent messages and the Allora Network Topics above, extract the following information about the requested:
