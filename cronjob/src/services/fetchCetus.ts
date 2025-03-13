@@ -15,20 +15,26 @@ export async function fetchLiquidityPools(
     try {
         const response = await axiosInstance.get("/stats_pools", {
             params: {
-                is_vaults:false,
-                display_all_pools:false,
-                has_mining:true,
-                has_farming:true,
-                no_incentives:true,
-                order_by:"-tvl",
-                limit:30,
-                offset:0,
+                is_vaults: false,
+                display_all_pools: false,
+                has_mining: true,
+                has_farming: true,
+                no_incentives: true,
+                order_by: "-tvl",
+                limit: 20,
+                offset: 0,
             },
         });
 
-        console.log("liquidity_pools:",response.data.data.lp_list)
+        response.data.lp_list.sort((a: any, b: any) => {
+            a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
+            b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
+            if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
+            if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
+            return 0;
+        });
         await redis.setValue({ key: 'liquidity_pools', value: JSON.stringify(response.data.data.lp_list), ttl: 300 });
-       
+
     } catch (error) {
         console.error("Error fetching market data:", error);
         throw new Error("Failed to fetch market data");

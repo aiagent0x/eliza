@@ -101,6 +101,13 @@ export const liquidityCetus: Action = {
             }
             let cetusProvider = new CetusProvider();
             let result: any = await cetusProvider.fetchLiquidityPools();
+            result.data.lp_list.sort((a: any, b: any) => {
+                a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
+                b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
+                if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
+                if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
+                return 0;
+            });
             try {
                 callback({
                     user: await runtime.character.name,
