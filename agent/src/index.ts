@@ -1036,7 +1036,7 @@ export async function createAgent(
             // getSecret(character, "IQSOlRPC")
             //     ? elizaCodeinPlugin
             //     : null,
-            bootstrapPlugin,
+            // bootstrapPlugin,
             // getSecret(character, "CDP_API_KEY_NAME") &&
             // getSecret(character, "CDP_API_KEY_PRIVATE_KEY") &&
             // getSecret(character, "CDP_AGENT_KIT_NETWORK")
