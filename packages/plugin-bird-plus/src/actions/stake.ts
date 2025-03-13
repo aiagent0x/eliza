@@ -124,7 +124,7 @@ export const stake: Action = {
                         );
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of Navi staking pools:",
+                            text: "Here’s a lineup of Navi staking pools for you!",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -192,7 +192,7 @@ export const stake: Action = {
                     try {
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of Navi staking pools:",
+                            text: "Here’s a lineup of Navi staking pools for you!",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -220,7 +220,7 @@ export const stake: Action = {
                         );
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of Scallop staking pools:",
+                            text: "Here’s a lineup of Scallop staking pools for you!",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -237,7 +237,7 @@ export const stake: Action = {
                     try {
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of Scallop staking pools:",
+                            text: "Here’s a lineup of Scallop staking pools for you!",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -263,7 +263,7 @@ export const stake: Action = {
                         );
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of Suilend staking pools:",
+                            text: "Here’s a lineup of Suilend staking pools for you!",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -281,7 +281,7 @@ export const stake: Action = {
                     try {
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of Suilend staking pools:",
+                            text: "Here’s a lineup of Suilend staking pools for you!",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -324,7 +324,7 @@ export const stake: Action = {
                             );
                             callback({
                                 user: await runtime.character.name,
-                                text: "Below is a list of staking pools:",
+                                text: "Here’s a lineup of staking pools for you!",
                                 action: "STAKE_POOLS",
                                 result: {
                                     type: "stake_pools",
@@ -394,7 +394,7 @@ export const stake: Action = {
                         try {
                             callback({
                                 user: await runtime.character.name,
-                                text: "Below is a list of stake pools:",
+                                text: "Here’s a lineup of staking pools for you!",
                                 action: "STAKE_POOLS",
                                 result: {
                                     type: "stake_pools",
@@ -429,7 +429,7 @@ export const stake: Action = {
                     if (!responseData) {
                         callback({
                             user: await runtime.character.name,
-                            text: "We couldn't find staking pools in Navi. You can search in list staking pools of Navi:",
+                            text: "We couldn’t spot any staking pools in Navi. Try scanning the list of Navi’s staking pools!",
                             action: "STAKE_TOKEN",
                             action_hint: getActionHint(
                                 "navi pools",
@@ -450,7 +450,7 @@ export const stake: Action = {
                     if (data && typeof data === "string" && data !== null) {
                         callback({
                             user: await runtime.character.name,
-                            text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
+                            text: "Double-check all the details before takeoff to dodge any turbulence!",
                             action: "STAKE_TOKEN",
                             result: {
                                 type: type_action === "stake" ? "stake_token" : "unstake_token",
@@ -494,7 +494,7 @@ export const stake: Action = {
 
                         callback({
                             user: await runtime.character.name,
-                            text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
+                            text: "Double-check all the details before takeoff to dodge any turbulence!",
                             action: "STAKE_TOKEN",
                             result: {
                                 type: type_action === "stake" ? "stake_token" : "unstake_token",
@@ -582,7 +582,7 @@ export const stake: Action = {
                         if (!poolSuilendInfo || poolSuilendInfo.length === 0) {
                             callback({
                                 user: await runtime.character.name,
-                                text: "We couldn't find staking pools in Suilend. You can search in list staking pools of Suilend:",
+                                text: "We couldn’t spot any staking pools in Suilend. Try scanning the list of Suilend’s staking pools!",
                                 action: "STAKE_TOKEN",
                                 action_hint: getActionHint(
                                     "suilend pools",
@@ -686,7 +686,7 @@ export const stake: Action = {
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,
-                            text: "We couldn't find staking pools. You can search in the list of staking pools:",
+                            text: "We couldn’t spot any staking pools. Try scanning the list of staking pools!",
                             action: "STAKE_TOKEN",
                             action_hint: getActionHint(
                                 "all stake pools",
@@ -729,7 +729,7 @@ export const stake: Action = {
                 // const scallopPortfolio = await scallopProvider.myStake(message.userId);
                 callback({
                     user: await runtime.character.name,
-                    text: "Here is your staking portfolio:",
+                    text: "Here’s your staking portfolio, all set and ready!",
                     action: "STAKE_TOKEN",
                     result: {
                         type: "my_stake",

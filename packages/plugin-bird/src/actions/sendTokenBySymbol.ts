@@ -93,7 +93,7 @@ export const sendTokenBySymbol: Action = {
         const tokenObject = await findByVerifiedAndSymbol(content.tokenSymbol);
         if (!tokenObject) {
             callback({
-                text: `We do not support ${content.inputTokenSymbol} token in SUI network yet. However, if your token is supported, we can proceed with sending tokens using the token's address `,
+                text: `We haven’t onboarded the  ${content.inputTokenSymbol} token on the SUI network yet. `,
             })
             return false
         }
@@ -107,7 +107,7 @@ export const sendTokenBySymbol: Action = {
 
             callback({
                 user: await runtime.character.name,
-                text: content.responseMessage,
+                text: "Double-check all the details before takeoff to dodge any turbulence!",
                 action: "SEND_TOKEN",
                 result: {
                     type: "send_sui_chain",

@@ -90,7 +90,7 @@ export const liquidityCetus: Action = {
             if (responseData !== undefined) {
                 callback({
                     user: await runtime.character.name,
-                    text: "Below is a list of liquidity pools:",
+                    text: "Here’s a lineup of liquidity pools for you!",
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "liquidity_pools",
@@ -111,7 +111,7 @@ export const liquidityCetus: Action = {
             try {
                 callback({
                     user: await runtime.character.name,
-                    text: "Below is a list of liquidity pools:",
+                    text: "Here’s a lineup of liquidity pools for you!",
                     action: "LIQUIDITY",
                     result: {
                         type: "liquidity_pools",

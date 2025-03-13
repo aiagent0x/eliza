@@ -188,7 +188,7 @@ export const projectInfo: Action = {
         if (!projectObj) {
             callback({
                 user: await runtime.character.name,
-                text: `We do not support ${content.project_name} token in SUI network yet. However, if your token is supported, we can proceed with sending tokens using the token's address `,
+                text: `We haven’t onboarded the  ${content.project_name} token in SUI network yet `,
             })
             return false
         }

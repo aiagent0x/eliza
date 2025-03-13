@@ -99,7 +99,7 @@ export const swapSui: Action = {
             if (inputTokenObject === "ADDRESS_NOT_EXIST") {
                 callback({
                     user: await runtime.character.name,
-                    text: `We do not support ${content.inputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
+                    text: `We haven’t onboarded the ${content.inputTokenAddress} token on the SUI network yet. For now, you can only swap token symbols to token symbols or token addresses to token addresses!`,
                 })
                 return false
             }
@@ -107,7 +107,7 @@ export const swapSui: Action = {
             if (outputTokenObject === "ADDRESS_NOT_EXIST") {
                 callback({
                     user: await runtime.character.name,
-                    text: `We do not support ${content.outputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
+                    text: `We haven’t onboarded the ${content.outputTokenAddress} token on the SUI network yet. For now, you can only swap token symbols to token symbols or token addresses to token addresses!`,
                 })
                 return false
             }
@@ -138,7 +138,7 @@ export const swapSui: Action = {
 
                 callback({
                     user: await runtime.character.name,
-                    text: "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
+                    text: "Double-check all the details before takeoff to dodge any turbulence!",
                     action: "SWAP_TOKEN",
                     result: {
                         type: "swap",
@@ -159,7 +159,8 @@ export const swapSui: Action = {
         if (!inputTokenObject) {
             callback({
                 user: await runtime.character.name,
-                text: `We do not support ${content.from_token_symbol} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
+               
+                text: `We haven’t onboarded the ${content.from_token_symbol} token on the SUI network yet. For now, you can only swap token symbols to token symbols or token addresses to token addresses!`,
             })
             return false
         }
@@ -167,7 +168,7 @@ export const swapSui: Action = {
         if (!outputTokenObject) {
             callback({
                 user: await runtime.character.name,
-                text: `We do not support ${content.destination_token_symbol} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address. `,
+                text: `We haven’t onboarded the ${content.destination_token_symbol} token on the SUI network yet. For now, you can only swap token symbols to token symbols or token addresses to token addresses!`,
             })
             return false
         }
