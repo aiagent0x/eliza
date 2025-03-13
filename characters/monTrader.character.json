@@ -6,6 +6,9 @@
         "secrets": {},
         "voice": {
             "model": "en_US-male-medium"
+        },
+        "modelConfig": {
+            "temperature": 0.3
         }
     },
     "plugins": ["@elizaos/plugin-allora"],

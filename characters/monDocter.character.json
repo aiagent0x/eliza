@@ -6,6 +6,9 @@
         "secrets": {},
         "voice": {
             "model": "en_US-female-sultry"
+        },
+        "modelConfig": {
+            "temperature": 0.3
         }
     },
     "plugins": [],
