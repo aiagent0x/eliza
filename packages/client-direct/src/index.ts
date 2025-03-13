@@ -309,13 +309,14 @@ export class DirectClient {
                     agentName: runtime.character.name,
                 });
 
-                
+                elizaLogger.info("state:", state);
                 elizaLogger.info("generateMessageResponse:-> start");
                 if (!response) {
                     const context = composeContext({
                         state,
                         template: messageHandlerTemplate,
                     });
+                    
                     response = await generateMessageResponse({
                         runtime: runtime,
                         context,

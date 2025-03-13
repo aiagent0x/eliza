@@ -99,7 +99,7 @@ export class MemoryManager implements IMemoryManager {
     }): Promise<Memory[]> {
         return await this.runtime.databaseAdapter.getMemories({
             roomId,
-            count,
+            count: 2,
             unique,
             tableName: this.tableName,
             agentId: this.runtime.agentId,
