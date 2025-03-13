@@ -8,7 +8,7 @@
             "model": "en_US-female-soft"
         },
         "modelConfig": {
-            "temperature": 0.3
+            "temperature": 1
         }
     },
     "plugins": [],
