@@ -304,12 +304,11 @@ export class DirectClient {
                 await saveMessage(sessionId, roomId, saveMessageToRedis)
                 let msgHash = hashUserMsg(userMessage, "direct_client:");
                 let response: Content = await runtime.cacheManager.get(msgHash);
-
+                elizaLogger.info("state:-start");
                 let state = await runtime.composeState(userMessage, {
                     agentName: runtime.character.name,
                 });
-
-                elizaLogger.info("state:", state);
+                elizaLogger.info("state:-end");
                 elizaLogger.info("generateMessageResponse:-> start");
                 if (!response) {
                     const context = composeContext({
