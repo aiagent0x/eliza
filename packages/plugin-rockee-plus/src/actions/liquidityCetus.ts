@@ -108,7 +108,6 @@ export const liquidityCetus: Action = {
                 if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
                 return 0;
             });
-
             try {
                 callback({
                     user: await runtime.character.name,
@@ -116,7 +115,7 @@ export const liquidityCetus: Action = {
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "liquidity_pools",
-                        data: result.data.lp_list.slice(0, content.size),
+                        data: result.data.lp_list.slice(0, content.amount_token_a),
                     }
                 })
                 return true;
