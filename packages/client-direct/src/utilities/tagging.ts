@@ -10,7 +10,7 @@ import { listPool } from "../services/stakeService/fetchSuilend/listPools";
 import CetusProvider from "../services/liquidityService/liquidityCetus";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
-const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools", "cetus_liquidity_pools"]
+const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools", "liquidity_pools"]
 export async function filterByTagging(tag: string, agentName: string) {
     console.log(agentName)
     tag = tag.trim().toLowerCase();
@@ -25,6 +25,7 @@ export async function filterByTagging(tag: string, agentName: string) {
     let listPoolSuilend;
     let scallopProvider = new ScallopProvider();
     let listPoolsNaviOnSite = await getPoolsInfo()
+    
     if (!text) return null;
     switch (text) {
         case "swap_1_sui_to_usdc":
