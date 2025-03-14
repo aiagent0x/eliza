@@ -395,7 +395,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 return false;
             }
             break;
-        case "cetus_liquidity_pools":
+        case "liquidity_pools":
             let liquidityCetus: any = await redis.getValue({ key: "liquidity_pools" })
             if (liquidityCetus !== undefined) {
                 return responseData = {
