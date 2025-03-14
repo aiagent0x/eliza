@@ -25,8 +25,8 @@ export async function fetchLiquidityPools(
                 offset: 0,
             },
         });
-
-        response.data.lp_list.sort((a: any, b: any) => {
+        console.log("response:",response)
+        response.data.data.lp_list.sort((a: any, b: any) => {
             a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
             b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
             if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
