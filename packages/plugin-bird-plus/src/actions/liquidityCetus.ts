@@ -45,7 +45,7 @@ Extract the liquidity pool parameters from the conversation above, following the
 - No single quotes anywhere in the JSON.  
 `;
 export const liquidityCetus: Action = {
-    name: "LIQUIDITY",
+    name: "FARM_AND_ADD_LIQUIDITY",
     similes: [
         "POOLS_LIQUIDITY",
         "ADD_LIQUIDITY",
@@ -57,7 +57,7 @@ export const liquidityCetus: Action = {
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
-    description: "liquidity cetus",
+    description: "farm and add liquidity and liquidity pools ",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
