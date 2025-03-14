@@ -8,8 +8,9 @@ interface IRockee {
     updated_at: Number,
 }
 interface RockeeModel extends Model<IRockee> {
-    // getUserInfoById(id: string): any;
     getDataByMessage(text: string): any;
+    createData(input: any): any;
+    updateData(input: any, id: string): any;
 }
 const rockeeSchema = new mongoose.Schema({
     message: {
@@ -18,11 +19,12 @@ const rockeeSchema = new mongoose.Schema({
         unique: true
     },
     data: {
-        type: String,
+        type: Object,
         require: true
     },
     type: {
         type: String,
+        default: "rockee",
         require: true
     },
     created_at: Number,
@@ -40,6 +42,28 @@ const rockeeSchema = new mongoose.Schema({
 rockeeSchema.static("getDataByMessage",
     async (text: string) => {
         return Rockee.findOne({ message: text }).select(["data"]);
+    }
+)
+rockeeSchema.static("createData",
+    async (input: any) => {
+        const rs = await Rockee.create({
+            message: input.message,
+            data: input.data,
+        });
+        return rs;
+    }
+)
+rockeeSchema.static("updateData",
+    async (input: any, id: string) => {
+        const rs = await Rockee.updateOne({
+            message: input.message,
+            data: input.data,
+        }, {
+            $set: {
+                _id: id
+            }
+        });
+        return rs
     }
 )
 const Rockee = mongoose.model<IRockee, RockeeModel>('Rockee', rockeeSchema);

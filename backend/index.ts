@@ -9,6 +9,9 @@ const app = express()
 app.use(cors())
 app.use(json());
 app.use(MainRouters)
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
 mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}${process.env.MONGODB_DATABASE}`, { useNewUrlParser: true, useUnifiedTopology: true } as ConnectOptions)
   .then(() => {
     console.log('Database connected');
