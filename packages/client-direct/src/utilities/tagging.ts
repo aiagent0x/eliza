@@ -410,6 +410,14 @@ export async function filterByTagging(tag: string, agentName: string) {
             }
             let cetusProvider = new CetusProvider();
             liquidityCetus = await cetusProvider.fetchLiquidityPools();
+
+            liquidityCetus.data.lp_list.sort((a: any, b: any) => {
+                a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
+                b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
+                if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
+                if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
+                return 0;
+            });
             try {
                 return responseData = {
                     user: agentName,
