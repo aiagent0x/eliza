@@ -475,7 +475,7 @@ export const topToken: Action = {
                 case "LISTING":
                     callback({
                         user: await runtime.character.name,
-                        text: `Top tokens that are about to have their TGE, token release, or exchange listing: BIRDS, SEED, FANTV, Walrus, Wave, Haedal`,
+                        text: `Top tokens that are about to have their TGE, token release, or exchange listing: BIRDS, SEED, FANTV, Walrus, Wave, Haedal, 7K`,
                     })
                     return true;
                     break;
