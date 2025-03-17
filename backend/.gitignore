@@ -10,6 +10,7 @@
 !src/middleware/*
 !src/helpers/*
 !src/routes/*
+!src/models/*
 !src/controllers/Posts/*
 !src/controllers/Users/*
 !.env.example
