@@ -16,6 +16,7 @@ import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
 import { hashUserMsg } from "../utils/format";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 import getInfoTokenOnSui from "../providers/coinMetaDataSui";
+import MessageService from "../services/messageService";
 const swapTemplate = `
 Recent messages: {{recentMessages}}  
 Extract the token swap parameters from the conversation above, following these rules:  
@@ -51,7 +52,7 @@ export const swapSui: Action = {
         "EXCHANGE_TOKENS",
         "BUY_TOKEN",
         "SELL_TOKEN",
-        
+
     ],
     validate: async (_runtime: IAgentRuntime, message: Memory) => {
         const content = typeof message.content === 'string'
@@ -71,25 +72,28 @@ export const swapSui: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ): Promise<boolean> => {
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
-        }
-        const msgHash = hashUserMsg(message, "swap");
-        let content: any = await runtime.cacheManager.get(msgHash);
-        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
-        if (!content) {
-            const swapContext = composeContext({
-                state,
-                template: swapTemplate,
-            });
-            content = await generateObjectDeprecated({
-                runtime,
-                context: swapContext,
-                modelClass: ModelClass.SMALL,
-            });
-            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+        let content: any = _options.data_extract;
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+            const msgHash = hashUserMsg(message, "swap");
+            content = await runtime.cacheManager.get(msgHash);
+            elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+            if (!content) {
+                const swapContext = composeContext({
+                    state,
+                    template: swapTemplate,
+                });
+                content = await generateObjectDeprecated({
+                    runtime,
+                    context: swapContext,
+                    modelClass: ModelClass.SMALL,
+                });
+                await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+            }
         }
 
         elizaLogger.info("content:", content);
@@ -159,7 +163,7 @@ export const swapSui: Action = {
         if (!inputTokenObject) {
             callback({
                 user: await runtime.character.name,
-               
+
                 text: `We haven’t onboarded the ${content.from_token_symbol} token on the SUI network yet. For now, you can only swap token symbols to token symbols or token addresses to token addresses!`,
             })
             return false
@@ -186,7 +190,18 @@ export const swapSui: Action = {
             toToken: outputTokenObject
 
         }
+
+        if (_options.type !== "toggle_faster") {
+            let messageService = new MessageService()
+            await messageService.createMessage(
+                message.content.text,
+                {
+                    action: "SWAP_AND_BUY_AND_SELL_TOKEN",
+                    data_extract: content
+                })
+        }
         try {
+
             await callback({
                 user: await runtime.character.name,
                 text: `Double-check all the details before takeoff to dodge any turbulence!`,
@@ -305,14 +320,14 @@ export const swapSui: Action = {
                 "user": "{{Agent}}",
                 "content": {
                     "text": "How much {TOKEN_SYMBOL} would you like to sell?",
-                    
+
                 }
             },
             {
                 "user": "{{user1}}",
                 "content": {
                     "text": "10",
-                    
+
                 }
             },
             {
@@ -341,14 +356,14 @@ export const swapSui: Action = {
                 "user": "{{Agent}}",
                 "content": {
                     "text": "How much {TOKEN_SYMBOL} would you like to buy?",
-                    
+
                 }
             },
             {
                 "user": "{{user1}}",
                 "content": {
                     "text": "5",
-                    
+
                 }
             },
             {
@@ -366,6 +381,6 @@ export const swapSui: Action = {
                 }
             }
         ]
-        
+
     ] as ActionExample[][],
 } as Action;

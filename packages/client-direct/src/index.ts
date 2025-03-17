@@ -30,6 +30,7 @@ import OpenAI from "openai";
 import { hashUserMsg } from "./utilities/format.ts";
 import { filterByTagging } from "./utilities/tagging.ts";
 import { suggestMessage } from "./services/suggestMessage/index.ts";
+import MessageService from "./services/messageService/index.ts";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), "data", "uploads");
@@ -246,6 +247,7 @@ export class DirectClient {
                     return;
                 }
 
+
                 const messageId = stringToUuid(Date.now().toString());
 
                 const attachments: Media[] = [];
@@ -292,7 +294,14 @@ export class DirectClient {
                     content,
                     createdAt: Date.now(),
                 };
-
+                const messageService = new MessageService();
+                let getDatabyMessage = await messageService.getDataByMessage(text);
+                console.log("getDatabyMessage:", getDatabyMessage)
+                if (getDatabyMessage.code === 1 && getDatabyMessage.data) {
+                    let dataResponse = await messageService.toggleChooseActionFaster(messageId, type, getDatabyMessage.data, userMessage, memory, runtime);
+                    res.json([dataResponse]);
+                    return;
+                }
                 // await runtime.messageManager.addEmbeddingToMemory(memory);
                 await runtime.messageManager.createMemory(memory);
 

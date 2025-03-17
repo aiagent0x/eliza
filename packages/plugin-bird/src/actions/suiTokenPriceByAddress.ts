@@ -14,6 +14,7 @@ import {
 
 import { hashUserMsg } from "../utils/format";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
+import MessageService from "../services/messageService";
 
 const promptSuiTokenInfoTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
 
@@ -112,32 +113,44 @@ export const suiTokenPriceByAddress: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         elizaLogger.info("[suiPools]");
+        let content: any = _options.data_extract;
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+            const msgHash = hashUserMsg(message, "token-price");
+            content = await runtime.cacheManager.get(msgHash);
+            elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+            if (!content) {
+                const suiTokenInfoContext = composeContext({
+                    state,
+                    template: promptSuiTokenInfoTemplate,
+                });
+                content = await generateObjectDeprecated({
+                    runtime,
+                    context: suiTokenInfoContext,
+                    modelClass: ModelClass.SMALL,
+                });
+                await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+            }
+        }
 
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
-        }
-        const msgHash = hashUserMsg(message, "token-price");
-        let content: any = await runtime.cacheManager.get(msgHash);
-        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
-        if (!content) {
-            const suiTokenInfoContext = composeContext({
-                state,
-                template: promptSuiTokenInfoTemplate,
-            });
-            content = await generateObjectDeprecated({
-                runtime,
-                context: suiTokenInfoContext,
-                modelClass: ModelClass.SMALL,
-            });
-            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
-        }
         elizaLogger.info("content: ", content);
         const coninGeckoTeminal = new GeckoTerminalProvider2()
         const info = await coninGeckoTeminal.getTokenDetails("sui-network", content.token_address);
 
         if (callback) {
+            if (_options.type !== "toggle_faster") {
+                let messageService = new MessageService()
+                await messageService.createMessage(
+                    message.content.text,
+                    {
+                        action: "TOKEN_PRICE_INFO_BY_ADDRESS",
+                        data_extract: content
+                    })
+            }
             callback({
                 user: await runtime.character.name,
                 text: ` Here are the token prices—let’s lock in the best deal! `,

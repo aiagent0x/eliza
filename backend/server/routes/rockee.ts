@@ -9,7 +9,7 @@ router.post('/api/rockee/search', async (req, res) => {
         const text = inputs.text;
         const rs = await RockeeControllers.getDataByMessage(text)
         return res.send({
-            data: rs,
+            data: rs.data,
             code: 1,
             message: "success"
         })
@@ -24,7 +24,19 @@ router.post('/api/rockee/search', async (req, res) => {
 router.post('/api/rockee/create', async (req, res) => {
     const inputs = req.body;
     try {
-        await RockeeSchema.createData(inputs)
+        let text = inputs.text
+        text = text.trim().toLowerCase();
+        text = text.replace(/\s+/g, '_');
+        delete inputs.text;
+        inputs.message = text;
+        const rs = await RockeeControllers.getDataByMessage(text);
+        if (rs) {
+            return res.status(400).send({
+                code: 0,
+                message: "Message is existed"
+            })
+        }
+        await RockeeSchema.createData(inputs);
         return res.send({
             code: 1,
             message: "sucess"
@@ -38,9 +50,14 @@ router.post('/api/rockee/create', async (req, res) => {
     }
 })
 router.post('/api/rockee/update', async (req, res) => {
-    const { id, data } = req.body;
+    const inputs = req.body;
     try {
-        await RockeeSchema.updateData(data, id);
+        let text = inputs.text
+        text = text.trim().toLowerCase();
+        text = text.replace(/\s+/g, '_');
+        delete inputs.text;
+        inputs.message = text;
+        await RockeeSchema.updateData(inputs);
         return res.send({
             code: 1,
             message: "success"

@@ -10,7 +10,7 @@ interface IRockee {
 interface RockeeModel extends Model<IRockee> {
     getDataByMessage(text: string): any;
     createData(input: any): any;
-    updateData(input: any, id: string): any;
+    updateData(input: any): any;
 }
 const rockeeSchema = new mongoose.Schema({
     message: {
@@ -19,8 +19,16 @@ const rockeeSchema = new mongoose.Schema({
         unique: true
     },
     data: {
-        type: Object,
-        require: true
+        action: {
+            type: String
+        },
+        data_extract: {
+            type: Object,
+        },
+        type: {
+            type: String,
+            default: "toggle_faster"
+        }
     },
     type: {
         type: String,
@@ -54,15 +62,11 @@ rockeeSchema.static("createData",
     }
 )
 rockeeSchema.static("updateData",
-    async (input: any, id: string) => {
-        const rs = await Rockee.updateOne({
-            message: input.message,
-            data: input.data,
-        }, {
-            $set: {
-                _id: id
-            }
-        });
+    async (input: any) => {
+        const rs = await Rockee.updateOne(
+            { message: input.message },
+            { $set: { data: input.data } }
+        );
         return rs
     }
 )

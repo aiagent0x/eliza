@@ -19,6 +19,7 @@ import { ScallopProvider } from "../providers/fetchScallop/scallopProvider";
 import { getDetail } from "../providers/fetchSuilend/getDetail";
 import { listPool } from "../providers/fetchSuilend/listPools";
 import getActionHint from "../utils/action_hint";
+import MessageService from "../services/messageService";
 // import { listPool } from "../providers/fetchSuilend/listPools";
 const suiClient = new SuiClient({
     url: "https://fullnode.mainnet.sui.io"
@@ -75,27 +76,31 @@ export const stake: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         elizaLogger.info("---- STAKE_TOKEN ----");
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
-        }
-        const msgHash = hashUserMsg(message, "stake");
-        let content: any = await runtime.cacheManager.get(msgHash);
-        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+        let content: any = _options.data_extract;
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+            const msgHash = hashUserMsg(message, "stake");
+            content = await runtime.cacheManager.get(msgHash);
+            elizaLogger.info("---- cache info: ", msgHash, "--->", content);
 
-        if (!content) {
-            const stakeContext = composeContext({
-                state,
-                template: stakeTokenTemplate,
-            });
-            content = await generateObjectDeprecated({
-                runtime,
-                context: stakeContext,
-                modelClass: ModelClass.SMALL,
-            });
-            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+            if (!content) {
+                const stakeContext = composeContext({
+                    state,
+                    template: stakeTokenTemplate,
+                });
+                content = await generateObjectDeprecated({
+                    runtime,
+                    context: stakeContext,
+                    modelClass: ModelClass.SMALL,
+                });
+                await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+            }
         }
+
         elizaLogger.info("content:", content)
         // const scallopProvider = new ScallopProvider();
         let listPoolsNaviOnSite = await getPoolsInfo()
@@ -123,6 +128,16 @@ export const stake: Action = {
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Here’s a lineup of Navi staking pools for you!",
@@ -191,6 +206,16 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Here’s a lineup of Navi staking pools for you!",
@@ -324,6 +349,16 @@ export const stake: Action = {
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Here’s a lineup of staking pools for you!",
@@ -395,6 +430,16 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Here’s a lineup of staking pools for you!",
@@ -451,6 +496,16 @@ export const stake: Action = {
                     }
                     data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
                     if (data && typeof data === "string" && data !== null) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -494,7 +549,16 @@ export const stake: Action = {
                         delete responseData.typeCoin;
                     }
                     try {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
 
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -705,6 +769,16 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -730,6 +804,16 @@ export const stake: Action = {
                 // // Convert the Map to an object
                 // const portfolioObject = Object.fromEntries(portfolio);
                 // const scallopPortfolio = await scallopProvider.myStake(message.userId);
+                if (_options.type !== "toggle_faster") {
+                    let messageService = new MessageService()
+                    await messageService.createMessage(
+                        message.content.text,
+                        {
+                            action: "STAKE_POOLS",
+                            data_extract: content
+                        })
+
+                }
                 callback({
                     user: await runtime.character.name,
                     text: "Here’s your staking portfolio, all set and ready!",

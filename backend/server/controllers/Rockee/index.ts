@@ -6,4 +6,5 @@ async function getDataByMessage(text: string) {
     const data = await RockeeSchema.getDataByMessage(text);
     return data;
 }
+
 export default { getDataByMessage };

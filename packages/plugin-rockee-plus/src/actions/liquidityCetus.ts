@@ -19,6 +19,7 @@ const redis = new RedisClient(REDIS_URL);
 import { CetusProvider } from "../providers/fetchCetus/fetchListLiquidityPools";
 import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
 import getActionHint from "../utils/action_hint";
+import MessageService from "../services/messageService";
 const topLiquidityPoolTemplate = `Recent messages: {{recentMessages}}  
 Extract the liquidity pool parameters from the conversation above, following these rules:  
 
@@ -66,32 +67,45 @@ export const liquidityCetus: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         // composeState
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
+        let content: any = _options.data_extract;
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+
+            const topLiquidityPoolContext = composeContext({
+                state,
+                template: topLiquidityPoolTemplate,
+            });
+
+            content = await generateObjectDeprecated({
+                runtime,
+                context: topLiquidityPoolContext,
+                modelClass: ModelClass.SMALL,
+            });
         }
-
-        const topLiquidityPoolContext = composeContext({
-            state,
-            template: topLiquidityPoolTemplate,
-        });
-
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: topLiquidityPoolContext,
-            modelClass: ModelClass.SMALL,
-        });
         elizaLogger.info("content:", content);
 
         if (content.type_action === "show_list") {
             if (parseInt(content.amount_token_a) === 0) content.amount_token_a = 5;
             let responseData = await redis.getValue({ key: "liquidity_pools" })
             if (responseData !== undefined) {
+                if (_options.type !== "toggle_faster") {
+                    let messageService = new MessageService()
+                    await messageService.createMessage(
+                        message.content.text,
+                        {
+                            action: "LIQUIDITY",
+                            data_extract: content
+                        })
+
+                }
                 callback({
                     user: await runtime.character.name,
                     text: "Below is a list of liquidity pools:",
-                    action: "LIQUIDITY_POOLS",
+                    action: "LIQUIDITY",
                     result: {
                         type: "liquidity_pools",
                         data: JSON.parse(responseData).slice(0, parseInt(content.amount_token_a)),
@@ -109,10 +123,20 @@ export const liquidityCetus: Action = {
                 return 0;
             });
             try {
+                if (_options.type !== "toggle_faster") {
+                    let messageService = new MessageService()
+                    await messageService.createMessage(
+                        message.content.text,
+                        {
+                            action: "LIQUIDITY",
+                            data_extract: content
+                        })
+
+                }
                 callback({
                     user: await runtime.character.name,
                     text: "Below is a list of liquidity pools:",
-                    action: "LIQUIDITY_POOLS",
+                    action: "LIQUIDITY",
                     result: {
                         type: "liquidity_pools",
                         data: result.data.lp_list.slice(0, content.amount_token_a),
@@ -162,6 +186,15 @@ export const liquidityCetus: Action = {
             let result = await cetusProvider.fetchLiquidityPoolsByCoinType(`${coinInfoA.type},${coinInfoB.type}`);
 
             try {
+                if (_options.type !== "toggle_faster") {
+                    let messageService = new MessageService()
+                    await messageService.createMessage(
+                        message.content.text,
+                        {
+                            action: "LIQUIDITY",
+                            data_extract: content
+                        })
+                }
                 callback({
                     user: await runtime.character.name,
                     text: "Please ensure all details are correct before adding liquidity to prevent any potential losses.",
