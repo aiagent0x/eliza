@@ -7,4 +7,5 @@ async function getDataByMessage(text: string) {
     return data;
 }
 
+
 export default { getDataByMessage };

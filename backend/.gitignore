@@ -10,5 +10,7 @@
 !src/middleware/*
 !src/helpers/*
 !src/routes/*
+!src/controllers/Posts/*
+!src/controllers/Users/*
 !.env.example
 certificate.json
