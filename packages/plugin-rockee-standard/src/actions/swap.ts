@@ -195,7 +195,6 @@ export const swapSui: Action = {
             amount: amount === "null" ? 0 : parseFloat(amount),
             fromToken: inputTokenObject,
             toToken: outputTokenObject
-
         }
         try {
             if (_options.type !== "toggle_faster") {
@@ -222,9 +221,6 @@ export const swapSui: Action = {
             console.error("Error during token swap:", error);
             return false;
         }
-
-
-
     },
     examples: [
         [

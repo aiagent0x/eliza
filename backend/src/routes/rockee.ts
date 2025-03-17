@@ -8,11 +8,21 @@ router.post('/api/rockee/search', async (req, res) => {
     try {
         const text = inputs.text;
         const rs = await RockeeControllers.getDataByMessage(text)
-        return res.send({
-            data: rs.data,
-            code: 1,
-            message: "success"
-        })
+        if (rs) {
+            return res.send({
+                data: rs.data,
+                code: 1,
+                message: "success"
+            })
+        }
+        else {
+            return res.send({
+                data: null,
+                code: 1,
+                message: "success"
+            })
+        }
+
     } catch (error) {
         console.log("error-api-/api/rockee/search:", error);
         return res.send({
