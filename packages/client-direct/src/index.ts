@@ -298,7 +298,7 @@ export class DirectClient {
                 console.log("getDatabyMessage:", getDatabyMessage)
                 if (getDatabyMessage.code === 1 && getDatabyMessage.data) {
                     let dataResponse = await messageService.toggleChooseActionFaster(messageId, type, getDatabyMessage.data, userMessage, memory, runtime);
-                    res.json([dataResponse]);
+                    res.json(dataResponse);
                     return;
                 }
                 // await runtime.messageManager.addEmbeddingToMemory(memory);
