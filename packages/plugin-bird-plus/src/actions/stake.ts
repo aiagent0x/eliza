@@ -19,6 +19,7 @@ import { ScallopProvider } from "../providers/fetchScallop/scallopProvider";
 import { getDetail } from "../providers/fetchSuilend/getDetail";
 import { listPool } from "../providers/fetchSuilend/listPools";
 import getActionHint from "../utils/action_hint";
+import MessageService from "../services/messageService";
 // import { listPool } from "../providers/fetchSuilend/listPools";
 const suiClient = new SuiClient({
     url: "https://fullnode.mainnet.sui.io"
@@ -75,27 +76,31 @@ export const stake: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         elizaLogger.info("---- STAKE_TOKEN ----");
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
-        }
-        const msgHash = hashUserMsg(message, "stake");
-        let content: any = await runtime.cacheManager.get(msgHash);
-        elizaLogger.info("---- cache info: ", msgHash, "--->", content);
+        let content: any = _options.data_extract;
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+            const msgHash = hashUserMsg(message, "stake");
+            content = await runtime.cacheManager.get(msgHash);
+            elizaLogger.info("---- cache info: ", msgHash, "--->", content);
 
-        if (!content) {
-            const stakeContext = composeContext({
-                state,
-                template: stakeTokenTemplate,
-            });
-            content = await generateObjectDeprecated({
-                runtime,
-                context: stakeContext,
-                modelClass: ModelClass.SMALL,
-            });
-            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+            if (!content) {
+                const stakeContext = composeContext({
+                    state,
+                    template: stakeTokenTemplate,
+                });
+                content = await generateObjectDeprecated({
+                    runtime,
+                    context: stakeContext,
+                    modelClass: ModelClass.SMALL,
+                });
+                await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+            }
         }
+
         elizaLogger.info("content:", content)
         const scallopProvider = new ScallopProvider();
         let listPoolsNaviOnSite = await getPoolsInfo()
@@ -122,6 +127,15 @@ export const stake: Action = {
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Here’s a lineup of Navi staking pools for you!",
@@ -190,6 +204,15 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Here’s a lineup of Navi staking pools for you!",
@@ -205,208 +228,227 @@ export const stake: Action = {
                         return false;
                     }
                     break;
-                case "scallop":
-                    dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-                    if (dataScallop && Object.keys(dataScallop).length > 0) {
+                // case "scallop":
+                //     dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+                //     if (dataScallop && Object.keys(dataScallop).length > 0) {
 
-                        let poolsScallopData: { [key: string]: string }[] = [];
-                        for (let key in dataScallop) {
-                            poolsScallopData.push(JSON.parse(dataScallop[key]));
+                //         let poolsScallopData: { [key: string]: string }[] = [];
+                //         for (let key in dataScallop) {
+                //             poolsScallopData.push(JSON.parse(dataScallop[key]));
+                //         }
+
+                //         poolsScallopData.sort(
+                //             (a: any, b: any) =>
+                //                 b.total_supply_rate - a.total_supply_rate
+                //         );
+                //         callback({
+                //             user: await runtime.character.name,
+                //             text: "Here’s a lineup of Scallop staking pools for you!",
+                //             action: "STAKE_POOLS",
+                //             result: {
+                //                 type: "stake_pools",
+                //                 data: poolsScallopData.slice(0, content.amount),
+                //             },
+                //         });
+                //         return true;
+                //     }
+                //     listPoolsScallop = await scallopProvider.listPools();
+                //     listPoolsScallop.sort(
+                //         (a, b) =>
+                //             b.total_supply_rate - a.total_supply_rate
+                //     );
+                //     try {
+                //         callback({
+                //             user: await runtime.character.name,
+                //             text: "Here’s a lineup of Scallop staking pools for you!",
+                //             action: "STAKE_POOLS",
+                //             result: {
+                //                 type: "stake_pools",
+                //                 data: listPoolsScallop.slice(0, content.amount),
+                //             },
+                //         });
+                //         return true;
+                //     } catch (error) {
+                //         console.error("Error during token swap:", error);
+                //         return false;
+                //     }
+                //     break;
+                // case "suilend":
+                //     dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+                //     if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+                //         let poolsSuilendData: { [key: string]: string }[] = [];
+                //         for (let key in dataSuilend) {
+                //             poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                //         }
+                //         poolsSuilendData.sort(
+                //             (a: any, b: any) =>
+                //                 b.total_supply_rate - a.total_supply_rate
+                //         );
+                //         callback({
+                //             user: await runtime.character.name,
+                //             text: "Here’s a lineup of Suilend staking pools for you!",
+                //             action: "STAKE_POOLS",
+                //             result: {
+                //                 type: "stake_pools",
+                //                 data: poolsSuilendData.slice(0, content.amount),
+                //             },
+                //         });
+                //         return true;
+                //     }
+                //     listPoolSuilend = await listPool();
+
+                //     listPoolSuilend.sort(
+                //         (a, b) =>
+                //             b.total_supply_rate - a.total_supply_rate
+                //     );
+                //     try {
+                //         callback({
+                //             user: await runtime.character.name,
+                //             text: "Here’s a lineup of Suilend staking pools for you!",
+                //             action: "STAKE_POOLS",
+                //             result: {
+                //                 type: "stake_pools",
+                //                 data: listPoolSuilend.slice(0, content.amount),
+                //             },
+                //         });
+                //         return true;
+                //     } catch (error) {
+                //         console.error("Error during token swap:", error);
+                //         return false;
+                //     }
+                //     break;
+                default:
+                    let parsedData: { [key: string]: string }[] = [];
+                    // let poolsScallopData: { [key: string]: string }[] = [];
+                    // let poolsSuilendData: { [key: string]: string }[] = [];
+                    data = await redis.hGetAll("STAKE_POOLS");
+                    // dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+                    // dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+                    if (data && Object.keys(data).length > 0) {
+                        for (let key in data) {
+                            parsedData.push(JSON.parse(data[key]));
                         }
-
-                        poolsScallopData.sort(
+                    }
+                    // if (dataScallop && Object.keys(dataScallop).length > 0) {
+                    //     for (let key in dataScallop) {
+                    //         poolsScallopData.push(JSON.parse(dataScallop[key]));
+                    //     }
+                    // }
+                    // if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+                    //     for (let key in dataSuilend) {
+                    //         poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                    //     }
+                    // }
+                    // if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
+                    if ((parsedData && parsedData.length > 0)) {
+                        // parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+                        parsedData.sort(
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Here’s a lineup of Scallop staking pools for you!",
-                            action: "STAKE_POOLS",
-                            result: {
-                                type: "stake_pools",
-                                data: poolsScallopData.slice(0, content.amount),
-                            },
-                        });
-                        return true;
-                    }
-                    listPoolsScallop = await scallopProvider.listPools();
-                    listPoolsScallop.sort(
-                        (a, b) =>
-                            b.total_supply_rate - a.total_supply_rate
-                    );
-                    try {
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Here’s a lineup of Scallop staking pools for you!",
-                            action: "STAKE_POOLS",
-                            result: {
-                                type: "stake_pools",
-                                data: listPoolsScallop.slice(0, content.amount),
-                            },
-                        });
-                        return true;
-                    } catch (error) {
-                        console.error("Error during token swap:", error);
-                        return false;
-                    }
-                    break;
-                case "suilend":
-                    dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
-                    if (dataSuilend && Object.keys(dataSuilend).length > 0) {
-                        let poolsSuilendData: { [key: string]: string }[] = [];
-                        for (let key in dataSuilend) {
-                            poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
                         }
-                        poolsSuilendData.sort(
-                            (a: any, b: any) =>
-                                b.total_supply_rate - a.total_supply_rate
-                        );
                         callback({
                             user: await runtime.character.name,
-                            text: "Here’s a lineup of Suilend staking pools for you!",
+                            text: "Here’s a lineup of staking pools for you!",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
-                                data: poolsSuilendData.slice(0, content.amount),
+                                data: parsedData.slice(0, content.amount),
                             },
                         });
                         return true;
                     }
-                    listPoolSuilend = await listPool();
 
-                    listPoolSuilend.sort(
-                        (a, b) =>
-                            b.total_supply_rate - a.total_supply_rate
-                    );
-                    try {
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Here’s a lineup of Suilend staking pools for you!",
-                            action: "STAKE_POOLS",
-                            result: {
-                                type: "stake_pools",
-                                data: listPoolSuilend.slice(0, content.amount),
-                            },
-                        });
-                        return true;
-                    } catch (error) {
-                        console.error("Error during token swap:", error);
-                        return false;
-                    }
-                    break;
-                    default:
-                        let parsedData: { [key: string]: string }[] = [];
-                        let poolsScallopData: { [key: string]: string }[] = [];
-                        let poolsSuilendData: { [key: string]: string }[] = [];
-                        data = await redis.hGetAll("STAKE_POOLS");
-                        dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-                        dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
-                        if (data && Object.keys(data).length > 0) {
-                            for (let key in data) {
-                                parsedData.push(JSON.parse(data[key]));
-                            }
-                        }
-                        if (dataScallop && Object.keys(dataScallop).length > 0) {
-                            for (let key in dataScallop) {
-                                poolsScallopData.push(JSON.parse(dataScallop[key]));
-                            }
-                        }
-                        if (dataSuilend && Object.keys(dataSuilend).length > 0) {
-                            for (let key in dataSuilend) {
-                                poolsSuilendData.push(JSON.parse(dataSuilend[key]));
-                            }
-                        }
-                        if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
-                            parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-                            parsedData.sort(
-                                (a: any, b: any) =>
-                                    b.total_supply_rate - a.total_supply_rate
-                            );
-                            callback({
-                                user: await runtime.character.name,
-                                text: "Here’s a lineup of staking pools for you!",
-                                action: "STAKE_POOLS",
-                                result: {
-                                    type: "stake_pools",
-                                    data: parsedData.slice(0, content.amount),
-                                },
-                            });
-                            return true;
-                        }
-    
-                        listPoolSuilend = await listPool();
-                        listPoolsScallop = await scallopProvider.listPools();
-                        listPoolsNavi = await listPoolsInFileJson();
-                        if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
-                            index = 0;
-                            for (let key in pool) {
-                                if (pool.hasOwnProperty(key)) {
-                                    let poolInfo;
-                                    if (pool[key]) {
-                                        poolInfo = await getPoolInfo({
-                                            symbol: key,
-                                            address: pool[key].type,
-                                            decimal: listPoolsNavi[index].decimal,
-                                        });
-                                        listPoolsNavi[index].name = key;
-                                        listPoolsNavi[index].total_supply = poolInfo.total_supply;
-                                        listPoolsNavi[index].token_price = poolInfo.tokenPrice;
-                                        listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
-                                        listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
-                                        listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                                        listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                                        listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                                        listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                                        listPoolsNavi[index].protocol = "navi";
-                                    } else {
-                                        elizaLogger.error(`Pool information for key ${key} is undefined.`);
-                                    }
-                                }
-                                index++;
-                            }
-                            for (let i = 0; i < listPoolsNavi.length; i++) {
-                                if (listPoolsNavi[i].type === "0x2::sui::SUI") {
-                                    listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                    // listPoolSuilend = await listPool();
+                    // listPoolsScallop = await scallopProvider.listPools();
+                    listPoolsNavi = await listPoolsInFileJson();
+                    if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
+                        index = 0;
+                        for (let key in pool) {
+                            if (pool.hasOwnProperty(key)) {
+                                let poolInfo;
+                                if (pool[key]) {
+                                    poolInfo = await getPoolInfo({
+                                        symbol: key,
+                                        address: pool[key].type,
+                                        decimal: listPoolsNavi[index].decimal,
+                                    });
+                                    listPoolsNavi[index].name = key;
+                                    listPoolsNavi[index].total_supply = poolInfo.total_supply;
+                                    listPoolsNavi[index].token_price = poolInfo.tokenPrice;
+                                    listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
+                                    listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
+                                    listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
+                                    listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
+                                    listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
+                                    listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
+                                    listPoolsNavi[index].protocol = "navi";
                                 } else {
-                                    listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                                    elizaLogger.error(`Pool information for key ${key} is undefined.`);
                                 }
-    
-                                for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
-                                    if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                                        delete listPoolsNavi[i].base_supply_rate;
-                                        delete listPoolsNavi[i].total_supply_rate;
-                                        listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                                        listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                                    }
-                                }
-                                delete listPoolsNavi[i].typeCoin;
                             }
-    
+                            index++;
                         }
-                        else {
-                            listPoolsNavi = [];
+                        for (let i = 0; i < listPoolsNavi.length; i++) {
+                            if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                                listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                            } else {
+                                listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                            }
+
+                            for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                                if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                                    delete listPoolsNavi[i].base_supply_rate;
+                                    delete listPoolsNavi[i].total_supply_rate;
+                                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                }
+                            }
+                            delete listPoolsNavi[i].typeCoin;
                         }
-                        responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
-                        responseData.sort(
-                            (a, b) =>
-                                b.total_supply_rate - a.total_supply_rate
-                        );
-                        try {
-                            callback({
-                                user: await runtime.character.name,
-                                text: "Here’s a lineup of staking pools for you!",
-                                action: "STAKE_POOLS",
-                                result: {
-                                    type: "stake_pools",
-                                    data: responseData.slice(0, content.amount),
-                                },
-                            });
-                            return true;
-                        } catch (error) {
-                            console.error("Error during token swap:", error);
-                            return false;
+
+                    }
+                    else {
+                        listPoolsNavi = [];
+                    }
+                    // responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
+                    responseData.sort(
+                        (a, b) =>
+                            b.total_supply_rate - a.total_supply_rate
+                    );
+                    try {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
                         }
-                        break;
+                        callback({
+                            user: await runtime.character.name,
+                            text: "Here’s a lineup of staking pools for you!",
+                            action: "STAKE_POOLS",
+                            result: {
+                                type: "stake_pools",
+                                data: responseData.slice(0, content.amount),
+                            },
+                        });
+                        return true;
+                    } catch (error) {
+                        console.error("Error during token swap:", error);
+                        return false;
+                    }
+                    break;
             }
         }
         if (content.type === "pool_name") {
@@ -448,6 +490,15 @@ export const stake: Action = {
                     }
                     data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
                     if (data && typeof data === "string" && data !== null) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -491,7 +542,15 @@ export const stake: Action = {
                         delete responseData.typeCoin;
                     }
                     try {
-
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -507,108 +566,106 @@ export const stake: Action = {
                         return false;
                     }
                     break;
-                case "scallop":
-                    type_action = content.type_action;
-                    if (content.pool_name === null || content.pool_name === "null") {
-                        content.pool_name = "sui"
-                    }
-                    dataScallop = await redis.hGet("STAKE_POOLS_SCALLOP", content.pool_name.toLowerCase());
-                    if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Double-check all the details before takeoff to dodge any turbulence!",
-                            action: "STAKE_TOKEN",
-                            result: {
-                                type: type_action === "stake" ? "stake_token" : "unstake_token",
-                                data: { ...JSON.parse(dataScallop), amount: content.amount, protocol: "scallop" },
-                            },
-                        });
-                        return true;
-                    }
+                // case "scallop":
+                //     type_action = content.type_action;
+                //     if (content.pool_name === null || content.pool_name === "null") {
+                //         content.pool_name = "sui"
+                //     }
+                //     dataScallop = await redis.hGet("STAKE_POOLS_SCALLOP", content.pool_name.toLowerCase());
+                //     if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
+                //         callback({
+                //             user: await runtime.character.name,
+                //             text: "Double-check all the details before takeoff to dodge any turbulence!",
+                //             action: "STAKE_TOKEN",
+                //             result: {
+                //                 type: type_action === "stake" ? "stake_token" : "unstake_token",
+                //                 data: { ...JSON.parse(dataScallop), amount: content.amount, protocol: "scallop" },
+                //             },
+                //         });
+                //         return true;
+                //     }
 
-                    poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
-                    try {
-                        if (!poolScallopInfo) {
-                            callback({
-                                user: await runtime.character.name,
-                                text: "We couldn't find staking pools in Scallop. You can search in list staking pools of Scallop:",
-                                action: "STAKE_TOKEN",
-                                action_hint: getActionHint(
-                                    "scallop pools",
-                                    "button_generate_text",
-                                    "scallop",
-                                    "stake"
-                                )
-                            });
-                        }
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Double-check all the details before takeoff to dodge any turbulence!",
-                            action: "STAKE_TOKEN",
-                            result: {
-                                type: type_action === "stake" ? "stake_token" : "unstake_token",
-                                data: poolScallopInfo,
-                            },
-                        });
-                        return true
+                //     poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
+                //     try {
+                //         if (!poolScallopInfo) {
+                //             callback({
+                //                 user: await runtime.character.name,
+                //                 text: "We couldn't find staking pools in Scallop. You can search in list staking pools of Scallop:",
+                //                 action: "STAKE_TOKEN",
+                //                 action_hint: getActionHint(
+                //                     "scallop pools",
+                //                     "button_generate_text",
+                //                     "scallop",
+                //                     "stake"
+                //                 )
+                //             });
+                //         }
+                //         callback({
+                //             user: await runtime.character.name,
+                //             text: "Double-check all the details before takeoff to dodge any turbulence!",
+                //             action: "STAKE_TOKEN",
+                //             result: {
+                //                 type: type_action === "stake" ? "stake_token" : "unstake_token",
+                //                 data: poolScallopInfo,
+                //             },
+                //         });
+                //         return true
 
-                    } catch (error) {
-                        console.error("Error during token swap:", error);
-                        return false;
-                    }
+                //     } catch (error) {
+                //         console.error("Error during token swap:", error);
+                //         return false;
+                //     }
+                //     break;
+                // case "suilend":
+                //     type_action = content.type_action;
+                //     if (content.pool_name === null || content.pool_name === "null") {
+                //         content.pool_name = "sui"
+                //     }
+                //     dataSuilend = await redis.hGet("STAKE_POOLS_SUILEND", content.pool_name.toLowerCase());
+                //     if (dataSuilend && typeof dataSuilend === "string" && dataSuilend !== null) {
+                //         callback({
+                //             user: await runtime.character.name,
+                //             text: "Double-check all the details before takeoff to dodge any turbulence",
+                //             action: "STAKE_TOKEN",
+                //             result: {
+                //                 type: type_action === "stake" ? "stake_token" : "unstake_token",
+                //                 data: { ...JSON.parse(dataSuilend), amount: content.amount, protocol: "suilend" },
+                //             },
+                //         });
+                //         return true;
+                //     }
+                //     poolSuilendInfo = await getDetail(content.pool_name);
+                //     try {
+                //         if (!poolSuilendInfo || poolSuilendInfo.length === 0) {
+                //             callback({
+                //                 user: await runtime.character.name,
+                //                 text: "We couldn’t spot any staking pools in Suilend. Try scanning the list of Suilend’s staking pools!",
+                //                 action: "STAKE_TOKEN",
+                //                 action_hint: getActionHint(
+                //                     "suilend pools",
+                //                     "button_generate_text",
+                //                     "suilend",
+                //                     "stake"
+                //                 )
+                //             });
+                //             return true
+                //         }
+                //         callback({
+                //             user: await runtime.character.name,
+                //             text: "Double-check all the details before takeoff to dodge any turbulence",
+                //             action: "STAKE_TOKEN",
+                //             result: {
+                //                 type: type_action === "stake" ? "stake_token" : "unstake_token",
+                //                 data: poolSuilendInfo[0],
+                //             },
+                //         });
+                //         return true
 
-
-                    break;
-                case "suilend":
-                    type_action = content.type_action;
-                    if (content.pool_name === null || content.pool_name === "null") {
-                        content.pool_name = "sui"
-                    }
-                    dataSuilend = await redis.hGet("STAKE_POOLS_SUILEND", content.pool_name.toLowerCase());
-                    if (dataSuilend && typeof dataSuilend === "string" && dataSuilend !== null) {
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Double-check all the details before takeoff to dodge any turbulence",
-                            action: "STAKE_TOKEN",
-                            result: {
-                                type: type_action === "stake" ? "stake_token" : "unstake_token",
-                                data: { ...JSON.parse(dataSuilend), amount: content.amount, protocol: "suilend" },
-                            },
-                        });
-                        return true;
-                    }
-                    poolSuilendInfo = await getDetail(content.pool_name);
-                    try {
-                        if (!poolSuilendInfo || poolSuilendInfo.length === 0) {
-                            callback({
-                                user: await runtime.character.name,
-                                text: "We couldn’t spot any staking pools in Suilend. Try scanning the list of Suilend’s staking pools!",
-                                action: "STAKE_TOKEN",
-                                action_hint: getActionHint(
-                                    "suilend pools",
-                                    "button_generate_text",
-                                    "suilend",
-                                    "stake"
-                                )
-                            });
-                            return true
-                        }
-                        callback({
-                            user: await runtime.character.name,
-                            text: "Double-check all the details before takeoff to dodge any turbulence",
-                            action: "STAKE_TOKEN",
-                            result: {
-                                type: type_action === "stake" ? "stake_token" : "unstake_token",
-                                data: poolSuilendInfo[0],
-                            },
-                        });
-                        return true
-
-                    } catch (error) {
-                        console.error("Error during token swap:", error);
-                        return false;
-                    }
-                    break;
+                //     } catch (error) {
+                //         console.error("Error during token swap:", error);
+                //         return false;
+                //     }
+                //     break;
                 default:
                     type_action = content.type_action;
                     if (content.pool_name === null || content.pool_name === "null") {
@@ -661,47 +718,57 @@ export const stake: Action = {
                         }
                     }
                     //Scallop 
-                    dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
-                    if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
-                        dataScallop = { ...JSON.parse(dataScallop), amount: content.amount, protocol: "scallop" }
-                    }
-                    poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
-                    dataScallop = poolScallopInfo;
+                    // dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
+                    // if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
+                    //     dataScallop = { ...JSON.parse(dataScallop), amount: content.amount, protocol: "scallop" }
+                    // }
+                    // poolScallopInfo = await scallopProvider.getDetail(content.pool_name.toLowerCase());
+                    // dataScallop = poolScallopInfo;
                     //Suilend
-                    dataSuilend = await redis.hGet("STAKE_POOLS_SUILEND", content.pool_name.toLowerCase());
-                    if (dataSuilend && typeof dataSuilend === "string" && dataSuilend !== null) {
-                        dataSuilend = { ...JSON.parse(dataSuilend), amount: content.amount, protocol: "suilend" };
-                    }
-                    else {
-                        poolSuilendInfo = await getDetail(content.pool_name);
-                        dataSuilend = poolSuilendInfo;
-                    }
+                    // dataSuilend = await redis.hGet("STAKE_POOLS_SUILEND", content.pool_name.toLowerCase());
+                    // if (dataSuilend && typeof dataSuilend === "string" && dataSuilend !== null) {
+                    //     dataSuilend = { ...JSON.parse(dataSuilend), amount: content.amount, protocol: "suilend" };
+                    // }
+                    // else {
+                    //     poolSuilendInfo = await getDetail(content.pool_name);
+                    //     dataSuilend = poolSuilendInfo;
+                    // }
                     //Map
-                    const arrayMap = [data, dataScallop];
-                    if (Array.isArray(dataSuilend)) {
-                        arrayMap.push(...dataSuilend);
-                    } else {
-                        arrayMap.push(dataSuilend);
-                    }
-                    if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
-                        callback({
-                            user: await runtime.character.name,
-                            text: "We couldn’t spot any staking pools. Try scanning the list of staking pools!",
-                            action: "STAKE_TOKEN",
-                            action_hint: getActionHint(
-                                "all stake pools",
-                                "button_generate_text",
-                                "all",
-                                "stake"
-                            )
-                        });
-                        return true;
-                    }
+                    // const arrayMap = [data, dataScallop];
+                    // if (Array.isArray(dataSuilend)) {
+                    //     arrayMap.push(...dataSuilend);
+                    // } else {
+                    //     arrayMap.push(dataSuilend);
+                    // }
+                    // if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
+                    //     callback({
+                    //         user: await runtime.character.name,
+                    //         text: "We couldn’t spot any staking pools. Try scanning the list of staking pools!",
+                    //         action: "STAKE_TOKEN",
+                    //         action_hint: getActionHint(
+                    //             "all stake pools",
+                    //             "button_generate_text",
+                    //             "all",
+                    //             "stake"
+                    //         )
+                    //     });
+                    //     return true;
+                    // }
+                    const arrayMap = data;
                     arrayMap.sort(
                         (a, b) =>
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "STAKE_POOLS",
+                                    data_extract: content
+                                })
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -727,6 +794,15 @@ export const stake: Action = {
                 // // Convert the Map to an object
                 // const portfolioObject = Object.fromEntries(portfolio);
                 // const scallopPortfolio = await scallopProvider.myStake(message.userId);
+                if (_options.type !== "toggle_faster") {
+                    let messageService = new MessageService()
+                    await messageService.createMessage(
+                        message.content.text,
+                        {
+                            action: "STAKE_POOLS",
+                            data_extract: content
+                        })
+                }
                 callback({
                     user: await runtime.character.name,
                     text: "Here’s your staking portfolio, all set and ready!",

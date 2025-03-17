@@ -21,6 +21,7 @@ import { RedisClient } from "@elizaos/adapter-redis";
 import CmsProvider from "../providers/fetchCMS/cmsProvider";
 import BlockBerryProvider from "../providers/fetchBlockBerry/blockBerryProvider";
 import { fetchTopDexByNetwork } from "../providers/topDex";
+import MessageService from "../services/messageService";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 const topTemplate = `
@@ -89,21 +90,23 @@ export const topToken: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ): Promise<boolean> => {
-
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
+        let content: any = _options.data_extract;
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+            const topContext = composeContext({
+                state,
+                template: topTemplate,
+            });
+            content = await generateObjectDeprecated({
+                runtime,
+                context: topContext,
+                modelClass: ModelClass.SMALL,
+            });
         }
-        const topContext = composeContext({
-            state,
-            template: topTemplate,
-        });
-        const content = await generateObjectDeprecated({
-            runtime,
-            context: topContext,
-            modelClass: ModelClass.SMALL,
-        });
         elizaLogger.info("content:", content);
         let size = parseInt(content.size || content.size !== "null" ? content.size : "5");
         if (content.type_action === "TOKEN") {
@@ -131,6 +134,16 @@ export const topToken: Action = {
 
                     }));
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of Meme tokens we’ve gathered for you!`,
@@ -148,6 +161,16 @@ export const topToken: Action = {
                     // const nft = new SuiOnChainProvider()
                     const nft = new BlockBerryProvider(process.env.BLOCKBERRY_API_KEY || "defaultApiKey");
                     responseData = await nft.fetchCollectionNft(0, 10, "VOLUME", "DESC", "DAY");
+                    if (_options.type !== "toggle_faster") {
+                        let messageService = new MessageService()
+                        await messageService.createMessage(
+                            message.content.text,
+                            {
+                                action: "TOP_TỌKEN",
+                                data_extract: content
+                            })
+
+                    }
                     callback({
                         user: await runtime.character.name,
                         text: `Here’s a lineup of top NFT projects making waves on the Sui Network!`,
@@ -158,6 +181,7 @@ export const topToken: Action = {
                         },
                         action_hint: getActionHint()
                     });
+                    return true
                     break;
                 case "TRENDING":
                     let result = await redis.hGet("coins_info", "trending");
@@ -181,6 +205,16 @@ export const topToken: Action = {
                     }));
 
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of trending tokens we’ve gathered for you!`,
@@ -216,6 +250,16 @@ export const topToken: Action = {
                     }));
 
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+    
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of DeFi tokens we’ve gathered for you!`,
@@ -251,6 +295,16 @@ export const topToken: Action = {
                     }));
 
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+    
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of Gainer tokens we’ve gathered for you!`,
@@ -285,6 +339,16 @@ export const topToken: Action = {
                     }));
 
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+    
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of Loser tokens we’ve gathered for you!`,
@@ -321,6 +385,16 @@ export const topToken: Action = {
 
 
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+    
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of stablecoins we’ve gathered for you!`,
@@ -357,6 +431,16 @@ export const topToken: Action = {
 
 
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+    
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of AI tokens we’ve gathered for you!`,
@@ -393,6 +477,16 @@ export const topToken: Action = {
 
 
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+    
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of Game tokens we’ve gathered for you!`,
@@ -427,6 +521,16 @@ export const topToken: Action = {
 
                     }));
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+    
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of DEX tokens we’ve gathered for you!`,
@@ -461,6 +565,16 @@ export const topToken: Action = {
 
                     }));
                     if (callback) {
+                        if (_options.type !== "toggle_faster") {
+                            let messageService = new MessageService()
+                            await messageService.createMessage(
+                                message.content.text,
+                                {
+                                    action: "TOP_TỌKEN",
+                                    data_extract: content
+                                })
+    
+                        }
                         callback({
                             user: await runtime.character.name,
                             text: `Here’s a collection of new tokens we’ve gathered for you!`,
@@ -476,9 +590,19 @@ export const topToken: Action = {
                 case "TGE":
                 case "RELEASE_TOKEN":
                 case "LISTING":
+                    if (_options.type !== "toggle_faster") {
+                        let messageService = new MessageService()
+                        await messageService.createMessage(
+                            message.content.text,
+                            {
+                                action: "TOP_TỌKEN",
+                                data_extract: content
+                            })
+
+                    }
                     callback({
                         user: await runtime.character.name,
-                        text: `Here’s a lineup of top tokens gearing up for their TGE, token release, or exchange listing: BIRDS, SEED, FANTV, Walrus, Wave, Haedal!`,
+                        text: `Here’s a lineup of top tokens gearing up for their TGE, token release, or exchange listing: BIRDS, SEED, FANTV, Walrus, Wave, Haedal, 7K!`,
                     })
                     return true;
                     break;
@@ -534,6 +658,16 @@ export const topToken: Action = {
                     iconUrl: token.attributes.image_url
                 };
             });
+            if (_options.type !== "toggle_faster") {
+                let messageService = new MessageService()
+                await messageService.createMessage(
+                    message.content.text,
+                    {
+                        action: "TOP_TỌKEN",
+                        data_extract: content
+                    })
+
+            }
             callback({
                 user: await runtime.character.name,
                 text: `Here’s a lineup of top potential tokens on Sui!`,
@@ -593,6 +727,15 @@ export const topToken: Action = {
                     };
                 });
                 const filteredResponseData = responseData.filter(dex => dex !== null);
+                if (_options.type !== "toggle_faster") {
+                    let messageService = new MessageService()
+                    await messageService.createMessage(
+                        message.content.text,
+                        {
+                            action: "TOP_TỌKEN",
+                            data_extract: content
+                        })
+                }
                 callback({
                     user: await runtime.character.name,
                     text: `Here’s a lineup of top decentralized exchanges (DEXs) making waves on the Sui Network!`,

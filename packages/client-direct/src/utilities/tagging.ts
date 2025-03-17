@@ -25,7 +25,7 @@ export async function filterByTagging(tag: string, agentName: string) {
     let listPoolSuilend;
     let scallopProvider = new ScallopProvider();
     let listPoolsNaviOnSite = await getPoolsInfo()
-    
+
     if (!text) return null;
     switch (text) {
         case "swap_1_sui_to_usdc":
@@ -97,7 +97,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             }
             responseData = {
                 "user": agentName,
-                "text": "Below are trending tokens we have collected:",
+                "text": agentName === "BIRDS DEFAI Platfrom" ? `Here’s a collection of trending tokens we’ve gathered for you!` : "Below are trending tokens we have collected:",
                 "action": "TOP_TRENDING_TOKENS",
                 "result": {
                     "type": "sui_trending_tokens",
@@ -115,35 +115,37 @@ export async function filterByTagging(tag: string, agentName: string) {
             break;
         case "stake_pools":
             let parsedData: { [key: string]: string }[] = [];
-            let poolsScallopData: { [key: string]: string }[] = [];
-            let poolsSuilendData: { [key: string]: string }[] = [];
+            // let poolsScallopData: { [key: string]: string }[] = [];
+            // let poolsSuilendData: { [key: string]: string }[] = [];
             data = await redis.hGetAll("STAKE_POOLS");
-            dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-            dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+            // dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            // dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
             if (data && Object.keys(data).length > 0) {
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
             }
-            if (dataScallop && Object.keys(dataScallop).length > 0) {
-                for (let key in dataScallop) {
-                    poolsScallopData.push(JSON.parse(dataScallop[key]));
-                }
-            }
-            if (dataSuilend && Object.keys(dataSuilend).length > 0) {
-                for (let key in dataSuilend) {
-                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
-                }
-            }
-            if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
-                parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+            // if (dataScallop && Object.keys(dataScallop).length > 0) {
+            //     for (let key in dataScallop) {
+            //         poolsScallopData.push(JSON.parse(dataScallop[key]));
+            //     }
+            // }
+            // if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+            //     for (let key in dataSuilend) {
+            //         poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+            //     }
+            // }
+            // if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
+            //     parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+            if ((parsedData && parsedData.length > 0)) {
+                // parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
                 parsedData.sort(
                     (a: any, b: any) =>
                         b.total_supply_rate - a.total_supply_rate
                 );
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of staking pools:",
+                    text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of Navi staking pools for you!" : "Below is a list of staking pools:",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",
@@ -152,8 +154,8 @@ export async function filterByTagging(tag: string, agentName: string) {
                 };
             }
             responseData = [];
-            listPoolSuilend = await listPool()
-            listPoolsScallop = await scallopProvider.listPools();
+            // listPoolSuilend = await listPool()
+            // listPoolsScallop = await scallopProvider.listPools();
             listPoolsNavi = await listPoolsInFileJson();
             if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
                 index = 0;
@@ -205,15 +207,16 @@ export async function filterByTagging(tag: string, agentName: string) {
             else {
                 listPoolsNavi = [];
             }
-            responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
+            // responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
             // responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
+            responseData = listPoolsNavi
             responseData.sort(
                 (a, b) =>
                     b.total_supply_rate - a.total_supply_rate
             );
             return {
                 user: agentName,
-                text: "Below is a list of stake pools:",
+                text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of Navi staking pools for you!" : "Below is a list of stake pools:",
                 action: "STAKE_POOLS",
                 result: {
                     type: "stake_pools",
@@ -234,7 +237,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 );
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of Navi staking pools:",
+                    text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of Navi staking pools for you!" : "Below is a list of stake pools:",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",
@@ -300,7 +303,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             try {
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of Navi staking pools:",
+                    text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of Navi staking pools for you!" : "Below is a list of stake pools:",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",
@@ -312,96 +315,96 @@ export async function filterByTagging(tag: string, agentName: string) {
                 return false;
             }
             break;
-        case "scallop_pools":
-            dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-            if (dataScallop && Object.keys(dataScallop).length > 0) {
+        // case "scallop_pools":
+        //     dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+        //     if (dataScallop && Object.keys(dataScallop).length > 0) {
 
-                let poolsScallopData: { [key: string]: string }[] = [];
-                for (let key in dataScallop) {
-                    poolsScallopData.push(JSON.parse(dataScallop[key]));
-                }
+        //         let poolsScallopData: { [key: string]: string }[] = [];
+        //         for (let key in dataScallop) {
+        //             poolsScallopData.push(JSON.parse(dataScallop[key]));
+        //         }
 
-                poolsScallopData.sort(
-                    (a: any, b: any) =>
-                        b.total_supply_rate - a.total_supply_rate
-                );
-                return responseData = {
-                    user: agentName,
-                    text: "Below is a list of Scallop staking pools:",
-                    action: "STAKE_POOLS",
-                    result: {
-                        type: "stake_pools",
-                        data: poolsScallopData.slice(0, 6),
-                    },
-                };
-            }
-            listPoolsScallop = await scallopProvider.listPools();
-            listPoolsScallop.sort(
-                (a, b) =>
-                    b.total_supply_rate - a.total_supply_rate
-            );
-            try {
-                return responseData = {
-                    user: agentName,
-                    text: "Below is a list of Scallop staking pools:",
-                    action: "STAKE_POOLS",
-                    result: {
-                        type: "stake_pools",
-                        data: listPoolsScallop.slice(0, 6),
-                    },
-                };
-            } catch (error) {
-                console.error("Error during token swap:", error);
-                return false;
-            }
-            break;
-        case "suilend_pools":
-            dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
-            if (dataSuilend && Object.keys(dataSuilend).length > 0) {
-                let poolsSuilendData: { [key: string]: string }[] = [];
-                for (let key in dataSuilend) {
-                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
-                }
-                poolsSuilendData.sort(
-                    (a: any, b: any) =>
-                        b.total_supply_rate - a.total_supply_rate
-                );
-                return responseData = {
-                    user: agentName,
-                    text: "Below is a list of Suilend staking pools:",
-                    action: "STAKE_POOLS",
-                    result: {
-                        type: "stake_pools",
-                        data: poolsSuilendData.slice(0, 6),
-                    },
-                };
-            }
-            listPoolSuilend = await listPool();
-            listPoolSuilend.sort(
-                (a, b) =>
-                    b.total_supply_rate - a.total_supply_rate
-            );
-            try {
-                return responseData = {
-                    user: agentName,
-                    text: "Below is a list of Suilend staking pools:",
-                    action: "STAKE_POOLS",
-                    result: {
-                        type: "stake_pools",
-                        data: listPoolSuilend.slice(0, 6),
-                    },
-                };
-            } catch (error) {
-                console.error("Error during token swap:", error);
-                return false;
-            }
-            break;
+        //         poolsScallopData.sort(
+        //             (a: any, b: any) =>
+        //                 b.total_supply_rate - a.total_supply_rate
+        //         );
+        //         return responseData = {
+        //             user: agentName,
+        //             text: "Below is a list of Scallop staking pools:",
+        //             action: "STAKE_POOLS",
+        //             result: {
+        //                 type: "stake_pools",
+        //                 data: poolsScallopData.slice(0, 6),
+        //             },
+        //         };
+        //     }
+        //     listPoolsScallop = await scallopProvider.listPools();
+        //     listPoolsScallop.sort(
+        //         (a, b) =>
+        //             b.total_supply_rate - a.total_supply_rate
+        //     );
+        //     try {
+        //         return responseData = {
+        //             user: agentName,
+        //             text: "Below is a list of Scallop staking pools:",
+        //             action: "STAKE_POOLS",
+        //             result: {
+        //                 type: "stake_pools",
+        //                 data: listPoolsScallop.slice(0, 6),
+        //             },
+        //         };
+        //     } catch (error) {
+        //         console.error("Error during token swap:", error);
+        //         return false;
+        //     }
+        //     break;
+        // case "suilend_pools":
+        //     dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+        //     if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+        //         let poolsSuilendData: { [key: string]: string }[] = [];
+        //         for (let key in dataSuilend) {
+        //             poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+        //         }
+        //         poolsSuilendData.sort(
+        //             (a: any, b: any) =>
+        //                 b.total_supply_rate - a.total_supply_rate
+        //         );
+        //         return responseData = {
+        //             user: agentName,
+        //             text: "Below is a list of Suilend staking pools:",
+        //             action: "STAKE_POOLS",
+        //             result: {
+        //                 type: "stake_pools",
+        //                 data: poolsSuilendData.slice(0, 6),
+        //             },
+        //         };
+        //     }
+        //     listPoolSuilend = await listPool();
+        //     listPoolSuilend.sort(
+        //         (a, b) =>
+        //             b.total_supply_rate - a.total_supply_rate
+        //     );
+        //     try {
+        //         return responseData = {
+        //             user: agentName,
+        //             text: "Below is a list of Suilend staking pools:",
+        //             action: "STAKE_POOLS",
+        //             result: {
+        //                 type: "stake_pools",
+        //                 data: listPoolSuilend.slice(0, 6),
+        //             },
+        //         };
+        //     } catch (error) {
+        //         console.error("Error during token swap:", error);
+        //         return false;
+        //     }
+        //     break;
         case "liquidity_pools":
             let liquidityCetus: any = await redis.getValue({ key: "liquidity_pools" })
             if (liquidityCetus !== undefined) {
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of liquidity pools:",
+                    text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of liquidity pools for you!" : "Below is a list of liquidity pools:",
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "liquidity_pools",
@@ -422,7 +425,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             try {
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of liquidity pools:",
+                    text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of liquidity pools for you!" : "Below is a list of liquidity pools:",
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "liquidity_pools",

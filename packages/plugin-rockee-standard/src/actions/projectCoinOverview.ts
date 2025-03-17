@@ -19,6 +19,7 @@ import { searchProjectInFileJson } from "../providers/searchProjectInFileJson";
 import { hashUserMsg } from "../utils/format";
 import getActionHint from "../utils/action_hint";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
+import MessageService from "../services/messageService";
 
 const projectInfoTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
 Example response:
@@ -158,29 +159,32 @@ export const projectInfo: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         elizaLogger.info("[tokenInfo]");
+        let content: any = _options.data_extract;
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+            console.log("state:->>", state.recentMessages)
+            const msgHash = hashUserMsg(message, "project_overview");
+            content = await runtime.cacheManager.get(msgHash)
+            elizaLogger.info("---- cache info: ", msgHash, "--->", content)
+            if (!content) {
+                const projectInfoContext = composeContext({
+                    state,
+                    template: projectInfoTemplate,
+                })
+                elizaLogger.info("projectInfoContext: ", projectInfoContext);
+                content = await generateObjectDeprecated({
+                    runtime,
+                    context: projectInfoContext,
+                    modelClass: ModelClass.SMALL,
+                })
+                await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+            }
+        }
 
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
-        }
-        console.log("state:->>", state.recentMessages)
-        const msgHash = hashUserMsg(message, "project_overview");
-        let content: any = await runtime.cacheManager.get(msgHash)
-        elizaLogger.info("---- cache info: ", msgHash, "--->", content)
-        if (!content) {
-            const projectInfoContext = composeContext({
-                state,
-                template: projectInfoTemplate,
-            })
-            elizaLogger.info("projectInfoContext: ", projectInfoContext);
-            content = await generateObjectDeprecated({
-                runtime,
-                context: projectInfoContext,
-                modelClass: ModelClass.SMALL,
-            })
-            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
-        }
         elizaLogger.info("content:", content)
         const projectObj = await searchProjectInFileJson(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
         const tokenObject = await findByVerifiedAndName(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
@@ -206,11 +210,11 @@ export const projectInfo: Action = {
             infoPrice = { market_cap_rank: "N/A", price_change_24h: "N/A", price: tokenSuiInfo.tokenPrice, market_cap: tokenSuiInfo.marketCap };
             infoDetail = { market_cap_rank: "N/A", tickers: [] };
             const coinGecko = new CoingeckoProvider();
-            if(tokenSuiInfo.coingecko_coin_id || tokenObject.coinGeckoId){
+            if (tokenSuiInfo.coingecko_coin_id || tokenObject.coinGeckoId) {
                 getToken = await coinGecko.getToken(tokenSuiInfo && tokenSuiInfo.coingecko_coin_id && tokenSuiInfo.coingecko_coin_id !== null ? tokenSuiInfo.coingecko_coin_id : tokenObject.coinGeckoId || "");
-                getDetail = await coinGecko.getCoinDataById(tokenSuiInfo && tokenSuiInfo.coingecko_coin_id && tokenSuiInfo.coingecko_coin_id !== null ? tokenSuiInfo.coingecko_coin_id : tokenObject.coinGeckoId|| "");
+                getDetail = await coinGecko.getCoinDataById(tokenSuiInfo && tokenSuiInfo.coingecko_coin_id && tokenSuiInfo.coingecko_coin_id !== null ? tokenSuiInfo.coingecko_coin_id : tokenObject.coinGeckoId || "");
             }
-            
+
             if (getToken) {
                 infoPrice = getToken;
             }
@@ -218,10 +222,19 @@ export const projectInfo: Action = {
                 infoDetail = getDetail;
             }
         }
+        if (_options.type !== "toggle_faster") {
+            let messageService = new MessageService()
+            await messageService.createMessage(
+                message.content.text,
+                {
+                    action: "PROJECT_OVERVIEW",
+                    data_extract: content
+                })
+        }
         callback({
             user: await runtime.character.name,
             text: responseText,
-            action: 'project_overview',
+            action: 'PROJECT_OVERVIEW',
             result: {
                 type: "project_overview",
                 data: {
@@ -237,7 +250,7 @@ export const projectInfo: Action = {
                         .slice(0, 5)
                         .map(item => item.market.name)
                         .join(",") : ""},...`,
-                    categories: projectObj && projectObj.categories ?projectObj.categories.join(", ") : "N/A",
+                    categories: projectObj && projectObj.categories ? projectObj.categories.join(", ") : "N/A",
                     imgUrl: tokenSuiInfo && tokenSuiInfo.image_url ? tokenSuiInfo.image_url : projectObj.img_url,
                     contract_address: tokenSuiInfo && tokenSuiInfo.address ? tokenSuiInfo.address : "",
                     ...infoPrice

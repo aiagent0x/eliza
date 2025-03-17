@@ -19,6 +19,7 @@ import { searchProjectInFileJson } from "../providers/searchProjectInFileJson";
 import { hashUserMsg } from "../utils/format";
 import getActionHint from "../utils/action_hint";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
+import MessageService from "../services/messageService";
 
 const projectInfoTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
 Example response:
@@ -157,29 +158,31 @@ export const projectInfo: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ): Promise<boolean> => {
-        elizaLogger.info("[tokenInfo]");
+        let content: any = _options.data_extract;;
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+            console.log("state:->>", state.recentMessages)
+            const msgHash = hashUserMsg(message, "project_overview");
+            content = await runtime.cacheManager.get(msgHash)
+            elizaLogger.info("---- cache info: ", msgHash, "--->", content)
+            if (!content) {
+                const projectInfoContext = composeContext({
+                    state,
+                    template: projectInfoTemplate,
+                })
+                elizaLogger.info("projectInfoContext: ", projectInfoContext);
+                content = await generateObjectDeprecated({
+                    runtime,
+                    context: projectInfoContext,
+                    modelClass: ModelClass.SMALL,
+                })
 
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
-        }
-        console.log("state:->>", state.recentMessages)
-        const msgHash = hashUserMsg(message, "project_overview");
-        let content: any = await runtime.cacheManager.get(msgHash)
-        elizaLogger.info("---- cache info: ", msgHash, "--->", content)
-        if (!content) {
-            const projectInfoContext = composeContext({
-                state,
-                template: projectInfoTemplate,
-            })
-            elizaLogger.info("projectInfoContext: ", projectInfoContext);
-            content = await generateObjectDeprecated({
-                runtime,
-                context: projectInfoContext,
-                modelClass: ModelClass.SMALL,
-            })
-            await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+                await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
+            }
         }
         elizaLogger.info("content:", content)
         const projectObj = await searchProjectInFileJson(content.project_name && content.project_name !== "null" ? content.project_name : content.token_symbol);
@@ -218,6 +221,17 @@ export const projectInfo: Action = {
                 infoDetail = getDetail;
             }
         }
+        
+        if (_options.type !== "toggle_faster") {
+            let messageService = new MessageService()
+            await messageService.createMessage(
+                message.content.text,
+                {
+                    action: "PROJECT_OVERVIEW",
+                    data_extract: content
+                })
+        }
+
         callback({
             user: await runtime.character.name,
             text: responseText,

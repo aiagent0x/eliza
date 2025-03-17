@@ -4,3 +4,4 @@ packages:
     - "client"
     - "agent"
     - "cronjob"
+    - "backend"
