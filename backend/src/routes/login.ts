@@ -1,10 +1,10 @@
 import express from 'express';
 const router: express.Router = express.Router();
-import { Middleware } from '../middleware/middleware.ts';
-import { UserSchema } from '../models/User.ts';
-import { signJwt } from '../helpers/jwt.ts';
-import { compareBcrypt, hashBcrypt } from '../helpers/bcrypt.ts';
-import { RoleSchema } from '../models/Role.ts';
+import { Middleware } from '../middleware/middleware';
+import { UserSchema } from '../models/User';
+import { signJwt } from '../helpers/jwt';
+import { compareBcrypt, hashBcrypt } from '../helpers/bcrypt';
+import { RoleSchema } from '../models/Role';
 router.post('/api/admin/login', async (req, res) => {
     let inputs = req.body;
 

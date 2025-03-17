@@ -1,6 +1,6 @@
 import express from 'express';
 const router: express.Router = express.Router();
-import PostControllers from '../controllers/posts/list.ts';
+import PostControllers from '../controllers/posts/list';
 
 router.post('/api/posts', async (req, res) => {
     const inputs = req.body;

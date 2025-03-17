@@ -1,9 +1,9 @@
 import express from 'express';
-import { PostRouters } from './post.ts';
-import { UserRouters } from './user.ts';
-import { AdminRouters } from './admin.ts';
-import { LoginRouter } from './login.ts';
-import { RockeeRouters } from './rockee.ts';
+import { PostRouters } from './post';
+import { UserRouters } from './user';
+import { AdminRouters } from './admin';
+import { LoginRouter } from './login';
+import { RockeeRouters } from './rockee';
 
 const router: express.Router = express.Router();
 
