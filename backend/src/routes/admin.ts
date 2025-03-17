@@ -2,14 +2,14 @@ import express from 'express';
 const router: express.Router = express.Router();
 import mongoose from "mongoose";
 import path from 'path'
-import { UserSchema } from '../models/User';
-import { RoleSchema } from '../models/Role';
-import { PageSchema } from '../models/Page';
-import { Middleware } from '../middleware/middleware';
+import { UserSchema } from '../models/User.ts';
+import { RoleSchema } from '../models/Role.ts';
+import { PageSchema } from '../models/Page.ts';
+import { Middleware } from '../middleware/middleware.ts';
 import { promises as fs } from 'fs';
-import { ImageSchema } from '../models/Image';
+import { ImageSchema } from '../models/Image.ts';
 
-import { uploadFile, uploadImage } from '../middleware/uploadMiddleware';
+import { uploadFile, uploadImage } from '../middleware/uploadMiddleware.ts';
 
 router.get('/api/admin/list', Middleware, async (req, res) => {
     const inputs: any = req.query.params;

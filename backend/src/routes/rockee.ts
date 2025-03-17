@@ -1,7 +1,7 @@
 import express from 'express';
 const router: express.Router = express.Router();
-import RockeeControllers from "../controllers/Rockee"
-import { RockeeSchema } from '../models/Rockee';
+import RockeeControllers from "../controllers/Rockee/index.ts"
+import { RockeeSchema } from '../models/Rockee.ts';
 
 router.post('/api/rockee/search', async (req, res) => {
     const inputs = req.body;
