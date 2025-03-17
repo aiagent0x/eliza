@@ -9,6 +9,7 @@ import { topDexInfo } from './actions/topDexByNetwork';
 import { suiTokenPriceBySymbol } from './actions/suiTokenPriceBySymbol';
 import { topPotentialTokenOnSui } from './actions/topPotentialTokenOnSui';
 import { swapSui } from './actions/swap';
+import { taskInfo } from './actions/task';
 
 const rockeeStandardPlugin: Plugin = {
   name: "rockeeStandardPlugin",
@@ -24,6 +25,7 @@ const rockeeStandardPlugin: Plugin = {
     suiTokenPriceBySymbol,
     suiTokenPriceByAddress,
     // topPotentialTokenOnSui
+    taskInfo
 ],
   evaluators: [],
   providers: []

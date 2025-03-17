@@ -152,7 +152,6 @@ export class DirectClient {
         // Update the route handler to use CustomRequest instead of express.Request
         this.app.post(
             "/:agentId/whisper",
-            upload.single("file"),
             async (req: CustomRequest, res: express.Response) => {
                 const audioFile = req.file; // Access the uploaded file using req.file
                 const agentId = req.params.agentId;
@@ -194,7 +193,7 @@ export class DirectClient {
 
         this.app.post(
             "/:agentId/message",
-            upload.single("file"),
+            // upload.single("file"),
             async (req: express.Request, res: express.Response) => {
 
                 const agentId = req.params.agentId;
