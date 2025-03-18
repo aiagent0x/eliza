@@ -143,9 +143,9 @@ export async function filterByTagging(tag: string, agentName: string) {
                 //     (a: any, b: any) =>
                 //         b.total_supply_rate - a.total_supply_rate
                 // );
-                parsedData.sort((a:any, b:any) => {
-                    if (a.name === "SUI") return -1;
-                    if (b.name === "SUI") return 1;
+                parsedData.sort((a: any, b: any) => {
+                    if (a.name.toLowerCase() === "sui") return -1;
+                    if (b.name.toLowerCase() === "sui") return 1;
                     return b.total_supply_rate - a.total_supply_rate;
                 });
                 return responseData = {
@@ -215,10 +215,11 @@ export async function filterByTagging(tag: string, agentName: string) {
             // responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
             // responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
             responseData = listPoolsNavi
-            responseData.sort(
-                (a, b) =>
-                    b.total_supply_rate - a.total_supply_rate
-            );
+            responseData.sort((a: any, b: any) => {
+                if (a.name === "SUI") return -1;
+                if (b.name === "SUI") return 1;
+                return b.total_supply_rate - a.total_supply_rate;
+            });
             return {
                 user: agentName,
                 text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of Navi staking pools for you!" : "Below is a list of stake pools:",
@@ -240,7 +241,9 @@ export async function filterByTagging(tag: string, agentName: string) {
                 //     (a: any, b: any) =>
                 //         b.total_supply_rate - a.total_supply_rate
                 // );
-                parsedData.sort((a:any, b:any) => {
+                parsedData.sort((a: any, b: any) => {
+                    console.log(a.name)
+                    console.log(b.name)
                     if (a.name === "SUI") return -1;
                     if (b.name === "SUI") return 1;
                     return b.total_supply_rate - a.total_supply_rate;
@@ -305,11 +308,12 @@ export async function filterByTagging(tag: string, agentName: string) {
             } else {
                 listPoolsNavi = [];
             }
+            listPoolsNavi.sort((a: any, b: any) => {
 
-            listPoolsNavi.sort(
-                (a, b) =>
-                    b.total_supply_rate - a.total_supply_rate
-            );
+                if (a.name.toLowerCase() === "sui") return -1;
+                if (b.name.toLowerCase() === "sui") return 1;
+                return b.total_supply_rate - a.total_supply_rate;
+            });
             try {
                 return responseData = {
                     user: agentName,

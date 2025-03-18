@@ -128,9 +128,9 @@ export const stake: Action = {
                         //     (a: any, b: any) =>
                         //         b.total_supply_rate - a.total_supply_rate
                         // );
-                        parsedData.sort((a:any, b:any) => {
-                            if (a.name === "SUI") return -1;
-                            if (b.name === "SUI") return 1;
+                        parsedData.sort((a: any, b: any) => {
+                            if (a.name.toLowerCase() === "sui") return -1;
+                            if (b.name.toLowerCase() === "sui") return 1;
                             return b.total_supply_rate - a.total_supply_rate;
                         });
                         if (_options.type !== "toggle_faster") {
@@ -206,9 +206,9 @@ export const stake: Action = {
                     else {
                         listPoolsNavi = [];
                     }
-                    listPoolsNavi.sort((a, b) => {
-                        if (a.name === "SUI") return -1;
-                        if (b.name === "SUI") return 1;
+                    listPoolsNavi.sort((a: any, b: any) => {
+                        if (a.name.toLowerCase() === "sui") return -1;
+                        if (b.name.toLowerCase() === "sui") return 1;
                         return b.total_supply_rate - a.total_supply_rate;
                     });
                     try {
@@ -351,10 +351,11 @@ export const stake: Action = {
                     // if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
                     if ((parsedData && parsedData.length > 0)) {
                         // parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-                        parsedData.sort(
-                            (a: any, b: any) =>
-                                b.total_supply_rate - a.total_supply_rate
-                        );
+                        parsedData.sort((a: any, b: any) => {
+                            if (a.name.toLowerCase() === "sui") return -1;
+                            if (b.name.toLowerCase() === "sui") return 1;
+                            return b.total_supply_rate - a.total_supply_rate;
+                        });
                         if (_options.type !== "toggle_faster") {
                             let messageService = new MessageService()
                             await messageService.createMessage(
@@ -431,10 +432,11 @@ export const stake: Action = {
                         listPoolsNavi = [];
                     }
                     // responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
-                    listPoolsNavi.sort(
-                        (a, b) =>
-                            b.total_supply_rate - a.total_supply_rate
-                    );
+                    listPoolsNavi.sort((a: any, b: any) => {
+                        if (a.name.toLowerCase() === "sui") return -1;
+                        if (b.name.toLowerCase() === "sui") return 1;
+                        return b.total_supply_rate - a.total_supply_rate;
+                    });
                     try {
                         if (_options.type !== "toggle_faster") {
                             let messageService = new MessageService()
