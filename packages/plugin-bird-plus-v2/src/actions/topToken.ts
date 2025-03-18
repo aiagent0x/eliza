@@ -137,7 +137,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -145,7 +145,7 @@ export const topToken: Action = {
                         callback({
                             user: await runtime.character.name,
                             text: `Below are Meme tokens we have collected:`,
-                            action: 'TOP_TỌKEN',
+                            action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
                                 data: responseData.slice(0, size)
@@ -164,7 +164,7 @@ export const topToken: Action = {
                         await messageService.createMessage(
                             message.content.text,
                             {
-                                action: "TOP_TỌKEN",
+                                action: "TOP_TOKEN",
                                 data_extract: content
                             })
 
@@ -207,7 +207,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -215,7 +215,7 @@ export const topToken: Action = {
                         callback({
                             user: await runtime.character.name,
                             text: `Below are trending tokens we have collected:`,
-                            action: 'TOP_TỌKEN',
+                            action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
                                 data: responseData.slice(0, size)
@@ -252,7 +252,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -297,7 +297,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -341,7 +341,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -387,7 +387,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -433,7 +433,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -479,7 +479,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -523,7 +523,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -567,7 +567,7 @@ export const topToken: Action = {
                             await messageService.createMessage(
                                 message.content.text,
                                 {
-                                    action: "TOP_TỌKEN",
+                                    action: "TOP_TOKEN",
                                     data_extract: content
                                 })
 
@@ -592,7 +592,7 @@ export const topToken: Action = {
                         await messageService.createMessage(
                             message.content.text,
                             {
-                                action: "TOP_TỌKEN",
+                                action: "TOP_TOKEN",
                                 data_extract: content
                             })
 
@@ -660,7 +660,7 @@ export const topToken: Action = {
                 await messageService.createMessage(
                     message.content.text,
                     {
-                        action: "TOP_TỌKEN",
+                        action: "TOP_TOKEN",
                         data_extract: content
                     })
 
@@ -730,7 +730,7 @@ export const topToken: Action = {
                     await messageService.createMessage(
                         message.content.text,
                         {
-                            action: "TOP_TỌKEN",
+                            action: "TOP_TOKEN",
                             data_extract: content
                         })
 
