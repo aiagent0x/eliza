@@ -12,7 +12,7 @@ app.use(MainRouters)
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
-mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}${process.env.MONGODB_DATABASE}`, { useNewUrlParser: true, useUnifiedTopology: true } as ConnectOptions)
+mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}`, { useNewUrlParser: true, useUnifiedTopology: true, dbName: process.env.MONGODB_DATABASE, user: process.env.MONGODB_USER, pass: process.env.MONGODB_PASSWORD } as ConnectOptions)
   .then(() => {
     console.log('Database connected');
   })
