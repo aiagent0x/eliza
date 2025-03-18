@@ -22,8 +22,6 @@
         "@elizaos/adapter-redis": "workspace:*",
         "@elizaos/core": "workspace:*",
         "@elizaos/plugin-image-generation": "workspace:*",
-        "@elizaos/plugin-tee-log": "workspace:*",
-        "@elizaos/plugin-tee-verifiable-log": "workspace:*",
         "@mysten/sui": "1.20.0",
         "@mysten/sui.js": "^0.53.0",
         "@scallop-io/sui-scallop-sdk": "^1.4.28",
