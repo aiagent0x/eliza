@@ -49,28 +49,27 @@ export const getInferenceAction: Action = {
 
         // Get Allora topics information from the provider
         currentState.alloraTopics = await topicsProvider.get(runtime, message, currentState);
-        console.log("currentState.alloraTopics:", currentState.alloraTopics)
+
         // Compose context for extracting the inference fields
         const inferenceTopicContext = composeContext({
             state: currentState,
             template: getInferenceTemplate,
         });
-        console.log("inferenceTopicContext:", inferenceTopicContext)
+
         // Define the schema for extracting the inference fields
         const schema = z.object({
             topicId: z.number().nullable(),
             topicName: z.string().nullable(),
         });
-        console.log("schema:", schema)
+
         const results = await generateObject({
             runtime,
             context: inferenceTopicContext,
             modelClass: ModelClass.SMALL,
             schema,
         });
-        console.log("results:", results)
         const inferenceFields = results.object as InferenceFields;
-        console.log("inferenceFields:", inferenceFields)
+
         if (!inferenceFields.topicId || !inferenceFields.topicName) {
             callback({
                 text: "There is no active Allora Network topic that matches your request.",
@@ -88,11 +87,10 @@ export const getInferenceAction: Action = {
                 chainSlug: runtime.getSetting("ALLORA_CHAIN_SLUG") as ChainSlug,
                 apiKey: runtime.getSetting("ALLORA_API_KEY") as string,
             });
-            
+
             const inferenceRes = await alloraApiClient.getInferenceByTopicID(
                 inferenceFields.topicId
             );
-            console.log("inferenceRes:", inferenceRes)
             const inferenceValue =
                 inferenceRes.inference_data.network_inference_normalized;
 
