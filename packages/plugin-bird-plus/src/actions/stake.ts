@@ -102,8 +102,9 @@ export const stake: Action = {
         }
 
         elizaLogger.info("content:", content)
-        const scallopProvider = new ScallopProvider();
+        // const scallopProvider = new ScallopProvider();
         let listPoolsNaviOnSite = await getPoolsInfo()
+        // console.log("listPoolsNaviOnSite:", listPoolsNaviOnSite) 
         if (content.type === "list") {
             if (typeof content.amount === "string") content.amount = parseInt(content.amount, 5);
             if (content.amount === 0) content.amount = 5;
@@ -135,6 +136,7 @@ export const stake: Action = {
                                     action: "STAKE_POOLS",
                                     data_extract: content
                                 })
+
                         }
                         callback({
                             user: await runtime.character.name,
@@ -212,6 +214,7 @@ export const stake: Action = {
                                     action: "STAKE_POOLS",
                                     data_extract: content
                                 })
+
                         }
                         callback({
                             user: await runtime.character.name,
@@ -354,6 +357,7 @@ export const stake: Action = {
                                     action: "STAKE_POOLS",
                                     data_extract: content
                                 })
+
                         }
                         callback({
                             user: await runtime.character.name,
@@ -369,6 +373,7 @@ export const stake: Action = {
 
                     // listPoolSuilend = await listPool();
                     // listPoolsScallop = await scallopProvider.listPools();
+
                     listPoolsNavi = await listPoolsInFileJson();
                     if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
                         index = 0;
@@ -420,7 +425,7 @@ export const stake: Action = {
                         listPoolsNavi = [];
                     }
                     // responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
-                    responseData.sort(
+                    listPoolsNavi.sort(
                         (a, b) =>
                             b.total_supply_rate - a.total_supply_rate
                     );
@@ -433,6 +438,7 @@ export const stake: Action = {
                                     action: "STAKE_POOLS",
                                     data_extract: content
                                 })
+
                         }
                         callback({
                             user: await runtime.character.name,
@@ -440,7 +446,7 @@ export const stake: Action = {
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
-                                data: responseData.slice(0, content.amount),
+                                data: listPoolsNavi.slice(0, content.amount),
                             },
                         });
                         return true;
@@ -498,6 +504,7 @@ export const stake: Action = {
                                     action: "STAKE_POOLS",
                                     data_extract: content
                                 })
+
                         }
                         callback({
                             user: await runtime.character.name,
@@ -550,6 +557,7 @@ export const stake: Action = {
                                     action: "STAKE_POOLS",
                                     data_extract: content
                                 })
+
                         }
                         callback({
                             user: await runtime.character.name,
@@ -754,7 +762,8 @@ export const stake: Action = {
                     //     });
                     //     return true;
                     // }
-                    const arrayMap = data;
+
+                    const arrayMap = [responseData];
                     arrayMap.sort(
                         (a, b) =>
                             b.total_supply_rate - a.total_supply_rate
@@ -768,6 +777,7 @@ export const stake: Action = {
                                     action: "STAKE_POOLS",
                                     data_extract: content
                                 })
+
                         }
                         callback({
                             user: await runtime.character.name,
@@ -802,6 +812,7 @@ export const stake: Action = {
                             action: "STAKE_POOLS",
                             data_extract: content
                         })
+
                 }
                 callback({
                     user: await runtime.character.name,

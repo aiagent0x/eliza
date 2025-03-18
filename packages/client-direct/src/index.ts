@@ -245,8 +245,6 @@ export class DirectClient {
                     ]);
                     return;
                 }
-
-
                 const messageId = stringToUuid(Date.now().toString());
 
                 const attachments: Media[] = [];

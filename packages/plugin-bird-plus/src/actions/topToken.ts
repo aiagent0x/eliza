@@ -11,12 +11,8 @@ import {
     State,
     type Action,
 } from "@elizaos/core";
-import { searchCategoriesInFileJson } from "../providers/searchProjectInFileJson";
-import { findTypesBySymbols } from "../providers/searchCoinInAggre";
 import { GeckoTerminalProvider } from "../providers/coingeckoTerminalProvider";
 import getActionHint from "../utils/action_hint";
-import SuiOnChainProvider from "../providers/fetchSuiChain/suiOnChainProvider";
-import { CoingeckoProvider } from "../providers/coingeckoProvider";
 import { RedisClient } from "@elizaos/adapter-redis";
 import CmsProvider from "../providers/fetchCMS/cmsProvider";
 import BlockBerryProvider from "../providers/fetchBlockBerry/blockBerryProvider";
@@ -33,7 +29,7 @@ Extract the ranking parameters from the conversation above, following these rule
         \`\`\`json
             {
                 "type_action": "TOKEN" | "POTENTIAL",
-                "type": "MEME" | "NEW" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME" | "DEX" ,
+                "type": "MEME" | "NEW" | "NFT" | "TRENDING" | "DEFI" | "TGE" | "RELEASE_TOKEN" | "LISTING" | "GAINERS" | "LOSERS" | "STABLECOIN" | "AI" | "GAME" | "DEX",
                 "sortBy": "MCAP" | "24VOL" | "PRICE_INCREASE" | "PRICE_DECREASE" | "HOLDERS" | "MARKET_CAP" | "24HVOLUME",
                 "size": number | 3
             }
@@ -107,6 +103,7 @@ export const topToken: Action = {
                 modelClass: ModelClass.SMALL,
             });
         }
+
         elizaLogger.info("content:", content);
         let size = parseInt(content.size || content.size !== "null" ? content.size : "5");
         if (content.type_action === "TOKEN") {
@@ -115,6 +112,7 @@ export const topToken: Action = {
             switch (content.type) {
                 case "MEME":
                     let memes = await redis.hGet("coins_info", "meme");
+                    console.log("memes:", memes);
                     let memeCoins;
                     if (memes !== null) {
                         memeCoins = JSON.parse(memes).data
@@ -146,7 +144,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of Meme tokens we’ve gathered for you!`,
+                            text: `Below are Meme tokens we have collected:`,
                             action: 'TOP_TỌKEN',
                             result: {
                                 type: "top_token",
@@ -173,7 +171,7 @@ export const topToken: Action = {
                     }
                     callback({
                         user: await runtime.character.name,
-                        text: `Here’s a lineup of top NFT projects making waves on the Sui Network!`,
+                        text: `The top NFT on ${content.network_blockchain}`,
                         action: "TOP_TOKEN",
                         result: {
                             type: "top_nft",
@@ -181,7 +179,6 @@ export const topToken: Action = {
                         },
                         action_hint: getActionHint()
                     });
-                    return true
                     break;
                 case "TRENDING":
                     let result = await redis.hGet("coins_info", "trending");
@@ -217,7 +214,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of trending tokens we’ve gathered for you!`,
+                            text: `Below are trending tokens we have collected:`,
                             action: 'TOP_TỌKEN',
                             result: {
                                 type: "top_token",
@@ -258,11 +255,11 @@ export const topToken: Action = {
                                     action: "TOP_TỌKEN",
                                     data_extract: content
                                 })
-    
+
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of DeFi tokens we’ve gathered for you!`,
+                            text: `Below are Defi tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -303,11 +300,11 @@ export const topToken: Action = {
                                     action: "TOP_TỌKEN",
                                     data_extract: content
                                 })
-    
+
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of Gainer tokens we’ve gathered for you!`,
+                            text: `Below are Gainers tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -347,11 +344,11 @@ export const topToken: Action = {
                                     action: "TOP_TỌKEN",
                                     data_extract: content
                                 })
-    
+
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of Loser tokens we’ve gathered for you!`,
+                            text: `Below are Losers tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -393,11 +390,11 @@ export const topToken: Action = {
                                     action: "TOP_TỌKEN",
                                     data_extract: content
                                 })
-    
+
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of stablecoins we’ve gathered for you!`,
+                            text: `Below are Stable coins we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -439,11 +436,11 @@ export const topToken: Action = {
                                     action: "TOP_TỌKEN",
                                     data_extract: content
                                 })
-    
+
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of AI tokens we’ve gathered for you!`,
+                            text: `Below are AI tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -485,11 +482,11 @@ export const topToken: Action = {
                                     action: "TOP_TỌKEN",
                                     data_extract: content
                                 })
-    
+
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of Game tokens we’ve gathered for you!`,
+                            text: `Below are Game tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -529,11 +526,11 @@ export const topToken: Action = {
                                     action: "TOP_TỌKEN",
                                     data_extract: content
                                 })
-    
+
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of DEX tokens we’ve gathered for you!`,
+                            text: `Below are Dex tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -573,11 +570,11 @@ export const topToken: Action = {
                                     action: "TOP_TỌKEN",
                                     data_extract: content
                                 })
-    
+
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Here’s a collection of new tokens we’ve gathered for you!`,
+                            text: `Below are New tokens we have collected:`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -602,7 +599,7 @@ export const topToken: Action = {
                     }
                     callback({
                         user: await runtime.character.name,
-                        text: `Here’s a lineup of top tokens gearing up for their TGE, token release, or exchange listing: BIRDS, SEED, FANTV, Walrus, Wave, Haedal, 7K!`,
+                        text: `Top tokens that are about to have their TGE, token release, or exchange listing: BIRDS, SEED, FANTV, Walrus, Wave, Haedal`,
                     })
                     return true;
                     break;
@@ -669,8 +666,9 @@ export const topToken: Action = {
 
             }
             callback({
+                
                 user: await runtime.character.name,
-                text: `Here’s a lineup of top potential tokens on Sui!`,
+                text: `Top potential token on Sui`,
                 action: "TOP_TOKEN",
                 result: {
                     type: "top_token",
@@ -735,10 +733,11 @@ export const topToken: Action = {
                             action: "TOP_TỌKEN",
                             data_extract: content
                         })
+
                 }
                 callback({
                     user: await runtime.character.name,
-                    text: `Here’s a lineup of top decentralized exchanges (DEXs) making waves on the Sui Network!`,
+                    text: `The top DEX on ${content.network_blockchain}`,
                     action: "TOP_DEX",
                     result: {
                         type: "top_dex",

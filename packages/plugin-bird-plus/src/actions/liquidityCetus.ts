@@ -46,7 +46,7 @@ Extract the liquidity pool parameters from the conversation above, following the
 - No single quotes anywhere in the JSON.  
 `;
 export const liquidityCetus: Action = {
-    name: "FARM_AND_ADD_LIQUIDITY",
+    name: "LIQUIDITY",
     similes: [
         "POOLS_LIQUIDITY",
         "ADD_LIQUIDITY",
@@ -58,7 +58,7 @@ export const liquidityCetus: Action = {
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
-    description: "farm and add liquidity and liquidity pools ",
+    description: "liquidity cetus",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -98,14 +98,15 @@ export const liquidityCetus: Action = {
                     await messageService.createMessage(
                         message.content.text,
                         {
-                            action: "FARM_AND_ADD_LIQUIDITY",
+                            action: "LIQUIDITY_POOLS",
                             data_extract: content
                         })
+
                 }
                 callback({
                     user: await runtime.character.name,
-                    text: "Here’s a lineup of liquidity pools for you!",
-                    action: "FARM_AND_ADD_LIQUIDITY",
+                    text: "Here's a rundown of liquidity pools—check them out before diving in!",
+                    action: "LIQUIDITY_POOLS",
                     result: {
                         type: "liquidity_pools",
                         data: JSON.parse(responseData).slice(0, parseInt(content.amount_token_a)),
@@ -115,27 +116,21 @@ export const liquidityCetus: Action = {
             }
             let cetusProvider = new CetusProvider();
             let result: any = await cetusProvider.fetchLiquidityPools();
-            result.data.lp_list.sort((a: any, b: any) => {
-                a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
-                b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
-                if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
-                if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
-                return 0;
-            });
             try {
                 if (_options.type !== "toggle_faster") {
                     let messageService = new MessageService()
                     await messageService.createMessage(
                         message.content.text,
                         {
-                            action: "FARM_AND_ADD_LIQUIDITY",
+                            action: "LIQUIDITY_POOLS",
                             data_extract: content
                         })
+
                 }
                 callback({
                     user: await runtime.character.name,
-                    text: "Here’s a lineup of liquidity pools for you!",
-                    action: "FARM_AND_ADD_LIQUIDITY",
+                    text: "Here's a rundown of liquidity pools—check them out before diving in!",
+                    action: "LIQUIDITY_POOLS",
                     result: {
                         type: "liquidity_pools",
                         data: result.data.lp_list.slice(0, parseInt(content.amount_token_a)),
@@ -157,8 +152,8 @@ export const liquidityCetus: Action = {
             if (!coinInfoA) {
                 callback({
                     user: await runtime.character.name,
-                    text: `Could not find the symbol for ${coinA}`,
-                    action: "FARM_AND_ADD_LIQUIDITY",
+                    text: `Could not find the symbol for ${coinA}:`,
+                    action: "LIQUIDITY_POOLS",
                     action_hint: getActionHint(
                         "navi pools",
                         "button_generate_text",
@@ -171,8 +166,8 @@ export const liquidityCetus: Action = {
             if (!coinInfoB) {
                 callback({
                     user: await runtime.character.name,
-                    text: `Could not find the symbol for ${coinB}`,
-                    action: "FARM_AND_ADD_LIQUIDITY",
+                    text: `Could not find the symbol for ${coinB}:`,
+                    action: "LIQUIDITY_POOLS",
                     action_hint: getActionHint(
                         "navi pools",
                         "button_generate_text",
@@ -190,15 +185,15 @@ export const liquidityCetus: Action = {
                     await messageService.createMessage(
                         message.content.text,
                         {
-                            action: "FARM_AND_ADD_LIQUIDITY",
+                            action: "LIQUIDITY_POOLS",
                             data_extract: content
                         })
+
                 }
                 callback({
-
                     user: await runtime.character.name,
                     text: "Double-check all the details before takeoff to dodge any turbulence!",
-                    action: "FARM_AND_ADD_LIQUIDITY",
+                    action: "LIQUIDITY_POOLS",
                     result: {
                         type: "add_liquidity",
                         data: result.data.lp_list[0],

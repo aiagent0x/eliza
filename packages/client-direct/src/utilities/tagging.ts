@@ -1,12 +1,12 @@
 import { RedisClient } from "@elizaos/adapter-redis";
 import { CmsProvider } from "../services/CMS/cmsProvider";
-import ScallopProvider from "../services/stakeService/stakeScallop";
+// import ScallopProvider from "../services/stakeService/stakeScallop";
 import { listPoolsInFileJson, pool } from "../services/stakeService/searchPoolInFile";
 import { getPoolInfo, getPoolsInfo } from "navi-sdk";
 import {
     elizaLogger,
 } from "@elizaos/core";
-import { listPool } from "../services/stakeService/fetchSuilend/listPools";
+// import { listPool } from "../services/stakeService/fetchSuilend/listPools";
 import CetusProvider from "../services/liquidityService/liquidityCetus";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
@@ -17,13 +17,13 @@ export async function filterByTagging(tag: string, agentName: string) {
     const text = tagging.find(t => t.replace(/\s+/g, '_') === tag.replace(/\s+/g, '_'));
     let responseData;
     let data;
-    let dataScallop;
-    let dataSuilend;
+    // let dataScallop;
+    // let dataSuilend;
     let listPoolsNavi;
     let index;
-    let listPoolsScallop;
-    let listPoolSuilend;
-    let scallopProvider = new ScallopProvider();
+    // let listPoolsScallop;
+    // let listPoolSuilend;
+    // let scallopProvider = new ScallopProvider();
     let listPoolsNaviOnSite = await getPoolsInfo()
 
     if (!text) return null;

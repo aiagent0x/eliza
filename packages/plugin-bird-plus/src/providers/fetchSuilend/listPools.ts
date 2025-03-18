@@ -6,85 +6,79 @@ import {
     initializeSuilendRewards,
     LENDING_MARKET_ID,
     LENDING_MARKET_TYPE,
-    SuilendClient
+    SuilendClient,
+
 } from "@suilend/sdk";
 import {
     LIQUID_STAKING_INFO_MAP,
     LstClient,
     NORMALIZED_LST_COINTYPES,
 } from "@suilend/springsui-sdk";
-// import { SuiClient, type SuiClient as SuiClientType } from "@mysten/sui/client";
+import { SuiClient } from "@mysten/sui/client";
 import BigNumber from "bignumber.js";
-import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 
-const keypair = Ed25519Keypair.deriveKeypair('')
-const STAKER = keypair.toSuiAddress();
 
 export enum Side {
     DEPOSIT = "deposit",
     BORROW = "borrow",
 }
-
-
-import { SuiClient, type SuiClient as SuiClientType } from "@mysten/sui/client";
-const WALLET_RPC = "https://wallet-rpc.mainnet.sui.io";
 const suiClient = new SuiClient({
-    url: "https://fullnode.mainnet.sui.io:443",
-  });
+    url: "https://fullnode.mainnet.sui.io"
+});
 
-const initSuilen = async (byAddress) => {
-    const suilendClient = await SuilendClient.initialize(
-        LENDING_MARKET_ID,
-        LENDING_MARKET_TYPE,
-        suiClient
-    );
+export async function listPool(walletAddress: any) {
+    const initSuilen = async (byAddress: any) => {
+        const suilendClient = await SuilendClient.initialize(
+            LENDING_MARKET_ID,
+            LENDING_MARKET_TYPE,
+            suiClient
+        );
 
+        const {
+            lendingMarket,
+            coinMetadataMap,
+
+            reserveMap,
+            refreshedRawReserves,
+            reserveCoinTypes,
+            reserveCoinMetadataMap,
+
+            rewardCoinTypes,
+            rewardCoinMetadataMap,
+            obligations,
+            obligationOwnerCaps,
+        } = await initializeSuilend(suiClient, suilendClient, byAddress);
+
+        const { rewardPriceMap, rewardMap } = await initializeSuilendRewards(
+            reserveMap,
+            rewardCoinTypes,
+            rewardCoinMetadataMap,
+            obligations && obligations.length ? obligations : []
+        );
+        return {
+            suilendClient,
+            lendingMarket,
+            coinMetadataMap,
+
+            reserveMap,
+            refreshedRawReserves,
+            reserveCoinTypes,
+            reserveCoinMetadataMap,
+
+            rewardCoinTypes,
+            rewardCoinMetadataMap,
+            obligations,
+            obligationOwnerCaps,
+
+            rewardPriceMap,
+            rewardMap,
+        };
+    };
     const {
         lendingMarket,
-        coinMetadataMap,
-
         reserveMap,
-        refreshedRawReserves,
-        reserveCoinTypes,
-        reserveCoinMetadataMap,
-
-        rewardCoinTypes,
-        rewardCoinMetadataMap,
-        obligations,
-        obligationOwnerCaps,
-    } = await initializeSuilend(suiClient, suilendClient, byAddress);
-
-    const { rewardPriceMap, rewardMap } = await initializeSuilendRewards(
-        reserveMap,
-        rewardCoinTypes,
-        rewardCoinMetadataMap,
-        obligations && obligations.length ? obligations : []
-    );
-    return {
-        suilendClient,
-        lendingMarket,
-        coinMetadataMap,
-
-        reserveMap,
-        refreshedRawReserves,
-        reserveCoinTypes,
-        reserveCoinMetadataMap,
-
-        rewardCoinTypes,
-        rewardCoinMetadataMap,
-        obligations,
-        obligationOwnerCaps,
-
-        rewardPriceMap,
         rewardMap,
-    };
-};
-const {
-    lendingMarket,
-    reserveMap,
-    rewardMap,
-} = await initSuilen(STAKER);
-export async function listPool() {
+    } = await initSuilen(walletAddress);
     const lstAprPercentMapEntries = await Promise.all(
         NORMALIZED_LST_COINTYPES.filter(
             (lstCoinType) =>
@@ -113,27 +107,38 @@ export async function listPool() {
             )
     );
     const lstAprPercentMap = Object.fromEntries(lstAprPercentMapEntries);
-
-    // console.log(rewardPriceMap, rewardMap);
     const revers = lendingMarket.reserves;
+    let dataLendingMarket:any = [];
     for (const reserve of revers) {
-        console.log(reserve.coinType);
-        console.log("depositAprPercent", reserve.depositAprPercent.toString());
         const totalDepositAprPercent = getTotalAprPercent(
             Side.DEPOSIT,
             reserve.depositAprPercent,
             getFilteredRewards(rewardMap[reserve.coinType].deposit),
             getStakingYieldAprPercent(Side.DEPOSIT, reserve, lstAprPercentMap)
         );
-        console.log("totalDepositAprPercent", totalDepositAprPercent.toString());
-
-        console.log("borrowAprPercent", reserve.borrowAprPercent.toString());
         const totalBorrowAprPercent = getTotalAprPercent(
             Side.BORROW,
             reserve.borrowAprPercent,
             getFilteredRewards(rewardMap[reserve.coinType].borrow)
         );
-        console.log("totalBorrowAprPercent", totalBorrowAprPercent.toString());
-        console.log("=======");
+        let obj = {
+            protocol: "suilend",
+            type: reserve.token.coinType,
+            decimals: reserve.token.decimals,
+            symbol: reserve.token.symbol,
+            description: reserve.token.symbol,
+            img_icon: reserve.token.iconUrl,
+            deposit_apr_percent: reserve.depositAprPercent.toString(),
+            total_deposit_apr_percent: totalDepositAprPercent.toString(),
+            borrow_apr_percent: reserve.borrowAprPercent.toString(),
+            total_borrow_apr_percent: totalBorrowAprPercent.toString(),
+            deposited_amount_usd: new BigNumber(reserve.depositedAmountUsd).toString(),
+            deposited_amount: new BigNumber(reserve.depositedAmount).toString(),
+            available_amount_usd: new BigNumber(reserve.availableAmountUsd).toString(),
+            borrowed_amount_usd: new BigNumber(reserve.borrowedAmountUsd).toString(),
+            total_supply_rate: parseFloat(totalDepositAprPercent.toString())
+        }
+        dataLendingMarket.push(obj)
     }
+    return dataLendingMarket;
 }
