@@ -6,23 +6,23 @@ import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import { SupabaseDatabaseAdapter } from "@elizaos/adapter-supabase";
 import { AutoClientInterface } from "@elizaos/client-auto";
 import { DiscordClientInterface } from "@elizaos/client-discord";
-import { InstagramClientInterface } from "@elizaos/client-instagram";
-import { LensAgentClient } from "@elizaos/client-lens";
-import { SlackClientInterface } from "@elizaos/client-slack";
-import { TelegramClientInterface } from "@elizaos/client-telegram";
-import { TelegramAccountClientInterface } from "@elizaos/client-telegram-account";
-import { TwitterClientInterface } from "@elizaos/client-twitter";
-import { AlexaClientInterface } from "@elizaos/client-alexa";
+// import { InstagramClientInterface } from "@elizaos/client-instagram";
+// import { LensAgentClient } from "@elizaos/client-lens";
+// import { SlackClientInterface } from "@elizaos/client-slack";
+// import { TelegramClientInterface } from "@elizaos/client-telegram";
+// import { TelegramAccountClientInterface } from "@elizaos/client-telegram-account";
+// import { TwitterClientInterface } from "@elizaos/client-twitter";
+// import { AlexaClientInterface } from "@elizaos/client-alexa";
 import { MongoDBDatabaseAdapter } from "@elizaos/adapter-mongodb";
 import { DevaClientInterface } from "@elizaos/client-deva";
 
 import { FarcasterClientInterface } from "@elizaos/client-farcaster";
-import { OmniflixPlugin } from "@elizaos/plugin-omniflix";
-import { JeeterClientInterface } from "@elizaos/client-simsai";
-import { XmtpClientInterface } from "@elizaos/client-xmtp";
+// import { OmniflixPlugin } from "@elizaos/plugin-omniflix";
+// import { JeeterClientInterface } from "@elizaos/client-simsai";
+// import { XmtpClientInterface } from "@elizaos/client-xmtp";
 import { DirectClient } from "@elizaos/client-direct";
 import { agentKitPlugin } from "@elizaos/plugin-agentkit";
-import { gelatoPlugin } from "@elizaos/plugin-gelato";
+// import { gelatoPlugin } from "@elizaos/plugin-gelato";
 import { PrimusAdapter } from "@elizaos/plugin-primus";
 // import { lightningPlugin } from "@elizaos/plugin-lightning";
 import { elizaCodeinPlugin, onchainJson } from "@elizaos/plugin-iq6900";
@@ -53,7 +53,7 @@ import {
 
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
 import { normalizeCharacter } from "@elizaos/plugin-di";
-import createGoatPlugin from "@elizaos/plugin-goat";
+// import createGoatPlugin from "@elizaos/plugin-goat";
 import createZilliqaPlugin from "@elizaos/plugin-zilliqa";
 
 // // import { intifacePlugin } from "@elizaos/plugin-intiface";
@@ -79,55 +79,55 @@ import createZilliqaPlugin from "@elizaos/plugin-zilliqa";
 //     tradePlugin,
 //     webhookPlugin,
 // } from "@elizaos/plugin-coinbase";
-import { coingeckoPlugin } from "@elizaos/plugin-coingecko";
-import { coinmarketcapPlugin } from "@elizaos/plugin-coinmarketcap";
+// import { coingeckoPlugin } from "@elizaos/plugin-coingecko";
+// import { coinmarketcapPlugin } from "@elizaos/plugin-coinmarketcap";
 // import { confluxPlugin } from "@elizaos/plugin-conflux";
 // import { createCosmosPlugin } from "@elizaos/plugin-cosmos";
 // import { cronosZkEVMPlugin } from "@elizaos/plugin-cronoszkevm";
 // import { deskExchangePlugin } from "@elizaos/plugin-desk-exchange";
-import { evmPlugin } from "@elizaos/plugin-evm";
-import { edwinPlugin } from "@elizaos/plugin-edwin";
-import { flowPlugin } from "@elizaos/plugin-flow";
+// import { evmPlugin } from "@elizaos/plugin-evm";
+// import { edwinPlugin } from "@elizaos/plugin-edwin";
+// import { flowPlugin } from "@elizaos/plugin-flow";
 // import { fuelPlugin } from "@elizaos/plugin-fuel";
-import { genLayerPlugin } from "@elizaos/plugin-genlayer";
+// import { genLayerPlugin } from "@elizaos/plugin-genlayer";
 // import { gitcoinPassportPlugin } from "@elizaos/plugin-gitcoin-passport";
-import { initiaPlugin } from "@elizaos/plugin-initia";
+// import { initiaPlugin } from "@elizaos/plugin-initia";
 // import { imageGenerationPlugin } from "@elizaos/plugin-image-generation";
 // import { lensPlugin } from "@elizaos/plugin-lens-network";
 // import { litPlugin } from "@elizaos/plugin-lit";
 // import { mindNetworkPlugin } from "@elizaos/plugin-mind-network";
-import { multiversxPlugin } from "@elizaos/plugin-multiversx";
+// import { multiversxPlugin } from "@elizaos/plugin-multiversx";
 // import { nearPlugin } from "@elizaos/plugin-near";
-import createNFTCollectionsPlugin from "@elizaos/plugin-nft-collections";
-import { nftGenerationPlugin } from "@elizaos/plugin-nft-generation";
+// import createNFTCollectionsPlugin from "@elizaos/plugin-nft-collections";
+// import { nftGenerationPlugin } from "@elizaos/plugin-nft-generation";
 import { createNodePlugin } from "@elizaos/plugin-node";
-import { obsidianPlugin } from "@elizaos/plugin-obsidian";
+// import { obsidianPlugin } from "@elizaos/plugin-obsidian";
 import { OpacityAdapter } from "@elizaos/plugin-opacity";
 // import { openWeatherPlugin } from "@elizaos/plugin-open-weather";
-import { quaiPlugin } from "@elizaos/plugin-quai";
-import { sgxPlugin } from "@elizaos/plugin-sgx";
+// import { quaiPlugin } from "@elizaos/plugin-quai";
+// import { sgxPlugin } from "@elizaos/plugin-sgx";
 // import { solanaPlugin } from "@elizaos/plugin-solana";
 // import { solanaPluginV2 } from "@elizaos/plugin-solana-v2";
 // import { solanaAgentkitPlugin } from "@elizaos/plugin-solana-agent-kit";
-import { squidRouterPlugin } from "@elizaos/plugin-squid-router";
-import { stargazePlugin } from "@elizaos/plugin-stargaze";
+// import { squidRouterPlugin } from "@elizaos/plugin-squid-router";
+// import { stargazePlugin } from "@elizaos/plugin-stargaze";
 // import { storyPlugin } from "@elizaos/plugin-story";
-import { suiPlugin } from "@elizaos/plugin-sui";
+// import { suiPlugin } from "@elizaos/plugin-sui";
 import { TEEMode, teePlugin } from "@elizaos/plugin-tee";
-import { teeLogPlugin } from "@elizaos/plugin-tee-log";
-import { teeMarlinPlugin } from "@elizaos/plugin-tee-marlin";
-import { verifiableLogPlugin } from "@elizaos/plugin-tee-verifiable-log";
+// import { teeLogPlugin } from "@elizaos/plugin-tee-log";
+// import { teeMarlinPlugin } from "@elizaos/plugin-tee-marlin";
+// import { verifiableLogPlugin } from "@elizaos/plugin-tee-verifiable-log";
 // import { tonPlugin } from "@elizaos/plugin-ton";
 import { webSearchPlugin } from "@elizaos/plugin-web-search";
-import { dkgPlugin } from "@elizaos/plugin-dkg";
+// import { dkgPlugin } from "@elizaos/plugin-dkg";
 // import { injectivePlugin } from "@elizaos/plugin-injective";
-import { giphyPlugin } from "@elizaos/plugin-giphy";
+// import { giphyPlugin } from "@elizaos/plugin-giphy";
 // import { letzAIPlugin } from "@elizaos/plugin-letzai";
-import { thirdwebPlugin } from "@elizaos/plugin-thirdweb";
-import { hyperliquidPlugin } from "@elizaos/plugin-hyperliquid";
-import { moralisPlugin } from "@elizaos/plugin-moralis";
+// import { thirdwebPlugin } from "@elizaos/plugin-thirdweb";
+// import { hyperliquidPlugin } from "@elizaos/plugin-hyperliquid";
+// import { moralisPlugin } from "@elizaos/plugin-moralis";
 import { echoChambersPlugin } from "@elizaos/plugin-echochambers";
-import { dexScreenerPlugin } from "@elizaos/plugin-dexscreener";
+// import { dexScreenerPlugin } from "@elizaos/plugin-dexscreener";
 import { pythDataPlugin } from "@elizaos/plugin-pyth-data";
 import { openaiPlugin } from "@elizaos/plugin-openai";
 import nitroPlugin from "@elizaos/plugin-router-nitro";
@@ -137,7 +137,7 @@ import nitroPlugin from "@elizaos/plugin-router-nitro";
 // import { holdstationPlugin } from "@elizaos/plugin-holdstation";
 import { nvidiaNimPlugin } from "@elizaos/plugin-nvidia-nim";
 // import { zxPlugin } from "@elizaos/plugin-0x";
-import { hyperbolicPlugin } from "@elizaos/plugin-hyperbolic";
+// import { hyperbolicPlugin } from "@elizaos/plugin-hyperbolic";
 import Database from "better-sqlite3";
 import fs from "fs";
 import net from "net";
@@ -158,7 +158,7 @@ import yargs from "yargs";
 import { MongoClient } from "mongodb";
 import { quickIntelPlugin } from "@elizaos/plugin-quick-intel";
 
-import { trikonPlugin } from "@elizaos/plugin-trikon";
+// import { trikonPlugin } from "@elizaos/plugin-trikon";
 // import arbitragePlugin from "@elizaos/plugin-arbitrage";
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
@@ -812,48 +812,48 @@ export async function initializeClients(
         if (autoClient) clients.auto = autoClient;
     }
 
-    if (clientTypes.includes(Clients.XMTP)) {
-        const xmtpClient = await XmtpClientInterface.start(runtime);
-        if (xmtpClient) clients.xmtp = xmtpClient;
-    }
+    // if (clientTypes.includes(Clients.XMTP)) {
+    //     const xmtpClient = await XmtpClientInterface.start(runtime);
+    //     if (xmtpClient) clients.xmtp = xmtpClient;
+    // }
 
     if (clientTypes.includes(Clients.DISCORD)) {
         const discordClient = await DiscordClientInterface.start(runtime);
         if (discordClient) clients.discord = discordClient;
     }
 
-    if (clientTypes.includes(Clients.TELEGRAM)) {
-        const telegramClient = await TelegramClientInterface.start(runtime);
-        if (telegramClient) clients.telegram = telegramClient;
-    }
+    // if (clientTypes.includes(Clients.TELEGRAM)) {
+    //     const telegramClient = await TelegramClientInterface.start(runtime);
+    //     if (telegramClient) clients.telegram = telegramClient;
+    // }
 
-    if (clientTypes.includes(Clients.TELEGRAM_ACCOUNT)) {
-        const telegramAccountClient =
-            await TelegramAccountClientInterface.start(runtime);
-        if (telegramAccountClient)
-            clients.telegram_account = telegramAccountClient;
-    }
+    // if (clientTypes.includes(Clients.TELEGRAM_ACCOUNT)) {
+    //     const telegramAccountClient =
+    //         await TelegramAccountClientInterface.start(runtime);
+    //     if (telegramAccountClient)
+    //         clients.telegram_account = telegramAccountClient;
+    // }
 
-    if (clientTypes.includes(Clients.TWITTER)) {
-        const twitterClient = await TwitterClientInterface.start(runtime);
-        if (twitterClient) {
-            clients.twitter = twitterClient;
-        }
-    }
+    // if (clientTypes.includes(Clients.TWITTER)) {
+    //     const twitterClient = await TwitterClientInterface.start(runtime);
+    //     if (twitterClient) {
+    //         clients.twitter = twitterClient;
+    //     }
+    // }
 
-    if (clientTypes.includes(Clients.ALEXA)) {
-        const alexaClient = await AlexaClientInterface.start(runtime);
-        if (alexaClient) {
-            clients.alexa = alexaClient;
-        }
-    }
+    // if (clientTypes.includes(Clients.ALEXA)) {
+    //     const alexaClient = await AlexaClientInterface.start(runtime);
+    //     if (alexaClient) {
+    //         clients.alexa = alexaClient;
+    //     }
+    // }
 
-    if (clientTypes.includes(Clients.INSTAGRAM)) {
-        const instagramClient = await InstagramClientInterface.start(runtime);
-        if (instagramClient) {
-            clients.instagram = instagramClient;
-        }
-    }
+    // if (clientTypes.includes(Clients.INSTAGRAM)) {
+    //     const instagramClient = await InstagramClientInterface.start(runtime);
+    //     if (instagramClient) {
+    //         clients.instagram = instagramClient;
+    //     }
+    // }
 
     if (clientTypes.includes(Clients.FARCASTER)) {
         const farcasterClient = await FarcasterClientInterface.start(runtime);
@@ -862,16 +862,16 @@ export async function initializeClients(
         }
     }
 
-    if (clientTypes.includes("lens")) {
-        const lensClient = new LensAgentClient(runtime);
-        lensClient.start();
-        clients.lens = lensClient;
-    }
+    // if (clientTypes.includes("lens")) {
+    //     const lensClient = new LensAgentClient(runtime);
+    //     lensClient.start();
+    //     clients.lens = lensClient;
+    // }
 
-    if (clientTypes.includes(Clients.SIMSAI)) {
-        const simsaiClient = await JeeterClientInterface.start(runtime);
-        if (simsaiClient) clients.simsai = simsaiClient;
-    }
+    // if (clientTypes.includes(Clients.SIMSAI)) {
+    //     const simsaiClient = await JeeterClientInterface.start(runtime);
+    //     if (simsaiClient) clients.simsai = simsaiClient;
+    // }
 
     elizaLogger.log("client keys", Object.keys(clients));
 
@@ -882,10 +882,10 @@ export async function initializeClients(
         }
     }
 
-    if (clientTypes.includes("slack")) {
-        const slackClient = await SlackClientInterface.start(runtime);
-        if (slackClient) clients.slack = slackClient; // Use object property instead of push
-    }
+    // if (clientTypes.includes("slack")) {
+    //     const slackClient = await SlackClientInterface.start(runtime);
+    //     if (slackClient) clients.slack = slackClient; // Use object property instead of push
+    // }
 
     function determineClientType(client: Client): string {
         // Check if client has a direct type identifier
@@ -950,11 +950,11 @@ export async function createAgent(
 
     let goatPlugin: any | undefined;
 
-    if (getSecret(character, "EVM_PRIVATE_KEY")) {
-        goatPlugin = await createGoatPlugin((secret) =>
-            getSecret(character, secret)
-        );
-    }
+    // if (getSecret(character, "EVM_PRIVATE_KEY")) {
+    //     goatPlugin = await createGoatPlugin((secret) =>
+    //         getSecret(character, secret)
+    //     );
+    // }
 
     let zilliqaPlugin: any | undefined;
     if (getSecret(character, "ZILLIQA_PRIVATE_KEY")) {

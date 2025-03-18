@@ -38,8 +38,8 @@ export class MessageService {
             });
             return response.data;
         } catch (error) {
-            console.error("Error fetching market data:", error);
-            throw new Error("Failed to fetch market data");
+            console.error("Error fetching market data:", error.message);
+            return null
         }
     }
     async toggleChooseActionFaster(messageId, type, dataTagging, userMessage, memory, runtime: AgentRuntime) {
