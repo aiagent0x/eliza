@@ -762,8 +762,9 @@ export const stake: Action = {
                     //     });
                     //     return true;
                     // }
-
+                    console.log("responseData:", responseData);
                     const arrayMap = [responseData];
+                    console.log("arrayMap:", arrayMap);
                     arrayMap.sort(
                         (a, b) =>
                             b.total_supply_rate - a.total_supply_rate
