@@ -216,8 +216,9 @@ export async function filterByTagging(tag: string, agentName: string) {
             // responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
             responseData = listPoolsNavi
             responseData.sort((a: any, b: any) => {
-                if (a.name === "SUI") return -1;
-                if (b.name === "SUI") return 1;
+
+                if (a.name.toLowerCase() === "sui") return -1;
+                if (b.name.toLowerCase() === "sui") return 1;
                 return b.total_supply_rate - a.total_supply_rate;
             });
             return {
@@ -242,10 +243,9 @@ export async function filterByTagging(tag: string, agentName: string) {
                 //         b.total_supply_rate - a.total_supply_rate
                 // );
                 parsedData.sort((a: any, b: any) => {
-                    console.log(a.name)
-                    console.log(b.name)
-                    if (a.name === "SUI") return -1;
-                    if (b.name === "SUI") return 1;
+
+                    if (a.name.toLowerCase() === "sui") return -1;
+                    if (b.name.toLowerCase() === "sui") return 1;
                     return b.total_supply_rate - a.total_supply_rate;
                 });
                 return responseData = {
