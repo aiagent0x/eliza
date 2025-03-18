@@ -139,10 +139,15 @@ export async function filterByTagging(tag: string, agentName: string) {
             //     parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
             if ((parsedData && parsedData.length > 0)) {
                 // parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-                parsedData.sort(
-                    (a: any, b: any) =>
-                        b.total_supply_rate - a.total_supply_rate
-                );
+                // parsedData.sort(
+                //     (a: any, b: any) =>
+                //         b.total_supply_rate - a.total_supply_rate
+                // );
+                parsedData.sort((a:any, b:any) => {
+                    if (a.name === "SUI") return -1;
+                    if (b.name === "SUI") return 1;
+                    return b.total_supply_rate - a.total_supply_rate;
+                });
                 return responseData = {
                     user: agentName,
                     text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of Navi staking pools for you!" : "Below is a list of staking pools:",
@@ -231,10 +236,15 @@ export async function filterByTagging(tag: string, agentName: string) {
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
-                parsedData.sort(
-                    (a: any, b: any) =>
-                        b.total_supply_rate - a.total_supply_rate
-                );
+                // parsedData.sort(
+                //     (a: any, b: any) =>
+                //         b.total_supply_rate - a.total_supply_rate
+                // );
+                parsedData.sort((a:any, b:any) => {
+                    if (a.name === "SUI") return -1;
+                    if (b.name === "SUI") return 1;
+                    return b.total_supply_rate - a.total_supply_rate;
+                });
                 return responseData = {
                     user: agentName,
                     text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of Navi staking pools for you!" : "Below is a list of stake pools:",

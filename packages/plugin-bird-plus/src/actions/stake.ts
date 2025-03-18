@@ -124,10 +124,15 @@ export const stake: Action = {
                         for (let key in data) {
                             parsedData.push(JSON.parse(data[key]));
                         }
-                        parsedData.sort(
-                            (a: any, b: any) =>
-                                b.total_supply_rate - a.total_supply_rate
-                        );
+                        // parsedData.sort(
+                        //     (a: any, b: any) =>
+                        //         b.total_supply_rate - a.total_supply_rate
+                        // );
+                        parsedData.sort((a:any, b:any) => {
+                            if (a.name === "SUI") return -1;
+                            if (b.name === "SUI") return 1;
+                            return b.total_supply_rate - a.total_supply_rate;
+                        });
                         if (_options.type !== "toggle_faster") {
                             let messageService = new MessageService()
                             await messageService.createMessage(
@@ -201,10 +206,11 @@ export const stake: Action = {
                     else {
                         listPoolsNavi = [];
                     }
-                    listPoolsNavi.sort(
-                        (a, b) =>
-                            b.total_supply_rate - a.total_supply_rate
-                    );
+                    listPoolsNavi.sort((a, b) => {
+                        if (a.name === "SUI") return -1;
+                        if (b.name === "SUI") return 1;
+                        return b.total_supply_rate - a.total_supply_rate;
+                    });
                     try {
                         if (_options.type !== "toggle_faster") {
                             let messageService = new MessageService()
@@ -762,9 +768,7 @@ export const stake: Action = {
                     //     });
                     //     return true;
                     // }
-                    console.log("responseData:", responseData);
                     const arrayMap = [responseData];
-                    console.log("arrayMap:", arrayMap);
                     arrayMap.sort(
                         (a, b) =>
                             b.total_supply_rate - a.total_supply_rate
