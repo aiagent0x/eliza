@@ -208,7 +208,6 @@ export class DirectClient {
                 const userId = req.body.userId;
                 const type = req.body.type || "default_message";
                 let runtime = this.agents.get(agentId);
-
                 // if runtime is null, look for runtime with the same name
                 if (!runtime) {
                     runtime = Array.from(this.agents.values()).find(

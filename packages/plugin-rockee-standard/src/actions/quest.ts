@@ -12,19 +12,16 @@ import {
 import MessageService from "../services/messageService";
 import CMSProvider from "../providers/CMS/cmsProvider";
 
-
-
-
 const questTemplate = `Recent messages: {{recentMessages}}  
-{{listProjects}} 
+{{listProjects}}  
 
 Extract the relevant project information from the conversation above, following these rules:  
 
-- If the user is requesting a **list of quests** (e.g., "list quest", "quest list", "show quests"), set '"type": "list"' and return '"projectId": null' and '"projectName": null'.  
-- If the user is requesting details about a **specific project or quest**, set '"type": "quest"' and return the corresponding '"projectId"' and '"projectName"'.  
+- If the user is requesting a **list of quests** (e.g., "list quest", "list of quest"), set '"type": "list"' and return '"projectId": null' and '"projectName": null'.  
+- If the user is requesting details about a **specific project or quest** (e.g., "quest of {Project_name}"), set '"type": "quest"' and return '"projectId": "151421514csdzc1qa14"' and '"projectName": "{Project_name}"'.  
 - Only return details of **active** projects. If the project is inactive or the timeframe does not match the request, return 'null' for both '"projectId"' and '"projectName"'.  
 
-Respond with a JSON markdown block containing only the extracted values. Use 'null' for any values that cannot be determined. The result should be a valid JSON object with the following schema:  
+Respond with a JSON markdown block containing only the extracted values. Use 'null' for any values that cannot be determined. The result should be a valid JSON object with the following schema:   
 
 \`\`\`json
 {
@@ -83,6 +80,7 @@ export const questInfo: Action = {
         let currentState = state;
         let cmsProvider = new CMSProvider();
         let outputListProject = await cmsProvider.listProjects();
+        console.log("outputListProject:", outputListProject)
         // if (_options.type !== "toggle_faster") {
         if (!currentState) {
             currentState = (await runtime.composeState(message)) as State;
@@ -94,6 +92,7 @@ export const questInfo: Action = {
             state: currentState,
             template: questTemplate,
         });
+        console.log("questInfoContext:", questInfoContext);
         content = await generateObjectDeprecated({
             runtime,
             context: questInfoContext,
