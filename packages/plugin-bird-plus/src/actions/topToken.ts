@@ -52,7 +52,8 @@ Extract the ranking parameters from the conversation above, following these rule
        - Use "type": "GAME" for gaming token rankings.
        - Use "type": "DEX" for dex token rankings.
        - Ensure that "sortBy" is one of the following: "MCAP", "24VOL", "PRICE_INCREASE", "PRICE_DECREASE", "HOLDERS", "MARKET_CAP", "24HVOLUME".
-       - "size" should default to 3.
+       - '"size"' should be extracted from the message when a number is specified (e.g., '"top 10 gainer tokens"' to '"size": 10').  
+       - If no size is mentioned, default '"size"' to '3'. 
        - Use null for any values that cannot be determined.
        - All property names must use double quotes.
        - No trailing commas or single quotes.
@@ -87,22 +88,22 @@ export const topToken: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         let content: any = _options.data_extract;
-        if (_options.type !== "toggle_faster") {
-            if (!state) {
-                state = (await runtime.composeState(message)) as State;
-            } else {
-                state = await runtime.updateRecentMessageState(state);
-            }
-            const topContext = composeContext({
-                state,
-                template: topTemplate,
-            });
-            content = await generateObjectDeprecated({
-                runtime,
-                context: topContext,
-                modelClass: ModelClass.SMALL,
-            });
+        // if (_options.type !== "toggle_faster") {
+        if (!state) {
+            state = (await runtime.composeState(message)) as State;
+        } else {
+            state = await runtime.updateRecentMessageState(state);
         }
+        const topContext = composeContext({
+            state,
+            template: topTemplate,
+        });
+        content = await generateObjectDeprecated({
+            runtime,
+            context: topContext,
+            modelClass: ModelClass.SMALL,
+        });
+        // }
 
         elizaLogger.info("content:", content);
         let size = parseInt(content.size || content.size !== "null" ? content.size : "5");
@@ -666,7 +667,7 @@ export const topToken: Action = {
 
             }
             callback({
-                
+
                 user: await runtime.character.name,
                 text: `Top potential token on Sui`,
                 action: "TOP_TOKEN",
