@@ -10,7 +10,8 @@ import {
 export const myPortfolio: Action = {
     name: "PORTFOLIO",
     similes: [
-        "SHOW_PORTFOLIO"
+        "SHOW_PORTFOLIO",
+        "MY_PORTFOLIO"
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
@@ -25,7 +26,7 @@ export const myPortfolio: Action = {
     ): Promise<boolean> => {
 
         callback({
-            text: "Below is your portofilo",
+            text: "Here’s a snapshot of your portfolio for you!",
             action: "PORTFOLIO",
             result: {
                 type: "my_portfolio",
@@ -36,7 +37,7 @@ export const myPortfolio: Action = {
 
 
     },
-    examples:[
+    examples: [
         [
             {
                 user: "{{user1}}",

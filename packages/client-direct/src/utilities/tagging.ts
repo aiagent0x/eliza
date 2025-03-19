@@ -452,6 +452,14 @@ export async function filterByTagging(tag: string, agentName: string) {
                 return false;
             }
             break;
+        case "my_portfolio":
+            return responseData = {
+                text: "Here’s a snapshot of your portfolio for you!",
+                action: "PORTFOLIO",
+                result: {
+                    type: "my_portfolio",
+                }
+            }
         default:
             responseData = null;
     }
