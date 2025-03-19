@@ -198,7 +198,7 @@ export class DirectClient {
 
         this.app.post(
             "/:agentId/message",
-            upload.single("file"),
+            upload.single("file") as unknown as express.RequestHandler,
             async (req: express.Request, res: express.Response) => {
 
                 // let messageHash = JSON.stringify({

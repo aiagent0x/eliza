@@ -6,3 +6,4 @@ packages:
     - "cronjob"
     - "write-message"
     - "hub-agent"
+    - "backend"

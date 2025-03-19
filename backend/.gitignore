@@ -1,0 +1,17 @@
+*.ts
+!index.ts
+!character.ts
+.env
+*.env
+.env*
+/data
+/generatedImages
+!src/controllers/*
+!src/middleware/*
+!src/helpers/*
+!src/routes/*
+!src/models/*
+!src/controllers/Posts/*
+!src/controllers/Users/*
+!.env.example
+certificate.json
