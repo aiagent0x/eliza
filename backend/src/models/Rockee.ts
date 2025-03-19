@@ -16,18 +16,21 @@ const rockeeSchema = new mongoose.Schema({
     message: {
         type: String,
         require: true,
-        unique: true
+        unique: true,
+        index: true // Adding index to the message field
     },
     data: {
         action: {
-            type: String
+            type: String,
+            index: true // Adding index to the data.action field
         },
         data_extract: {
             type: Object,
         },
         type: {
             type: String,
-            default: "toggle_faster"
+            default: "toggle_faster",
+            index: true // Adding index to the data.type field
         }
     },
     type: {
@@ -37,8 +40,7 @@ const rockeeSchema = new mongoose.Schema({
     },
     created_at: Number,
     updated_at: Number,
-}
-    ,
+},
     {
         timestamps: {
             currentTime: () => Date.now(),
@@ -46,7 +48,18 @@ const rockeeSchema = new mongoose.Schema({
             updatedAt: 'updated_at'
         }
     }
-)
+);
+
+// Adding a compound index for message, data.type, data.action, and data.data_extract in reverse order
+
+rockeeSchema.index(
+    { "data.data_extract": 1, "data.action": 1, "data.type": 1, message: 1 },
+    { name: "reverse_order_index" }
+);
+rockeeSchema.index(
+    { message: 1 },
+    { unique: true, name: "unique_message_index" }
+);
 rockeeSchema.static("getDataByMessage",
     async (text: string) => {
         return Rockee.findOne({ message: text }).select(["data"]);
