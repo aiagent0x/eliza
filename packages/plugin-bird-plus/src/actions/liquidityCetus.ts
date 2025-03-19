@@ -28,7 +28,7 @@ Extract the liquidity pool parameters from the conversation above, following the
 - Return only a JSON object with the specified fields in this format:  
     \`\`\`json
         {  
-            "type_action": "show_list" | "add",  
+            "type_action": "show_list" | "add" | "remove",  
             "pair_name": string | SUI-USDC,  
             "amount_token_a": number | 0,  //is size list or amount token a
             "amount_token_b": number | 0, 
@@ -36,6 +36,7 @@ Extract the liquidity pool parameters from the conversation above, following the
     \`\`\`
 - Use '"type_action": "show_list"' when the request is about listing liquidity pools (e.g., "liquidity pools", "top 5 liquidity pools").  
 - Use '"type_action": "add"' when the request specifies adding liquidity (e.g., "add liquidity SUI-USDC").  
+- Use '"type_action": "remove"' when the request specifies removing liquidity (e.g., "remove liquidity SUI-USDC"). 
 - Set '"pair_name"' to null if no specific pair is mentioned.  
 - If a specific token and amount are provided, assign it to the corresponding field ('amount_token_a' or 'amount_token_b').  
 - If both tokens have amounts, only assign 'amount_token_a' and set 'amount_token_b' to '0'.  
@@ -54,6 +55,8 @@ export const liquidityCetus: Action = {
         "FARM_{PAIR_NAME}",
         "FARMING_{PAIR_NAME}",
         "FARMING_LIQUIDITY",
+        "REMOVE_LIQUIDITY",
+        "REMOVE_LIQUIDITY_{PAIR_NAME}"
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
@@ -134,6 +137,68 @@ export const liquidityCetus: Action = {
                     result: {
                         type: "liquidity_pools",
                         data: result.data.lp_list.slice(0, parseInt(content.amount_token_a)),
+                    }
+                })
+                return true;
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
+        }
+        else if(content.type_action === "remove"){
+            let cetusProvider = new CetusProvider();
+            let coinA = content.pair_name.split("-")[0];
+            let coinB = content.pair_name.split("-")[1];
+            let coinInfoA = await findByVerifiedAndSymbol(coinA);
+            let coinInfoB = await findByVerifiedAndSymbol(coinB);
+            if (!coinInfoA) {
+                callback({
+                    user: await runtime.character.name,
+                    text: `Could not find the symbol for ${coinA}:`,
+                    action: "LIQUIDITY_POOLS",
+                    action_hint: getActionHint(
+                        "navi pools",
+                        "button_generate_text",
+                        "navi",
+                        "liquidity"
+                    )
+                })
+                return true;
+            }
+            if (!coinInfoB) {
+                callback({
+                    user: await runtime.character.name,
+                    text: `Could not find the symbol for ${coinB}:`,
+                    action: "LIQUIDITY_POOLS",
+                    action_hint: getActionHint(
+                        "navi pools",
+                        "button_generate_text",
+                        "navi",
+                        "liquidity"
+                    )
+                })
+                return true;
+            }
+            let result = await cetusProvider.fetchLiquidityPoolsByCoinType(`${coinInfoA.type},${coinInfoB.type}`);
+
+            try {
+                if (_options.type !== "toggle_faster") {
+                    let messageService = new MessageService()
+                    await messageService.createMessage(
+                        message.content.text,
+                        {
+                            action: "LIQUIDITY_POOLS",
+                            data_extract: content
+                        })
+
+                }
+                callback({
+                    user: await runtime.character.name,
+                    text: "Double-check all the details before takeoff to dodge any turbulence!",
+                    action: "LIQUIDITY_POOLS",
+                    result: {
+                        type: "remove_liquidity",
+                        data: result.data.lp_list[0],
                     }
                 })
                 return true;
@@ -234,6 +299,22 @@ export const liquidityCetus: Action = {
                 user: "{{agent}}",
                 content: {
                     text: "add liquidity",
+                    action: "LIQUIDITY",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "remove liquidity",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "remove liquidity",
                     action: "LIQUIDITY",
 
                 },
