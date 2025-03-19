@@ -10,7 +10,7 @@ import {
 import CetusProvider from "../services/liquidityService/liquidityCetus";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
-const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools", "liquidity_pools"]
+const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools", "liquidity_pools", "my_portfolio"]
 export async function filterByTagging(tag: string, agentName: string) {
     console.log(agentName)
     tag = tag.trim().toLowerCase();
