@@ -33,6 +33,8 @@ const AGENTIDDEFAUT = "95654c56-888a-0d17-bc32-57df8d1dedc3";
 import { RabbitMQ } from "@elizaos/adapter-rabbitmq"
 import { v4 as uuidv4 } from 'uuid';
 import { hashUserMsg } from "./utilities/format.ts";
+import rateLimitMiddleware from "./middleware/rateLimit.ts";
+import whiteListMiddleware from "./middleware/whiteList.ts";
 const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue", "agent_swam_traning"], 10);
 console.log("process.env.RABBITMQ_CONNECTION_STRING:", process.env.RABBITMQ_CONNECTION_STRING)
 const storage = multer.diskStorage({
@@ -131,7 +133,9 @@ export class DirectClient {
 
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(whiteListMiddleware)
         this.app.use(serverMiddleware)
+        
         // Serve both uploads and generated images
         this.app.use(
             "/media/uploads",
@@ -198,6 +202,7 @@ export class DirectClient {
 
         this.app.post(
             "/:agentId/message",
+            // rateLimitMiddleware,
             upload.single("file") as unknown as express.RequestHandler,
             async (req: express.Request, res: express.Response) => {
 
@@ -1032,7 +1037,7 @@ export class DirectClient {
             });
             return
         })
-        this.app.post("/swarm-tranning/start", async (req, res) => {
+        this.app.post("/swarm-tranning/start", rateLimitMiddleware, async (req, res) => {
             const { agentA, agentB, countMessage, topic } = req.body;
             let roomId = `swarm_training_${uuidv4()}`
             let dataHash = JSON.stringify({

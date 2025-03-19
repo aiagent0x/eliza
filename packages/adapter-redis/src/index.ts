@@ -174,6 +174,31 @@ export class RedisClient implements IDatabaseCacheAdapter {
             elizaLogger.error("Error pattern unsubscribing:", err);
         }
     }
+
+    async pipeline(commands: Array<[string, ...unknown[]]>): Promise<unknown[]> {
+        try {
+            const pipeline = this.client.pipeline();
+            commands.forEach((command) => {
+                const [method, ...args] = command;
+                if (typeof pipeline[method] === "function") {
+                    pipeline[method](...args);
+                } else {
+                    elizaLogger.error(`Invalid pipeline command: ${method}`);
+                }
+            });
+            const results = await pipeline.exec();
+            return results.map(([err, result]) => {
+                if (err) {
+                    elizaLogger.error("Pipeline command error:", err);
+                    return null;
+                }
+                return result;
+            });
+        } catch (err) {
+            elizaLogger.error("Error executing pipeline:", err);
+            return [];
+        }
+    }
 }
 
 export default RedisClient;
