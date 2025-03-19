@@ -88,22 +88,22 @@ export const topToken: Action = {
         callback?: HandlerCallback
     ): Promise<boolean> => {
         let content: any = _options.data_extract;
-        // if (_options.type !== "toggle_faster") {
-        if (!state) {
-            state = (await runtime.composeState(message)) as State;
-        } else {
-            state = await runtime.updateRecentMessageState(state);
+        if (_options.type !== "toggle_faster") {
+            if (!state) {
+                state = (await runtime.composeState(message)) as State;
+            } else {
+                state = await runtime.updateRecentMessageState(state);
+            }
+            const topContext = composeContext({
+                state,
+                template: topTemplate,
+            });
+            content = await generateObjectDeprecated({
+                runtime,
+                context: topContext,
+                modelClass: ModelClass.SMALL,
+            });
         }
-        const topContext = composeContext({
-            state,
-            template: topTemplate,
-        });
-        content = await generateObjectDeprecated({
-            runtime,
-            context: topContext,
-            modelClass: ModelClass.SMALL,
-        });
-        // }
 
         elizaLogger.info("content:", content);
         let size = parseInt(content.size || content.size !== "null" ? content.size : "5");
