@@ -20,12 +20,12 @@ const questTemplate = `Recent messages: {{recentMessages}}
 
 Extract the relevant project information from the conversation above, following these rules:  
 
-- Identify the **project ID** and **project name** that best match the user's request.  
-- If the user is asking for a list of projects, set '"type": "list"' and return '"projectId": null' and '"projectName": null'.  
-- If the user is asking for details of a specific project or task, set '"type": "quest"' and return the corresponding '"projectId"' and '"projectName"'.  
+- If the user is requesting a **list of quests** (e.g., "list quest", "quest list", "show quests"), set '"type": "list"' and return '"projectId": null' and '"projectName": null'.  
+- If the user is requesting details about a **specific project or quest**, set '"type": "quest"' and return the corresponding '"projectId"' and '"projectName"'.  
 - Only return details of **active** projects. If the project is inactive or the timeframe does not match the request, return 'null' for both '"projectId"' and '"projectName"'.  
 
 Respond with a JSON markdown block containing only the extracted values. Use 'null' for any values that cannot be determined. The result should be a valid JSON object with the following schema:  
+
 \`\`\`json
 {
     "type": "list" | "quest",
