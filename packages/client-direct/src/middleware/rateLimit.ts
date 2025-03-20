@@ -10,7 +10,7 @@ export default async function rateLimitMiddleware(req: Request, res: Response, n
         {
             "api": "/swarm-tranning/start",
             "max-request": "1",
-            "time": "86400"
+            "time": "3600"
         },
     ];
     let script = `
@@ -35,7 +35,7 @@ export default async function rateLimitMiddleware(req: Request, res: Response, n
         });
         console.log("currentRequests:", currentRequests)
         if (currentRequests === 0) {
-            return res.status(429).json({ message: "You can only call this function once per day." });
+            return res.status(429).json({ message: "You can only call this function once per hour." });
         }
         next();
     } catch (error) {

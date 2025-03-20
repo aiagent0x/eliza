@@ -35,6 +35,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { hashUserMsg } from "./utilities/format.ts";
 import rateLimitMiddleware from "./middleware/rateLimit.ts";
 import whiteListMiddleware from "./middleware/whiteList.ts";
+import rateLimitMessage from "./services/rateLimit/rateLimitMessage.ts";
 const rabbitMQ = new RabbitMQ(process.env.RABBITMQ_CONNECTION_STRING, ["input_chat_queue", "agent_swam_traning"], 10);
 console.log("process.env.RABBITMQ_CONNECTION_STRING:", process.env.RABBITMQ_CONNECTION_STRING)
 const storage = multer.diskStorage({
@@ -135,7 +136,7 @@ export class DirectClient {
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(whiteListMiddleware)
         this.app.use(serverMiddleware)
-        
+
         // Serve both uploads and generated images
         this.app.use(
             "/media/uploads",
@@ -221,6 +222,18 @@ export class DirectClient {
                 // const userId = stringToUuid(req.body.userId ?? "user");
                 const roomId = req.body.roomId;
                 const userId = req.body.userId;
+                let rateLimit = await rateLimitMessage(userId, roomId)
+                if (rateLimit === "too_many_request") {
+                    res.status(200).send({
+                        text: "You are only allowed to send 50 messages a day."
+                    })
+                    return
+                }
+                if (rateLimit === false) {
+                    res.status(400).send("Server Error");
+                    return
+                }
+
                 let runtimeDefault = this.agents.get(AGENTIDDEFAUT)
                 let accountInfo = await runtimeDefault.databaseAdapter.getAccountInfo(agentId);
                 if (accountInfo && accountInfo.agentSampleId) {
@@ -320,7 +333,7 @@ export class DirectClient {
                         state,
                         template: messageHandlerTemplate,
                     });
-                    
+
                     response = await generateMessageResponse({
                         runtime: runtime,
                         context,
@@ -334,9 +347,9 @@ export class DirectClient {
                     }
                     await runtime.cacheManager.set(msgHash, response, { expires: Date.now() + 300000 });
                 }
-                
+
                 elizaLogger.info("generateMessageResponse:-> end");
-                
+
 
                 // save response to memory
                 const responseMessage: Memory = {
@@ -1038,28 +1051,28 @@ export class DirectClient {
             return
         })
         this.app.post("/swarm-tranning/start",
-             rateLimitMiddleware as unknown as express.RequestHandler,
-              async (req, res) => {
-            const { agentA, agentB, countMessage, topic } = req.body;
-            let roomId = `swarm_training_${uuidv4()}`
-            let dataHash = JSON.stringify({
-                agentA: agentA,
-                agentB: agentB,
-                countMessage: countMessage,
-                topic: topic,
-                roomId: roomId
-            });
+            rateLimitMiddleware as unknown as express.RequestHandler,
+            async (req, res) => {
+                const { agentA, agentB, countMessage, topic } = req.body;
+                let roomId = `swarm_training_${uuidv4()}`
+                let dataHash = JSON.stringify({
+                    agentA: agentA,
+                    agentB: agentB,
+                    countMessage: countMessage,
+                    topic: topic,
+                    roomId: roomId
+                });
 
-            dataHash = Buffer.from(dataHash).toString('base64')
-            rabbitMQ.publish("agent_swam_traning", dataHash);
-            res.status(200).json({
-                message: "Start swarm tranning",
-                data: {
-                    roomId
-                }
-            });
-            return;
-        })
+                dataHash = Buffer.from(dataHash).toString('base64')
+                rabbitMQ.publish("agent_swam_traning", dataHash);
+                res.status(200).json({
+                    message: "Start swarm tranning",
+                    data: {
+                        roomId
+                    }
+                });
+                return;
+            })
         this.app.post("/swarm-tranning/stop", async (req, res) => {
             const { agentA, agentB } = req.body;
             let dataHash = JSON.stringify({
