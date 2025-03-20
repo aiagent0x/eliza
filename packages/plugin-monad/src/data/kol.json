@@ -1,103 +1,78 @@
 [
     {
-        "name":"aPriori☑️",
-        "category":"Liquid staking",
-        "x_link":"https://x.com/SuiNetwork"
+        "name": "@wyckoffweb",
+        "x_link": "https://x.com/wyckoffweb",
+        "sub_count": "212k"
     },
     {
-        "name":"Nad Name Service☑️",
-        "category":"Name service",
-        "x_link":"https://x.com/CetusProtocol"
+        "name": "@Joshyysmartt",
+        "x_link": "https://x.com/Joshyysmartt",
+        "sub_count": "131,5k"
     },
     {
-        "name":"Ambient",
-        "category":"DEX",
-        "x_link":"https://x.com/navi_protocol"
+        "name": "@LeonardJ_24",
+        "x_link": "https://x.com/LeonardJ_24",
+        "sub_count": "75k"
     },
     {
-        "name":"Bean Exchange☑️",
-        "category":"DEX",
-        "x_link":"https://x.com/DeepBookonSui"
+        "name": "@1stBenjaNAD",
+        "x_link": "https://x.com/1stBenjaNAD",
+        "sub_count": "18k"
     },
     {
-        "name":"Magma☑️",
-        "category":"Liquid staking",
-        "x_link":"https://x.com/WalrusProtocol"
+        "name": "@crexsol",
+        "x_link": "https://x.com/crexsol",
+        "sub_count": "22,5k"
     },
     {
-        "name":"Kintsu☑️",
-        "category":"Liquid staking",
-        "x_link":"https://x.com/TheBirdsDogs"
+        "name": "@btamberlian",
+        "x_link": "https://x.com/btamberlian/",
+        "sub_count": "148k"
     },
     {
-        "name":"Curvance",
-        "category":"Lending",
-        "x_link":"https://x.com/bluefinapp"
+        "name": "@_gvan",
+        "x_link": "https://x.com/_gvan",
+        "sub_count": "16,5k"
     },
     {
-        "name":"Talentum",
-        "category":"SocialFi/GameFi",
-        "x_link":"https://x.com/Turbos_finance"
+        "name": "@Monad_Daily",
+        "x_link": "https://x.com/Monad_Daily",
+        "sub_count": "118k"
     },
     {
-        "name":"iZUMi Finance",
-        "category":"DEX",
-        "x_link":"https://x.com/Scallop_io"
+        "name": "@Monad_Daily",
+        "x_link": "https://x.com/Monad_Daily",
+        "sub_count": "118k"
     },
     {
-        "name":"aiCraft.fun☑️",
-        "category":"AI Agent Launchpad",
-        "x_link":"https://x.com/SuiNSdapp"
+        "name": "@Monad_Insights",
+        "x_link": "https://x.com/Monad_Insights",
+        "sub_count": "12k"
     },
     {
-        "name":"Uniswap",
-        "category":"DEX",
-        "x_link":"https://x.com/suilendprotocol"
+        "name": "@monadhub",
+        "x_link": "https://x.com/monadhub",
+        "sub_count": "24k"
     },
     {
-        "name":"Dusted☑️",
-        "category":"SocialFi ",
-        "x_link":"https://x.com/suiplay"
+        "name": "@monad_dev",
+        "x_link": "https://x.com/monad_dev",
+        "sub_count": "26k"
     },
     {
-        "name":"Monorail☑️",
-        "category":"DEX",
-        "x_link":"https://x.com/SUDENG_HIPPO"
+        "name": "@pipeline_xyz",
+        "x_link": "https://x.com/pipeline_xyz",
+        "sub_count": "26k"
+    },
+    {
+        "name": "@TKVResearch",
+        "x_link": "https://x.com/TKVResearch",
+        "sub_count": "4k"
+    },
+    {
+        "name": "@TheMonadOG",
+        "x_link": "https://x.com/TheMonadOG",
+        "sub_count": "39k"
     }
-    ,
-    {
-        "name":"Pancake Swap",
-        "category":"DEX",
-        "x_link":"https://x.com/blubsui"
-    },
-    {
-        "name":"Magic Eden",
-        "category":"NFT Marketplace",
-        "x_link":"https://x.com/FudthePugcoin"
-    },
-    {
-        "name":"Monadex☑️",
-        "category":"DEX",
-        "x_link":"https://x.com/RockeeAI"
-    },
-    {
-        "name":"nad.fun☑️",
-        "category":"Marketplace",
-        "x_link":"https://x.com/lofitheyeti"
-    },
-    {
-        "name":"Kuru☑️",
-        "category":"DEX",
-        "x_link":"@KuruExchange"
-    },
-    {
-        "name":"fantasy.top",
-        "category":"GameFi",
-        "x_link":"@fantasy_top_"
-    },
-    {
-        "name":"Kinza Finance",
-        "category":"Liquidity Hub",
-        "x_link":"@kinzafinance"
-    }
+
 ]
