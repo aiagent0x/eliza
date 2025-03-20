@@ -1148,6 +1148,9 @@ export interface IDatabaseAdapter {
     updateAgentSample(character: any)
     getAgentSample(idAgent: string)
     createUpdateUser(input: any)
+    createPartiticipantMessage(roomId: string, userId: string, content: any)
+    updatePartiticipantMessage(roomId: string, userId: string, content: any)
+    getParticipantMessage(roomId: string, userId: string)
     createKnowledge(knowledge: RAGKnowledgeItem): Promise<void>;
     removeKnowledge(id: UUID): Promise<void>;
     clearKnowledge(agentId: UUID, shared?: boolean): Promise<void>;

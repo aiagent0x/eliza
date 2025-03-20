@@ -317,9 +317,10 @@ export class DirectClient {
                 elizaLogger.info("createMemory:-> start");
                 await runtime.messageManager.createMemory(memory);
                 elizaLogger.info("createMemory:-> end");
-                let saveMessageToRedis: any = memory;
-                delete saveMessageToRedis.embedding
-                await saveMessage(sessionId, roomId, saveMessageToRedis)
+                await runtime.databaseAdapter.updatePartiticipantMessage(roomId, userId, userMessage);
+                // let saveMessageToRedis: any = memory;
+                // delete saveMessageToRedis.embedding
+                // await saveMessage(sessionId, roomId, saveMessageToRedis)
                 let msgHash = hashUserMsg(userMessage, "direct_client:");
                 let response: Content = await runtime.cacheManager.get(msgHash);
                 elizaLogger.info("state:-start");
@@ -362,9 +363,18 @@ export class DirectClient {
                 };
 
                 await runtime.messageManager.createMemory(responseMessage);
-                saveMessageToRedis = responseMessage;
-                delete saveMessageToRedis.embedding;
-                await saveMessage(sessionId, roomId, saveMessageToRedis)
+                await runtime.databaseAdapter.updatePartiticipantMessage(
+                    roomId,
+                    userId, {
+                    id: stringToUuid(messageId + "-" + sessionId),
+                    ...userMessage,
+                    userId: sessionId,
+                    content: response,
+                    createdAt: Date.now(),
+                });
+                // saveMessageToRedis = responseMessage;
+                // delete saveMessageToRedis.embedding;
+                // await saveMessage(sessionId, roomId, saveMessageToRedis)
                 state = await runtime.updateRecentMessageState(state);
 
                 let message = null as Content | null;
@@ -387,9 +397,9 @@ export class DirectClient {
                     action?.suppressInitialMessage;
                 if (!shouldSuppressInitialMessage) {
                     if (message) {
-                        saveMessageToRedis = message;
-                        delete saveMessageToRedis.embedding;
-                        await saveMessage(sessionId, roomId, message)
+                        // saveMessageToRedis = message;
+                        // delete saveMessageToRedis.embedding;
+                        // await saveMessage(sessionId, roomId, message)
                         res.json([response, message]);
                     } else {
                         res.json([response]);
@@ -1029,24 +1039,27 @@ export class DirectClient {
             }
         });
         this.app.post("/memories", async (req, res) => {
+            console.log("oke");
             const { agentId, roomId, userId, skip, limit } = req.body;
             let runtimeDefault = this.agents.get(AGENTIDDEFAUT);
-            let memories = await getMessages(agentId, roomId, skip);
-            if (memories && memories.length > 0) {
+            // let memories = await getMessages(agentId, roomId, skip);
+            // if (memories && memories.length > 0) {
 
-                res.status(200).json({
-                    message: "success",
-                    data: memories
-                });
-                return
-            }
-            memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomId(agentId, roomId, limit, skip);
-            memories.map((memory) => {
-                memory.content = JSON.parse(memory.content)
-            })
+            //     res.status(200).json({
+            //         message: "success",
+            //         data: memories
+            //     });
+            //     return
+            // }
+            // memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomId(agentId, roomId, limit, skip);
+            // memories.map((memory) => {
+            //     memory.content = JSON.parse(memory.content)
+            // })
+
+            let memories = await runtimeDefault.databaseAdapter.getParticipantMessage(roomId, agentId);
             res.status(200).json({
                 message: "success",
-                data: memories
+                data: memories.content
             });
             return
         })

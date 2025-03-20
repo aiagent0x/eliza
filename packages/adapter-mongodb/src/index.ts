@@ -1654,6 +1654,65 @@ export class MongoDBDatabaseAdapter
             return;
         } catch (error) {
             console.log("createUser-Mongo", error);
+            return
+        }
+    }
+    async createPartiticipantMessage(roomId: string, userId: string, content: any) {
+        try {
+            await this.database.collection("participants").insertOne({
+                roomId: roomId,
+                userId: userId,
+                content: [content],
+                createdAt: new Date()
+            })
+            return;
+        } catch (error) {
+            console.log("createPartiticipantMessage-Mongo", error);
+            return;
+        }
+    }
+    async updatePartiticipantMessage(roomId: string, userId: string, content: any) {
+        try {
+            let participant = await this.getParticipantMessage(roomId, userId);
+            if (!participant.content) {
+                await this.database.collection("participants").updateOne({ _id: participant._id },{
+                    $set:{
+                        roomId: roomId,
+                        userId: userId,
+                        content: [content],
+                        createdAt: new Date()
+                    }
+                });
+                return;
+            }
+            let contentUpdate = participant.content;
+            if (contentUpdate.length >= 10) {
+                contentUpdate.shift(); // Remove the oldest message
+            }
+            contentUpdate.push(content);
+            await this.database.collection("participants").updateOne({ _id: participant._id },
+                {
+                    $set: {
+                        roomId: roomId,
+                        userId: userId,
+                        content: contentUpdate,
+                        createdAt: new Date()
+                    }
+                }
+            )
+            return;
+        } catch (error) {
+            console.log("updatePartiticipantMessage-Mongo", error);
+            return;
+        }
+    }
+    async getParticipantMessage(roomId: string, userId: string) {
+        try {
+            let participantMessage = await this.database.collection("participants").findOne({ roomId: roomId, userId: userId });
+            return participantMessage;
+        } catch (error) {
+            console.log("getParticipantMessage-Mongo", error);
+            return;
         }
     }
 }

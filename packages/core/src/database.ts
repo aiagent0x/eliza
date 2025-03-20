@@ -466,9 +466,12 @@ export abstract class DatabaseAdapter<DB = any> implements IDatabaseAdapter {
 
     abstract createAgentSample(character: any);
     abstract getAgentsSample();
-    abstract updateAgentSample(character:any);
+    abstract updateAgentSample(character: any);
     abstract getAgentSample(idAgent: string);
-    abstract createUpdateUser(input: any)
+    abstract createUpdateUser(input: any);
+    abstract createPartiticipantMessage(roomId: string, userId: string, content: any);
+    abstract updatePartiticipantMessage(roomId: string, userId: string, content: any);
+    abstract getParticipantMessage(roomId: string, userId: string);
     /**
      * Executes an operation with circuit breaker protection.
      * @param operation A function that returns a Promise to be executed with circuit breaker protection

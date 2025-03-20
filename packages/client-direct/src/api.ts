@@ -273,7 +273,6 @@ export function createApiRouter(
         delete parentInfo.name;
         parentInfo.name = character.name;
         parentInfo.parentId = parentId;
-
         let accountInfo = await runtime.databaseAdapter.createAgent(parentInfo, parentId);
         if (!accountInfo) {
             res.status(400).json({
