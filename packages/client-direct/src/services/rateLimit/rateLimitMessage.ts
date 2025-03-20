@@ -26,7 +26,7 @@ export default async function rateLimitMessage(
         const currentRequests = await redis.eval({
             script: script,
             keys: [key],
-            args: ["86400", "5"]
+            args: ["86400", "50"]
         });
         if (currentRequests === 0) {
             return "too_many_request"
