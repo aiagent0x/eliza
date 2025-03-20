@@ -311,12 +311,12 @@ export class DirectClient {
                     content,
                     createdAt: Date.now(),
                 };
-                elizaLogger.info("addEmbeddingToMemory:-> start");
-                await runtime.messageManager.addEmbeddingToMemory(memory);
-                elizaLogger.info("addEmbeddingToMemory:-> end");
-                elizaLogger.info("createMemory:-> start");
-                await runtime.messageManager.createMemory(memory);
-                elizaLogger.info("createMemory:-> end");
+                // elizaLogger.info("addEmbeddingToMemory:-> start");
+                // await runtime.messageManager.addEmbeddingToMemory(memory);
+                // elizaLogger.info("addEmbeddingToMemory:-> end");
+                // elizaLogger.info("createMemory:-> start");
+                // await runtime.messageManager.createMemory(memory);
+                // elizaLogger.info("createMemory:-> end");
                 await runtime.databaseAdapter.updatePartiticipantMessage(roomId, userId, userMessage);
                 // let saveMessageToRedis: any = memory;
                 // delete saveMessageToRedis.embedding
@@ -362,7 +362,7 @@ export class DirectClient {
                     createdAt: Date.now(),
                 };
 
-                await runtime.messageManager.createMemory(responseMessage);
+                // await runtime.messageManager.createMemory(responseMessage);
                 await runtime.databaseAdapter.updatePartiticipantMessage(
                     roomId,
                     userId, {
