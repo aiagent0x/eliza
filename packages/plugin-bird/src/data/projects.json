@@ -830,5 +830,70 @@
     "congecko_link": "",
     "slogan": "SuiVision is a Sui explorer for Sui Network, where you can discover transactions, wallets, staking, validators, and dive into immersive Sui data.",
     "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6FNywVmnvx6vInfG-_OfC82iBiWfYO7eaHg&s"
+  },
+  {
+    "name": "Agora",
+    "symbol": "N/A",
+    "categories": [
+      "RWA"
+    ],
+    "website": "https://www.agora.finance/",
+    "x_website": "https://twitter.com/AgoraDefi",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Agora_Logo_4896eaef9f.jpg"
+  },
+  {
+    "name": "Stork Oracle",
+    "symbol": "N/A",
+    "categories": [
+      "Oracle"
+    ],
+    "website": "https://storkoracle.io/",
+    "x_website": "https://twitter.com/StorkOracle",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://pbs.twimg.com/profile_images/1899474008195637248/-nVBNuKn_400x400.jpg"
+  },
+  {
+    "name": "Nansen",
+    "symbol": "N/A",
+    "categories": [
+      "AI"
+    ],
+    "website": "https://www.nansen.ai/",
+    "x_website": "https://twitter.com/nansen_ai",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "hhttps://ens.suiscan.xyz/uploads/posts/2024-09/thumbs/nansen.jpg"
+  },
+  {
+    "name": "Talus Network",
+    "symbol": "N/A",
+    "categories": [
+      "Ai agent"
+    ],
+    "website": "https://talus.network/",
+    "x_website": "https://twitter.com/TalusNetwork",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Talus_logo_cbd2bc13e7.png"
+  },
+  {
+    "name": "Lombard Protocol",
+    "symbol": "N/A",
+    "categories": [
+      "Liquid Staking "
+    ],
+    "website": "https://www.lombard.finance/",
+    "x_website": "https://twitter.com/Lombard_Finance",
+    "verified": "Yes",
+    "congecko_link": "https://www.coingecko.com/en/coins/lombard-staked-btc",
+    "slogan": "",
+    "img_url": "https://www.lombard.finance/lbtc/LBTC.png"
   }
 ]
