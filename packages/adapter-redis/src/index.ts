@@ -89,7 +89,19 @@ export class RedisClient implements IDatabaseCacheAdapter {
             return false;
         }
     }
-
+    async incr(params: {
+        agentId: string;
+        key: string;
+    }): Promise<number | undefined> {
+        try {
+            const redisKey = this.buildKey(params.agentId, params.key);
+            const result = await this.client.incr(redisKey);
+            return result;
+        } catch (err) {
+            elizaLogger.error("Error incrementing key:", err);
+            return undefined;
+        }
+    }
     async expire(params: {
         agentId: string;
         key: string;
@@ -197,6 +209,19 @@ export class RedisClient implements IDatabaseCacheAdapter {
         } catch (err) {
             elizaLogger.error("Error executing pipeline:", err);
             return [];
+        }
+    }
+    async eval(params: {
+        script: string;
+        keys: string[];
+        args: string[];
+    }): Promise<unknown> {
+        try {
+            const result = await this.client.eval(params.script, params.keys.length, ...params.keys, ...params.args);
+            return result;
+        } catch (err) {
+            elizaLogger.error("Error executing eval script:", err);
+            return undefined;
         }
     }
 }

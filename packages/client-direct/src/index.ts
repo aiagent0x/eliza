@@ -202,7 +202,7 @@ export class DirectClient {
 
         this.app.post(
             "/:agentId/message",
-            // rateLimitMiddleware,
+            rateLimitMiddleware as unknown as express.RequestHandler,
             upload.single("file") as unknown as express.RequestHandler,
             async (req: express.Request, res: express.Response) => {
 
@@ -1037,7 +1037,9 @@ export class DirectClient {
             });
             return
         })
-        this.app.post("/swarm-tranning/start", rateLimitMiddleware, async (req, res) => {
+        this.app.post("/swarm-tranning/start",
+             rateLimitMiddleware as unknown as express.RequestHandler,
+              async (req, res) => {
             const { agentA, agentB, countMessage, topic } = req.body;
             let roomId = `swarm_training_${uuidv4()}`
             let dataHash = JSON.stringify({

@@ -2,31 +2,46 @@ import { Request, Response, NextFunction } from 'express';
 import { RedisClient } from "@elizaos/adapter-redis";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL);
-const rateLimitMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    // console.log("Oke vô middleware");
+export default async function rateLimitMiddleware(req: Request, res: Response, next: NextFunction) {
     let url = req.url;
-    console.log("url", url);
-    let parts = url.split("/");
-    console.log("parts", parts);
-    const key = `rate_limit:${parts.join(":")}`;
-    // const current = await redis.hget(HASH_KEY, field);
-    // const requestCount = current ? parseInt(current) : 0;
+    console.log("url:", url);
+    const key = `rate_limit_api_${url}`;
+    const listAPIRateLimit = [
+        {
+            "api": "/swarm-tranning/start",
+            "max-request": "1",
+            "time": "86400"
+        },
+    ];
+    let script = `
+  local current = redis.call("INCR", KEYS[1])
+  if current == 1 then
+    redis.call("EXPIRE", KEYS[1], ARGV[1])
+  end
+  if current > tonumber(ARGV[2]) then
+    return 0
+  end
+  return current
+`
+    try {
+        const apiRateLimit = listAPIRateLimit.find((item) => item.api === url);
+        if (!apiRateLimit) {
+            return next(); // Skip rate limiting if no matching API is found
+        }
+        const currentRequests = await redis.eval({
+            script: script,
+            keys: [key],
+            args: [apiRateLimit.time, apiRateLimit['max-request']]
+        });
+        console.log("currentRequests:", currentRequests)
+        if (currentRequests === 0) {
+            return res.status(429).json({ message: "You can only call this function once per day." });
+        }
+        next();
+    } catch (error) {
+        console.error("Redis error:", error);
+        res.status(500).json({ message: "Server Error!" });
+    }
 
-    // if (requestCount >= RATE_LIMIT) {
-    //     return res.status(429).json({ message: "Too many requests. Please try again later." });
-    // }
-
-    // // Tăng số lượng request lên 1
-    // const pipeline = redis.pipeline();
-    // pipeline.hincrby(HASH_KEY, field, 1);
-
-    // // Nếu lần đầu tiên truy cập, đặt thời gian hết hạn cho toàn bộ Hash Key
-    // if (requestCount === 0) {
-    //     pipeline.expire(HASH_KEY, WINDOW);
-    // }
-
-    // await pipeline.exec();
-    next();
 };
 
-export default rateLimitMiddleware;
