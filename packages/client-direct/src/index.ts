@@ -225,7 +225,7 @@ export class DirectClient {
                 let rateLimit = await rateLimitMessage(userId, roomId)
                 if (rateLimit === "too_many_request") {
                     res.status(200).send({
-                        text: "You are only allowed to send 50 messages a day."
+                        text: "You are only allowed to send 10 messages a day."
                     })
                     return
                 }

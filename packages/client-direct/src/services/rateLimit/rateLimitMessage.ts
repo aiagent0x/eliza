@@ -28,6 +28,8 @@ export default async function rateLimitMessage(
             keys: [key],
             args: ["86400", "10"]
         });
+        console.log("key:",key);
+        console.log("currentRequests:",currentRequests);
         if (currentRequests === 0) {
             return "too_many_request"
         }
