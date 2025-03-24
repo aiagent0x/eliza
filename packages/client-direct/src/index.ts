@@ -1056,10 +1056,10 @@ export class DirectClient {
             //     memory.content = JSON.parse(memory.content)
             // })
 
-            let memories = await runtimeDefault.databaseAdapter.getParticipantMessage(roomId, agentId);
+            let memories = await runtimeDefault.databaseAdapter.getParticipantMessage(roomId, userId);
             res.status(200).json({
                 message: "success",
-                data: memories.content
+                data: memories?.content || []
             });
             return
         })
