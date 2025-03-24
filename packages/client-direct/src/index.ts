@@ -318,9 +318,9 @@ export class DirectClient {
                 // await runtime.messageManager.createMemory(memory);
                 // elizaLogger.info("createMemory:-> end");
                 await runtime.databaseAdapter.updatePartiticipantMessage(roomId, userId, userMessage);
-                // let saveMessageToRedis: any = memory;
-                // delete saveMessageToRedis.embedding
-                // await saveMessage(sessionId, roomId, saveMessageToRedis)
+                let saveMessageToRedis: any = memory;
+                delete saveMessageToRedis.embedding
+                await saveMessage(sessionId, roomId, saveMessageToRedis)
                 let msgHash = hashUserMsg(userMessage, "direct_client:");
                 let response: Content = await runtime.cacheManager.get(msgHash);
                 elizaLogger.info("state:-start");
@@ -372,9 +372,9 @@ export class DirectClient {
                     content: response,
                     createdAt: Date.now(),
                 });
-                // saveMessageToRedis = responseMessage;
-                // delete saveMessageToRedis.embedding;
-                // await saveMessage(sessionId, roomId, saveMessageToRedis)
+                saveMessageToRedis = responseMessage;
+                delete saveMessageToRedis.embedding;
+                await saveMessage(sessionId, roomId, saveMessageToRedis)
                 state = await runtime.updateRecentMessageState(state);
 
                 let message = null as Content | null;
@@ -397,9 +397,9 @@ export class DirectClient {
                     action?.suppressInitialMessage;
                 if (!shouldSuppressInitialMessage) {
                     if (message) {
-                        // saveMessageToRedis = message;
-                        // delete saveMessageToRedis.embedding;
-                        // await saveMessage(sessionId, roomId, message)
+                        saveMessageToRedis = message;
+                        delete saveMessageToRedis.embedding;
+                        await saveMessage(sessionId, roomId, message)
                         res.json([response, message]);
                     } else {
                         res.json([response]);

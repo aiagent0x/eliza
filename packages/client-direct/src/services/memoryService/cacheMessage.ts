@@ -26,7 +26,7 @@ export async function getMessages(agentId: string, roomId: string, bucketIndex: 
 }
 export async function expire(agentId: string, roomId: string) {
     const key = `chat:${roomId}`;
-    let seconds = 604800;
+    let seconds = 86400;
     await redis.expire({ agentId, key, seconds })
     return;
 }
