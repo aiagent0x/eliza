@@ -1063,43 +1063,42 @@ export class DirectClient {
             });
             return
         })
-        this.app.post("/swarm-tranning/start",
-            rateLimitMiddleware as unknown as express.RequestHandler,
-            async (req, res) => {
-                const { agentA, agentB, countMessage, topic } = req.body;
-                let roomId = `swarm_training_${uuidv4()}`
-                let dataHash = JSON.stringify({
-                    agentA: agentA,
-                    agentB: agentB,
-                    countMessage: countMessage,
-                    topic: topic,
-                    roomId: roomId
-                });
+        // this.app.post("/swarm-tranning/start",
+        //     rateLimitMiddleware as unknown as express.RequestHandler,
+        //     async (req, res) => {
+        //         const { agentA, agentB, roomId, countMessage, topic } = req.body;
+        //         let dataHash = JSON.stringify({
+        //             agentA: agentA,
+        //             agentB: agentB,
+        //             countMessage: countMessage,
+        //             topic: topic,
+        //             roomId: roomId
+        //         });
 
-                dataHash = Buffer.from(dataHash).toString('base64')
-                rabbitMQ.publish("agent_swam_traning", dataHash);
-                res.status(200).json({
-                    message: "Start swarm tranning",
-                    data: {
-                        roomId
-                    }
-                });
-                return;
-            })
-        this.app.post("/swarm-tranning/stop", async (req, res) => {
-            const { agentA, agentB } = req.body;
-            let dataHash = JSON.stringify({
-                agentA: agentA,
-                agentB: agentB,
-                status: "stop"
-            });
-            dataHash = Buffer.from(dataHash).toString('base64')
-            rabbitMQ.publish("agent_swam_traning", dataHash);
-            res.status(200).json({
-                message: "Stop swarm tranning",
-            });
-            return
-        })
+        //         dataHash = Buffer.from(dataHash).toString('base64')
+        //         rabbitMQ.publish("agent_swam_traning", dataHash);
+        //         res.status(200).json({
+        //             message: "Start swarm tranning",
+        //             data: {
+        //                 roomId
+        //             }
+        //         });
+        //         return;
+        //     })
+        // this.app.post("/swarm-tranning/stop", async (req, res) => {
+        //     const { agentA, agentB } = req.body;
+        //     let dataHash = JSON.stringify({
+        //         agentA: agentA,
+        //         agentB: agentB,
+        //         status: "stop"
+        //     });
+        //     dataHash = Buffer.from(dataHash).toString('base64')
+        //     rabbitMQ.publish("agent_swam_traning", dataHash);
+        //     res.status(200).json({
+        //         message: "Stop swarm tranning",
+        //     });
+        //     return
+        // })
     }
 
     // agent/src/index.ts:startAgent calls this

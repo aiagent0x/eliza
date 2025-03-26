@@ -19,4 +19,12 @@ function verify(token: any) {
     }
 
 }
+function getPayload(token: string) {
+    try {
+        const decoded = jwt.decode(token);
+        return decoded ? decoded : null;
+    } catch (err) {
+        return null;
+    }
+}
 export { sign as signJwt, verify as verifyJwt }

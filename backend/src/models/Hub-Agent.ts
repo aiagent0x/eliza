@@ -1,38 +1,35 @@
 import mongoose, { Model } from "mongoose";
 interface IHubAgent {
-    // username: String,
-    // password: String,
-    // role: mongoose.Schema.Types.ObjectId,
-    // name: String,
+    name: String,
+    type: String,
+    agentAId: String,
+    agentBId: String,
+    roomId: String,
     created_at: Number,
     updated_at: Number,
 }
 interface HubAgentModel extends Model<IHubAgent> {
-    // getDataByMessage(text: string): any;
-    // createData(input: any): any;
-    // updateData(input: any): any;
+    createHubAgent(input: any): any;
+    updateHubAgent(input: any, id: string): any;
 }
 const hubAgentSchema = new mongoose.Schema({
-    message: {
+    name: {
         type: String,
-        require: true,
-        unique: true
+        default: "swarm-tranning",
+        required: true
     },
-    data: {
-        action: {
-            type: String
-        },
-        data_extract: {
-            type: Object,
-        },
-        type: {
-            type: String,
-            default: "toggle_faster"
-        }
+    agentAId: {
+        type: String
+    },
+    agentBId: {
+        type: String
+    },
+    roomId: {
+        type: String
     },
     type: {
         type: String,
-        default: "rockee",
+        default: "swarm-tranning",
         require: true
     },
     created_at: Number,
@@ -47,29 +44,32 @@ const hubAgentSchema = new mongoose.Schema({
         }
     }
 )
-// hubAgentSchema.static("getDataByMessage",
-//     async (text: string) => {
-//         return Rockee.findOne({ message: text }).select(["data"]);
-//     }
-// )
-// hubAgentSchema.static("createData",
-//     async (input: any) => {
-//         const rs = await Rockee.create({
-//             message: input.message,
-//             data: input.data,
-//         });
-//         return rs;
-//     }
-// )
-// hubAgentSchema.static("updateData",
-//     async (input: any) => {
-//         const rs = await Rockee.updateOne(
-//             { message: input.message },
-//             { $set: { data: input.data } }
-//         );
-//         return rs
-//     }
-// )
+hubAgentSchema.static("createHubAgent",
+    async (input: any) => {
+        await HubAgent.create({
+            name: input.name,
+            agentAId: input.agentAId,
+            agentBId: input.agentBId,
+            roomId: input.roomId,
+            type: input.type
+        });
+        return;
+    }
+)
+hubAgentSchema.static("updateHubAgent",
+    async (input: any, id: string) => {
+        await HubAgent.updateOne({ _id: id }, {
+            $set:{
+                name: input.name,
+                agentAId: input.agentAId,
+                agentBId: input.agentBId,
+                roomId: input.roomId,
+                type: input.type
+            }
+        });
+        return;
+    }
+);
 const HubAgent = mongoose.model<IHubAgent, HubAgentModel>('HubAgent', hubAgentSchema);
 
-export { HubAgent as HubAgent }
+export { HubAgent as HubAgentSchema }

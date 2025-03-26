@@ -4,7 +4,9 @@ import { UserRouters } from './user';
 import { AdminRouters } from './admin';
 import { LoginRouter } from './login';
 import { RockeeRouters } from './rockee';
-
+import { ParticipantRouters } from './participant';
+import { HubAgentRouters } from './hubAgent';
+import { MessageRouters } from './message';
 const router: express.Router = express.Router();
 
 router.use(PostRouters);
@@ -12,5 +14,7 @@ router.use(UserRouters);
 router.use(AdminRouters);
 router.use(LoginRouter);
 router.use(RockeeRouters);
-
+router.use(ParticipantRouters);
+router.use(HubAgentRouters);
+router.use(MessageRouters);
 export { router as MainRouters };

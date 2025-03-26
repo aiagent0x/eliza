@@ -1,11 +1,27 @@
-import { RockeeSchema } from "../../models/Rockee";
+import { HubAgentSchema } from "../../models/Hub-Agent";
 
-async function getDataByMessage(text: string) {
-    text = text.trim().toLowerCase();
-    text = text.replace(/\s+/g, '_');
-    const data = await RockeeSchema.getDataByMessage(text);
-    return data;
+async function createHubAgent(input: any) {
+    try {
+        await HubAgentSchema.createHubAgent({
+            name: input.name,
+            agentAId: input.agentAId,
+            agentBId: input.agentBId,
+            roomId: input.roomId,
+            type: input.type
+        });
+        return;
+    } catch (error) {
+        console.log("Error in createHubAgent controller", error);
+        return;
+    }
 }
-
-
-export default { getDataByMessage };
+async function updateHubAgent(input: any, id: string) {
+    try {
+        await HubAgentSchema.updateHubAgent(input, id);
+        return;
+    } catch (error) {
+        console.log("Error in updateHubAgent controller", error);
+        return;
+    }
+}
+export default { createHubAgent, updateHubAgent };
