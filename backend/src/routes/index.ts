@@ -7,6 +7,7 @@ import { RockeeRouters } from './rockee';
 import { ParticipantRouters } from './participant';
 import { HubAgentRouters } from './hubAgent';
 import { MessageRouters } from './message';
+import { Middleware } from '../middleware/middleware-api';
 const router: express.Router = express.Router();
 
 router.use(PostRouters);
@@ -14,7 +15,7 @@ router.use(UserRouters);
 router.use(AdminRouters);
 router.use(LoginRouter);
 router.use(RockeeRouters);
-router.use(ParticipantRouters);
-router.use(HubAgentRouters);
-router.use(MessageRouters);
+router.use(Middleware, ParticipantRouters);
+router.use(Middleware, HubAgentRouters);
+router.use(Middleware, MessageRouters);
 export { router as MainRouters };

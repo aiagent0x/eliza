@@ -27,4 +27,4 @@ function getPayload(token: string) {
         return null;
     }
 }
-export { sign as signJwt, verify as verifyJwt }
+export { sign as signJwt, verify as verifyJwt, getPayload as getPayloadJwt }

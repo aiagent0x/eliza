@@ -5,6 +5,7 @@ import { MainRouters } from "./routes";
 import cors from 'cors';
 import dotenv from 'dotenv';
 import Redis from "ioredis";
+
 dotenv.config();
 const app = express();
 app.use(cors());
