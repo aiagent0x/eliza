@@ -54,8 +54,8 @@
   },
   {
     "id": 4,
-    "name": "Walrus",
-    "symbol": "N/A",
+    "name": "Walrus(Wal Token)",
+    "symbol": "WAL",
     "categories": [
       "Decentralized",
       "Philanthropy",
@@ -64,8 +64,8 @@
     ],
     "website": "https://www.walrus.xyz/vi",
     "x_website": "https://x.com/WalrusProtocol",
-    "verified": "No",
-    "congecko_link": "x",
+    "verified": "Yes",
+    "congecko_link": "https://www.coingecko.com/en/coins/walrus-2",
     "slogan": "Walrus, decentralized storage network for blockchain apps, is now available as a developer preview for Sui builders to gather feedback.",
     "img_url": "https://public.rootdata.com/images/b6/1723721140493.jpg"
   },
