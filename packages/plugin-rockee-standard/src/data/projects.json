@@ -54,7 +54,7 @@
   },
   {
     "id": 4,
-    "name": "Walrus(Wal Token)",
+    "name": "Walrus",
     "symbol": "WAL",
     "categories": [
       "Decentralized",
@@ -62,7 +62,7 @@
       "Blockchain-based",
       "Donation Platforms"
     ],
-    "website": "https://www.walrus.xyz/vi",
+    "website": "https://www.walrus.xyz",
     "x_website": "https://x.com/WalrusProtocol",
     "verified": "Yes",
     "congecko_link": "https://www.coingecko.com/en/coins/walrus-2",
