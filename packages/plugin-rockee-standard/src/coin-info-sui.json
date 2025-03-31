@@ -10634,5 +10634,16 @@
     "iconUrl":"https://www.walrus.xyz/wal-icon.svg",
     "verified":true,
     "coinGeckoId":"walrus-2"
+  },
+  {
+    "type": "0x82616322719cb327186d5b83a6d7783ce5cef4c5dbd4c6d1b5f3d6e5d288e2be::wav::WAV",
+    "decimals": 9,
+    "symbol": "WAV",
+    "name": "WAVE",
+    "website":"https://waveonsui.com/",
+    "coingeckoUrl":"https://www.coingecko.com/en/coins/wave",
+    "iconUrl":"https://files.waveonsui.com/logos/wav.png",
+    "verified":true,
+    "coinGeckoId":"wave"
   }
 ]
