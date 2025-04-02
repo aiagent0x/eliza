@@ -11,7 +11,7 @@ const api = axios.create({
 const getCoinAll = async (job: any) => {
   const url = '/get-coins';
   try {
-    const categories = ["all", "trending", "gainers", "losers", "defi", "ai", "meme", "new", "others", "dex"];
+    const categories = ["all", "trending", "gainers", "losers", "defi", "ai", "meme", "new", "others", "dex", "mcap"];
     await Promise.all(categories.map(category => 
       api.get(url, { params: { category } }).then(response => {
       redis.hSet('coins_info', category, JSON.stringify(response.data), 300);
