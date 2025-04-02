@@ -145,7 +145,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Meme tokens we have collected:`,
+                            text: `Here’s a collection of Meme tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -215,7 +215,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are trending tokens we have collected:`,
+                            text: `Here’s a collection of Trending tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -263,7 +263,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Defi tokens we have collected:`,
+                            text: `Here’s a collection of Defi tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -308,7 +308,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Gainers tokens we have collected:`,
+                            text: `Here’s a collection of Gainers tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -352,7 +352,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Losers tokens we have collected:`,
+                            text: `Here’s a collection of Losers tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -398,7 +398,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Stable coins we have collected:`,
+                            text: `Here’s a collection of StableCoin tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -444,7 +444,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are AI tokens we have collected:`,
+                            text: `Here’s a collection of AI tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -490,7 +490,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Game tokens we have collected:`,
+                            text: `Here’s a collection of Game tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -534,7 +534,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are Dex tokens we have collected:`,
+                            text: `Here’s a collection of Dex tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
@@ -578,7 +578,7 @@ export const topToken: Action = {
                         }
                         callback({
                             user: await runtime.character.name,
-                            text: `Below are New tokens we have collected:`,
+                            text: `Here’s a collection of New tokens we’ve gathered for you!`,
                             action: 'TOP_TOKEN',
                             result: {
                                 type: "top_token",
