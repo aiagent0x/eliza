@@ -220,6 +220,9 @@ export const topToken: Action = {
                             result: {
                                 type: "top_token",
                                 data: responseData.slice(0, size)
+                            },
+                            action_hint: {
+                                text: "Here’s a token you might be interested in staking or learning more about!",
                             }
                         });
                     }
