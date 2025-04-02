@@ -10634,8 +10634,7 @@
     "iconUrl":"https://www.walrus.xyz/wal-icon.svg",
     "verified":true,
     "coinGeckoId":"walrus-2"
-  }
-  ,
+  },
   {
     "type": "0x82616322719cb327186d5b83a6d7783ce5cef4c5dbd4c6d1b5f3d6e5d288e2be::wav::WAV",
     "decimals": 9,
@@ -10646,5 +10645,16 @@
     "iconUrl":"https://files.waveonsui.com/logos/wav.png",
     "verified":true,
     "coinGeckoId":"wave"
+  },
+  {
+    "type": "0x6dd439dee053557b3dd340287a4b81099b3e729cb48fbdae726dd2dff82736c3::slove::SLOVE",
+    "decimals": 6,
+    "symbol": "SLOVE",
+    "name": "SLOVE",
+    "website":"https://seeddao.org/",
+    "coingeckoUrl":"https://www.coingecko.com/en/coins/slove",
+    "iconUrl":"https://ipfs.io/ipfs/bafkreigt2pvpzokflugamigupuwo3xfw3agg3xcfuiduqpv3j6hfooh65a",
+    "verified":true,
+    "coinGeckoId":"slove"
   }
 ]
