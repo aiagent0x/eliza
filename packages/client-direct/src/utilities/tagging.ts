@@ -109,7 +109,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                         price_change_24h: token.change24h,
                         type: token.address,
                         iconUrl: token.logo
-                    }))
+                    })).slice(0, 3)
                 }
             }
             break;
