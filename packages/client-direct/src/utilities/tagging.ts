@@ -110,6 +110,9 @@ export async function filterByTagging(tag: string, agentName: string) {
                         type: token.address,
                         iconUrl: token.logo
                     })).slice(0, 3)
+                },
+                "action_hint": {
+                    text: "Here’s a token you might be interested in staking or learning more about!",
                 }
             }
             break;

@@ -1,7 +1,7 @@
 export default function getActionHint(actionHintText: string = "Do you need any further assistance? Please let me know!", type?: string, protocol?: string, type_action?: string) {
 
     if (type === "button_generate_text") {
-        if(type_action === "liquidity"){
+        if (type_action === "liquidity") {
             return {
                 text: actionHintText,
                 actions: [
@@ -13,7 +13,7 @@ export default function getActionHint(actionHintText: string = "Do you need any 
                 ]
             }
         }
-        if(type_action === "stake"){
+        if (type_action === "stake") {
             switch (protocol) {
                 case "navi":
                     return {
@@ -22,7 +22,7 @@ export default function getActionHint(actionHintText: string = "Do you need any 
                             {
                                 type: "button_generate_text",
                                 text: "Navi pools",
-    
+
                             },
                         ]
                     }
@@ -34,7 +34,7 @@ export default function getActionHint(actionHintText: string = "Do you need any 
                             {
                                 type: "button_generate_text",
                                 text: "Scallop pools",
-    
+
                             },
                         ]
                     }
@@ -50,7 +50,7 @@ export default function getActionHint(actionHintText: string = "Do you need any 
                         ]
                     }
                     break;
-    
+
                 default:
                     return {
                         text: actionHintText,
@@ -58,12 +58,12 @@ export default function getActionHint(actionHintText: string = "Do you need any 
                             {
                                 type: "button_generate_text",
                                 text: "Navi pools",
-    
+
                             },
                             {
                                 type: "button_generate_text",
                                 text: "Scallop pools",
-    
+
                             },
                             {
                                 type: "button_generate_text",
@@ -74,7 +74,7 @@ export default function getActionHint(actionHintText: string = "Do you need any 
                     break;
             }
         }
-        
+
     }
     else {
         return {
