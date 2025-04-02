@@ -3,7 +3,7 @@ import {RedisClient} from "@elizaos/adapter-redis";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 const api = axios.create({
-  baseURL: "https://cms.rockee.ai/api/coin",
+  baseURL: "https://cms.thebirds.ai/api/coin",
   timeout: 5000,
 });
 
@@ -11,7 +11,7 @@ const api = axios.create({
 const getCoinAll = async (job: any) => {
   const url = '/get-coins';
   try {
-    const categories = ["all", "trending", "gainers", "losers", "defi", "ai", "meme", "new", "others", "dex"];
+    const categories = ["all", "trending", "gainers", "losers", "defi", "ai", "meme", "new", "others", "dex", "mcap"];
     await Promise.all(categories.map(category => 
       api.get(url, { params: { category } }).then(response => {
       redis.hSet('coins_info', category, JSON.stringify(response.data), 300);

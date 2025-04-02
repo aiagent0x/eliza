@@ -182,13 +182,13 @@ export const topToken: Action = {
                     });
                     break;
                 case "TRENDING":
-                    let result = await redis.hGet("coins_info", "trending");
+                    let result = await redis.hGet("coins_info", "mcap");
                     let trendingCoins;
                     if (result !== null) {
                         trendingCoins = JSON.parse(result).data
                     }
                     else {
-                        trendingCoins = await cmsProvider.getTokens("trending");
+                        trendingCoins = await cmsProvider.getTokens("mcap");
                         trendingCoins = trendingCoins.data;
                     }
                     responseData = trendingCoins.map((token: any) => ({

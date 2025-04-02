@@ -86,13 +86,13 @@ export async function filterByTagging(tag: string, agentName: string) {
             break;
         case "trending_tokens":
             let cmsProvider = new CmsProvider()
-            let result = await redis.hGet("coins_info", "trending");
+            let result = await redis.hGet("coins_info", agentName === "BIRDS DEFAI Platfrom" ? "mcap" : "trending");
             let trendingCoins;
             if (result !== null) {
                 trendingCoins = result ? JSON.parse(result).data : []
             }
             else {
-                trendingCoins = await cmsProvider.getTokens("trending");
+                trendingCoins = await cmsProvider.getTokens(agentName === "BIRDS DEFAI Platfrom" ? "mcap" : "trending");
                 trendingCoins = trendingCoins.data;
             }
             responseData = {
