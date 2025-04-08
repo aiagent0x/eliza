@@ -838,7 +838,7 @@
     "x_website": "https://twitter.com/AgoraDefi",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Agora is a Money Market & AMM for Lending, Borrowing and Swapping on Metis.",
     "img_url": "https://strapi-dev.scand.app/uploads/Agora_Logo_4896eaef9f.jpg"
   },
   {
@@ -851,7 +851,7 @@
     "x_website": "https://twitter.com/StorkOracle",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Stork Oracle is decentralized oracle service, providing off-chain data (like price feeds) to smart contracts on the blockchain. It may also be part of the DePIN (Decentralized Physical Infrastructure Networks) ecosystem, supporting real-world data integration. ",
     "img_url": "https://pbs.twimg.com/profile_images/1899474008195637248/-nVBNuKn_400x400.jpg"
   },
   {
@@ -864,7 +864,7 @@
     "x_website": "https://twitter.com/nansen_ai",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Nansen is a well-known blockchain analytics platform that uses AI to provide insights into on-chain data, such as wallet tracking, token movements, and market trends, helping users make informed decisions in crypto trading and investing.",
     "img_url": "hhttps://ens.suiscan.xyz/uploads/posts/2024-09/thumbs/nansen.jpg"
   },
   {
@@ -877,7 +877,7 @@
     "x_website": "https://twitter.com/TalusNetwork",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Talus Network is a blockchain project leveraging AI agents, possibly for autonomous decision-making, smart contract automation, or decentralized AI applications, aiming to integrate AI with blockchain technology.",
     "img_url": "https://strapi-dev.scand.app/uploads/Talus_logo_cbd2bc13e7.png"
   },
   {
@@ -890,7 +890,111 @@
     "x_website": "https://twitter.com/Lombard_Finance",
     "verified": "Yes",
     "congecko_link": "https://www.coingecko.com/en/coins/lombard-staked-btc",
-    "slogan": "",
+    "slogan": "Lombard Protocol is a liquid staking platform, allowing users to stake their tokens (e.g., in proof-of-stake networks) while receiving liquid tokens in return, which can be used in DeFi for additional yield or trading without locking up assets",
     "img_url": "https://www.lombard.finance/lbtc/LBTC.png"
+  },
+  {
+    "name": "Tusky",
+    "symbol": "N/A",
+    "categories": [
+      "Cloud Data"
+    ],
+    "website": "https://tusky.io/",
+    "x_website": "https://x.com/TuskyTools",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://x.com/TuskyTools/photo"
+  },
+  {
+    "name": "Utila",
+    "symbol": "N/A",
+    "categories": [
+      "Defi"
+    ],
+    "website": "https://utila.io/",
+    "x_website": "https://x.com/utila_io",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Utila_logo_71eab93023.jpg"
+  },
+  {
+    "name": "Momentum",
+    "symbol": "N/A",
+    "categories": [
+      "Defi"
+    ],
+    "website": "https://app.mmt.finance/",
+    "x_website": "https://x.com/MMTFinance",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Momentum_logo_2f4bd6f8e9.jpg"
+  },
+  {
+    "name": "Karrier",
+    "symbol": "N/A",
+    "categories": [
+      "Defi"
+    ],
+    "website": "https://www.karrier.one/",
+    "x_website": "https://x.com/karrier_one",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Karrier_One_Logo_1c82d1f30c.jpg"
+  },
+  {
+    "name": "Astro",
+    "symbol": "N/A",
+    "categories": [
+      "DEX"
+    ],
+    "website": "https://astros.ag",
+    "x_website": "https://x.com/astros_ag",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Astros_logo_0e1c659ead.jpg"
+  },
+  {
+    "name": "SpringSui",
+    "symbol": "N/A",
+    "categories": [
+      "Liquid Staking "
+    ],
+    "website": "https://springsui.com/",
+    "x_website": "https://x.com/springsui_",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Spring_Sui_logo_c595de8bd8.png"
+  },
+  {
+    "name": "STEAMM",
+    "symbol": "N/A",
+    "categories": [
+      "AMM"
+    ],
+    "website": "https://steamm.fi/",
+    "x_website": "https://x.com/steammfi",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/STEAMM_logo_ff9f5ee6c4.png"
+  },
+  {
+    "name": "Ika",
+    "symbol": "N/A",
+    "categories": [
+      "MPC Network"
+    ],
+    "website": "https://ika.xyz/",
+    "x_website": "https://x.com/ikadotxyz",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Ika_1187a8ee05.png"
   }
 ]
