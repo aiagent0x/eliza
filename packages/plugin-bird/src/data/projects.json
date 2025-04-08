@@ -897,13 +897,13 @@
     "name": "Tusky",
     "symbol": "N/A",
     "categories": [
-      "Cloud Data"
+      "Infrastructure"
     ],
     "website": "https://tusky.io/",
     "x_website": "https://x.com/TuskyTools",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Tusky is a Cloud Data project that likely focuses on decentralized data storage or management solutions within the blockchain ecosystem.",
     "img_url": "https://api.movepump.com/uploads/Z5_Xi_GH_01_400x400_575500b08d.jpg"
   },
   {
@@ -916,7 +916,7 @@
     "x_website": "https://x.com/utila_io",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Utila is a DeFi (Decentralized Finance) platform. It aims to offer financial services such as lending, borrowing, or yield farming, leveraging blockchain technology.",
     "img_url": "https://strapi-dev.scand.app/uploads/Utila_logo_71eab93023.jpg"
   },
   {
@@ -929,7 +929,7 @@
     "x_website": "https://x.com/MMTFinance",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Momentum is a DeFi project focused on decentralized financial services, possibly including staking, trading, or yield optimization.",
     "img_url": "https://strapi-dev.scand.app/uploads/Momentum_logo_2f4bd6f8e9.jpg"
   },
   {
@@ -942,20 +942,20 @@
     "x_website": "https://x.com/karrier_one",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Karrier provides decentralized financial solutions, such as peer-to-peer transactions or financial products, with a focus on accessibility and innovation.",
     "img_url": "https://strapi-dev.scand.app/uploads/Karrier_One_Logo_1c82d1f30c.jpg"
   },
   {
     "name": "Astro",
     "symbol": "N/A",
     "categories": [
-      "DEX"
+      "DEX Aggregator"
     ],
     "website": "https://astros.ag",
     "x_website": "https://x.com/astros_ag",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Astro is a DEX (Decentralized Exchange) platform that enables users to trade cryptocurrencies directly without intermediaries.",
     "img_url": "https://strapi-dev.scand.app/uploads/Astros_logo_0e1c659ead.jpg"
   },
   {
@@ -968,33 +968,33 @@
     "x_website": "https://x.com/springsui_",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "SpringSui is a Liquid Staking project that allows users to stake their crypto assets while keeping them liquid for other uses, such as trading or lending.",
     "img_url": "https://strapi-dev.scand.app/uploads/Spring_Sui_logo_c595de8bd8.png"
   },
   {
     "name": "STEAMM",
     "symbol": "N/A",
     "categories": [
-      "AMM"
+      "DEX AMM"
     ],
     "website": "https://steamm.fi/",
     "x_website": "https://x.com/steammfi",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "STEAMM is an AMM (Automated Market Maker)  platform that facilitates decentralized trading by using liquidity pools instead of traditional order books.",
     "img_url": "https://strapi-dev.scand.app/uploads/STEAMM_logo_ff9f5ee6c4.png"
   },
   {
     "name": "Ika",
     "symbol": "N/A",
     "categories": [
-      "MPC Network"
+      "Infrastructure"
     ],
     "website": "https://ika.xyz/",
     "x_website": "https://x.com/ikadotxyz",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "",
+    "slogan": "Ika is an MPC (Multi-Party Computation) Network project that focuses on secure and private computations across multiple parties, often used for privacy-preserving applications in blockchain.",
     "img_url": "https://strapi-dev.scand.app/uploads/Ika_1187a8ee05.png"
   }
 ]
