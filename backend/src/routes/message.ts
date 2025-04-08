@@ -5,7 +5,7 @@ const router: express.Router = express.Router();
 router.post('/api/message', async (req, res) => {
     try {
         const { agentId, roomId, userId, text } = req.body;
-        // await MessageControllers.sendMessage(agentId, userId, roomId, text);
+        await MessageControllers.sendMessage(agentId, userId, roomId, text);
         return res.send({
             code: 1,
             message: "success"
