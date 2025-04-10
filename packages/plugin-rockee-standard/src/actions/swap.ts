@@ -60,7 +60,7 @@ export const swapSui: Action = {
 
         if (!content) return false;
 
-        const hasPriceKeyword = /\b(swap|buy|sell|transfer)\b/i.test(content.toLowerCase());
+        const hasPriceKeyword = /\b(swap|buy|sell)\b/i.test(content.toLowerCase());
         return hasPriceKeyword;
     },
     description: "Perform a token swap or buy token or sell token.",
