@@ -1039,66 +1039,17 @@ export class DirectClient {
             }
         });
         this.app.post("/memories", async (req, res) => {
-            console.log("oke");
-            const { agentId, roomId, userId, skip, limit } = req.body;
+            const { roomId, userId } = req.body;
             let runtimeDefault = this.agents.get(AGENTIDDEFAUT);
-            // let memories = await getMessages(agentId, roomId, skip);
-            // if (memories && memories.length > 0) {
-
-            //     res.status(200).json({
-            //         message: "success",
-            //         data: memories
-            //     });
-            //     return
-            // }
-            // memories = await runtimeDefault.databaseAdapter.getMemoriesByAgentIdRoomId(agentId, roomId, limit, skip);
-            // memories.map((memory) => {
-            //     memory.content = JSON.parse(memory.content)
-            // })
 
             let memories = await runtimeDefault.databaseAdapter.getParticipantMessage(roomId, userId);
             res.status(200).json({
                 message: "success",
                 data: memories?.content || []
             });
-            return
+            return;
         })
-        // this.app.post("/swarm-tranning/start",
-        //     rateLimitMiddleware as unknown as express.RequestHandler,
-        //     async (req, res) => {
-        //         const { agentA, agentB, roomId, countMessage, topic } = req.body;
-        //         let dataHash = JSON.stringify({
-        //             agentA: agentA,
-        //             agentB: agentB,
-        //             countMessage: countMessage,
-        //             topic: topic,
-        //             roomId: roomId
-        //         });
-
-        //         dataHash = Buffer.from(dataHash).toString('base64')
-        //         rabbitMQ.publish("agent_swam_traning", dataHash);
-        //         res.status(200).json({
-        //             message: "Start swarm tranning",
-        //             data: {
-        //                 roomId
-        //             }
-        //         });
-        //         return;
-        //     })
-        // this.app.post("/swarm-tranning/stop", async (req, res) => {
-        //     const { agentA, agentB } = req.body;
-        //     let dataHash = JSON.stringify({
-        //         agentA: agentA,
-        //         agentB: agentB,
-        //         status: "stop"
-        //     });
-        //     dataHash = Buffer.from(dataHash).toString('base64')
-        //     rabbitMQ.publish("agent_swam_traning", dataHash);
-        //     res.status(200).json({
-        //         message: "Stop swarm tranning",
-        //     });
-        //     return
-        // })
+   
     }
 
     // agent/src/index.ts:startAgent calls this
