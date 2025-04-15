@@ -18,6 +18,8 @@
         "exec": "node --enable-source-maps --loader ts-node/esm src/index.ts"
     },
     "dependencies": {
+        "@elizaos/plugin-allora": "workspace:*",
+        "@elizaos/client-telegram-account": "workspace:*",
         "@elizaos/adapter-rabbitmq": "workspace:*",
         "@elizaos/adapter-bullmq": "workspace:*",
         "@elizaos/adapter-redis": "workspace:*",
