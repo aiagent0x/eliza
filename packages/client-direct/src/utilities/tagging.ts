@@ -25,7 +25,7 @@ export async function filterByTagging(tag: string, agentName: string) {
     let listPoolSuilend;
     let scallopProvider = new ScallopProvider();
     let listPoolsNaviOnSite = await getPoolsInfo()
-    
+
     if (!text) return null;
     switch (text) {
         case "swap_1_sui_to_usdc":
@@ -115,30 +115,30 @@ export async function filterByTagging(tag: string, agentName: string) {
             break;
         case "stake_pools":
             let parsedData: { [key: string]: string }[] = [];
-            // let poolsScallopData: { [key: string]: string }[] = [];
-            // let poolsSuilendData: { [key: string]: string }[] = [];
+            let poolsScallopData: { [key: string]: string }[] = [];
+            let poolsSuilendData: { [key: string]: string }[] = [];
             data = await redis.hGetAll("STAKE_POOLS");
-            // dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-            // dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+            dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
             if (data && Object.keys(data).length > 0) {
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
             }
-            // if (dataScallop && Object.keys(dataScallop).length > 0) {
-            //     for (let key in dataScallop) {
-            //         poolsScallopData.push(JSON.parse(dataScallop[key]));
-            //     }
-            // }
-            // if (dataSuilend && Object.keys(dataSuilend).length > 0) {
-            //     for (let key in dataSuilend) {
-            //         poolsSuilendData.push(JSON.parse(dataSuilend[key]));
-            //     }
-            // }
-            // if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
-            //     parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-            if ((parsedData && parsedData.length > 0)) {
-                    // parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+            if (dataScallop && Object.keys(dataScallop).length > 0) {
+                for (let key in dataScallop) {
+                    poolsScallopData.push(JSON.parse(dataScallop[key]));
+                }
+            }
+            if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+                for (let key in dataSuilend) {
+                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                }
+            }
+            if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
+                parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+                // if ((parsedData && parsedData.length > 0) && (parsedData && parsedData.length > 0)) {
+                // parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
                 parsedData.sort(
                     (a: any, b: any) =>
                         b.total_supply_rate - a.total_supply_rate
@@ -154,8 +154,8 @@ export async function filterByTagging(tag: string, agentName: string) {
                 };
             }
             responseData = [];
-            // listPoolSuilend = await listPool()
-            // listPoolsScallop = await scallopProvider.listPools();
+            listPoolSuilend = await listPool()
+            listPoolsScallop = await scallopProvider.listPools();
             listPoolsNavi = await listPoolsInFileJson();
             if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
                 index = 0;
@@ -207,9 +207,9 @@ export async function filterByTagging(tag: string, agentName: string) {
             else {
                 listPoolsNavi = [];
             }
-            // responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
+            responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
             // responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
-            responseData = listPoolsNavi
+            // responseData = listPoolsNavi
             responseData.sort(
                 (a, b) =>
                     b.total_supply_rate - a.total_supply_rate

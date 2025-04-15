@@ -107,68 +107,74 @@ const listCoins: any = [{
 }
 ]
 export async function listPoolScallop() {
-    await scallopQuery.init();
-    let marketPools: any = await scallopQuery.getMarketPools(listCoinName,{
-        indexer: true,
-    });
-    let marketPoolsArray: any = []
-    marketPools = marketPools.pools;
-    Object.keys(marketPools).forEach((key, index) => {
-        const coin = listCoins.find((c: any) => c.coin_name === marketPools[key].coinName);
-        marketPoolsArray[index] = {
-            img_icon: coin.img_icon,
-            coin_name: marketPools[key].coinName,
-            symbol: marketPools[key].symbol,
-            market_coin_type: marketPools[key].marketCoinType,
-            coin_type: marketPools[key].coinType,
-            s_coin_type: marketPools[key].sCoinType,
-            coin_wrapped_type: marketPools[key].coinWrappedType,
-            coin_price: marketPools[key].coinPrice,
-            high_kink: parseFloat(marketPools[key].highKink) * 100,
-            mid_kink: parseFloat(marketPools[key].midKink) * 100,
-            reserve_factor: parseFloat(marketPools[key].reserveFactor) * 100,
-            borrow_weight: parseFloat(marketPools[key].borrowWeight) * 100,
-            borrow_fee: parseFloat(marketPools[key].borrowFee) * 100,
-            market_coin_supply_amount: parseFloat(marketPools[key].marketCoinSupplyAmount) * 100,
-            min_borrow_amount: parseFloat(marketPools[key].minBorrowAmount) * 100,
-            base_borrow_apr: parseFloat(marketPools[key].baseBorrowApr) * 100,
-            base_borrow_apy: parseFloat(marketPools[key].baseBorrowApy) * 100,
-            borrow_apr_on_high_kink: parseFloat(marketPools[key].borrowAprOnHighKink) * 100,
-            borrow_apy_on_high_kink: parseFloat(marketPools[key].borrowApyOnHighKink) * 100,
-            borrow_apr_on_mid_kink: parseFloat(marketPools[key].borrowAprOnMidKink) * 100,
-            borrow_apy_on_mid_kink: parseFloat(marketPools[key].borrowApyOnMidKink) * 100,
-            coin_decimal: marketPools[key].coinDecimal,
-            max_borrow_apr: parseFloat(marketPools[key].maxBorrowApr) * 100,
-            max_borrow_apy: parseFloat(marketPools[key].maxBorrowApy) * 100,
-            borrow_apr: parseFloat(marketPools[key].borrowApr) * 100,
-            borrow_apy: parseFloat(marketPools[key].borrowApy) * 100,
-            borrow_index: marketPools[key].borrowIndex,
-            growth_interest: marketPools[key].growthInterest,
-            supply_amount: marketPools[key].supplyAmount,
-            supply_coin: marketPools[key].supplyCoin,
-            borrow_amount: marketPools[key].borrowAmount,
-            borrow_coin: marketPools[key].borrowCoin,
-            reserve_amount: marketPools[key].reserveAmount,
-            reserve_coin: marketPools[key].reserveCoin,
-            utilization_rate: parseFloat(marketPools[key].utilizationRate) * 100,
-            supply_apr: parseFloat(marketPools[key].supplyApr) * 100,
-            supply_apy: parseFloat(marketPools[key].supplyApy) * 100,
-            total_supply_rate: parseFloat(marketPools[key].supplyApy) * 100,
-            conversion_rate: marketPools[key].conversionRate,
-            is_isolated: marketPools[key].isIsolated,
-            max_supply_coin: marketPools[key].maxSupplyCoin,
-            max_borrow_coin: marketPools[key].maxBorrowCoin,
-            protocol: "scallop"
+    try {
+        await scallopQuery.init();
+        let marketPools: any = await scallopQuery.getMarketPools(listCoinName, {
+            indexer: true,
+        });
+        let marketPoolsArray: any = []
+        marketPools = marketPools.pools;
+        Object.keys(marketPools).forEach((key, index) => {
+            const coin = listCoins.find((c: any) => c.coin_name === marketPools[key].coinName);
+            marketPoolsArray[index] = {
+                img_icon: coin ? coin.img_icon : "",
+                coin_name: marketPools[key].coinName,
+                symbol: marketPools[key].symbol,
+                market_coin_type: marketPools[key].marketCoinType,
+                coin_type: marketPools[key].coinType,
+                s_coin_type: marketPools[key].sCoinType,
+                coin_wrapped_type: marketPools[key].coinWrappedType,
+                coin_price: marketPools[key].coinPrice,
+                high_kink: parseFloat(marketPools[key].highKink) * 100,
+                mid_kink: parseFloat(marketPools[key].midKink) * 100,
+                reserve_factor: parseFloat(marketPools[key].reserveFactor) * 100,
+                borrow_weight: parseFloat(marketPools[key].borrowWeight) * 100,
+                borrow_fee: parseFloat(marketPools[key].borrowFee) * 100,
+                market_coin_supply_amount: parseFloat(marketPools[key].marketCoinSupplyAmount) * 100,
+                min_borrow_amount: parseFloat(marketPools[key].minBorrowAmount) * 100,
+                base_borrow_apr: parseFloat(marketPools[key].baseBorrowApr) * 100,
+                base_borrow_apy: parseFloat(marketPools[key].baseBorrowApy) * 100,
+                borrow_apr_on_high_kink: parseFloat(marketPools[key].borrowAprOnHighKink) * 100,
+                borrow_apy_on_high_kink: parseFloat(marketPools[key].borrowApyOnHighKink) * 100,
+                borrow_apr_on_mid_kink: parseFloat(marketPools[key].borrowAprOnMidKink) * 100,
+                borrow_apy_on_mid_kink: parseFloat(marketPools[key].borrowApyOnMidKink) * 100,
+                coin_decimal: marketPools[key].coinDecimal,
+                max_borrow_apr: parseFloat(marketPools[key].maxBorrowApr) * 100,
+                max_borrow_apy: parseFloat(marketPools[key].maxBorrowApy) * 100,
+                borrow_apr: parseFloat(marketPools[key].borrowApr) * 100,
+                borrow_apy: parseFloat(marketPools[key].borrowApy) * 100,
+                borrow_index: marketPools[key].borrowIndex,
+                growth_interest: marketPools[key].growthInterest,
+                supply_amount: marketPools[key].supplyAmount,
+                supply_coin: marketPools[key].supplyCoin,
+                borrow_amount: marketPools[key].borrowAmount,
+                borrow_coin: marketPools[key].borrowCoin,
+                reserve_amount: marketPools[key].reserveAmount,
+                reserve_coin: marketPools[key].reserveCoin,
+                utilization_rate: parseFloat(marketPools[key].utilizationRate) * 100,
+                supply_apr: parseFloat(marketPools[key].supplyApr) * 100,
+                supply_apy: parseFloat(marketPools[key].supplyApy) * 100,
+                total_supply_rate: parseFloat(marketPools[key].supplyApy) * 100,
+                conversion_rate: marketPools[key].conversionRate,
+                is_isolated: marketPools[key].isIsolated,
+                max_supply_coin: marketPools[key].maxSupplyCoin,
+                max_borrow_coin: marketPools[key].maxBorrowCoin,
+                protocol: "scallop"
 
-        };
-    });
+            };
+        });
 
-    for (let data of marketPoolsArray) {
+        for (let data of marketPoolsArray) {
 
-        const success = await redis.hSet("STAKE_POOLS_SCALLOP", data.coin_name.toLowerCase(), JSON.stringify(data), 300);
-        if (!success) {
-            elizaLogger.error(`Failed to set data for pool ${data.name} in Redis.`);
+            const success = await redis.hSet("STAKE_POOLS_SCALLOP", data.coin_name.toLowerCase(), JSON.stringify(data), 300);
+            if (!success) {
+                elizaLogger.error(`Failed to set data for pool ${data.name} in Redis.`);
+            }
         }
+        return
+    } catch (error) {
+        console.log("error:", error)
+        return
     }
-    return
+
 }

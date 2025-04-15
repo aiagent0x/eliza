@@ -29,6 +29,7 @@ export default async function listStakes(req: Request, res: Response) {
         for (let key in dataScallop) {
             poolsScallopData.push(JSON.parse(dataScallop[key]));
         }
+        console.log("poolsScallopData:",poolsScallopData)
     }
     if (dataSuilend && Object.keys(dataSuilend).length > 0) {
         for (let key in dataSuilend) {
@@ -53,7 +54,6 @@ export default async function listStakes(req: Request, res: Response) {
     const listScallopPools = await scallopProvider.listPools();
     let listPoolsNaviOnSite = await getPoolsInfo();
     let listPoolsNavi = await listPoolsInFileJson();
-    console.log("listPoolsNaviOnSite:", listPoolsNaviOnSite);
     if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
         let index = 0;
         for (let key in pool) {
