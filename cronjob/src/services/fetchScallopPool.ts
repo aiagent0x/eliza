@@ -9,7 +9,7 @@ const scallopSDK = new Scallop({
     networkType: 'mainnet'
 });
 const scallopQuery = await scallopSDK.createScallopQuery();
-const listCoinName: any = ["usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd", "ns", "usdy"];
+const listCoinName: any = ["usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd", "ns", "usdy", "wal"];
 const listCoins: any = [{
     coin_name: "usdc",
     img_icon: "https://www.circle.com/hubfs/Brand/USDC/USDC_icon_32x32.png"
@@ -104,11 +104,16 @@ const listCoins: any = [{
 {
     coin_name: "usdy",
     img_icon: "https://ondo.finance/images/tokens/usdy.svg"
+
+},
+{
+    coin_name: "wal",
+    img_icon: "https://www.walrus.xyz/wal-icon.svg"
 }
 ]
 export async function listPoolScallop() {
     await scallopQuery.init();
-    let marketPools: any = await scallopQuery.getMarketPools(listCoinName,{
+    let marketPools: any = await scallopQuery.getMarketPools(listCoinName, {
         indexer: true,
     });
     let marketPoolsArray: any = []
@@ -116,7 +121,7 @@ export async function listPoolScallop() {
     Object.keys(marketPools).forEach((key, index) => {
         const coin = listCoins.find((c: any) => c.coin_name === marketPools[key].coinName);
         marketPoolsArray[index] = {
-            img_icon: coin.img_icon,
+            img_icon: coin ? coin.img_icon : "",
             coin_name: marketPools[key].coinName,
             symbol: marketPools[key].symbol,
             market_coin_type: marketPools[key].marketCoinType,
