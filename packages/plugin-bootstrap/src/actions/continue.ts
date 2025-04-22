@@ -81,6 +81,16 @@ export const continueAction: Action = {
                 }
             }
         }
+        
+        const ignoredKeywords = ["swap", "sell", "buy", "trade", "offer"];
+        const containsIgnoredKeyword = recentMessagesData.some((m: Memory) =>
+            ignoredKeywords.some((keyword) =>
+                m.content?.text?.toLowerCase().includes(keyword)
+            )
+        );
+        if (containsIgnoredKeyword) {
+            return false;
+        }
 
         return true;
     },

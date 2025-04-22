@@ -8,7 +8,22 @@ import type {
 export const ignoreAction: Action = {
     name: "IGNORE",
     similes: ["STOP_TALKING", "STOP_CHATTING", "STOP_CONVERSATION"],
-    validate: async (_runtime: IAgentRuntime, _message: Memory) => {
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        const recentMessagesData = await runtime.messageManager.getMemories({
+            roomId: message.roomId,
+            count: 10,
+            unique: false,
+        });
+        const ignoredKeywords = ["swap", "sell", "buy", "trade", "offer"];
+        const containsIgnoredKeyword = recentMessagesData.some((m: Memory) =>
+            ignoredKeywords.some((keyword) =>
+                m.content?.text?.toLowerCase().includes(keyword)
+            )
+        );
+        if (containsIgnoredKeyword) {
+            return false;
+        }
+
         return true;
     },
     description:
