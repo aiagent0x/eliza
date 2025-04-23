@@ -126,16 +126,16 @@ export const stake: Action = {
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Below is a list of Navi staking pools:",
@@ -242,16 +242,16 @@ export const stake: Action = {
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Below is a list of Scallop staking pools:",
@@ -305,16 +305,16 @@ export const stake: Action = {
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Below is a list of Suilend staking pools:",
@@ -386,16 +386,16 @@ export const stake: Action = {
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Below is a list of staking pools:",
@@ -532,16 +532,16 @@ export const stake: Action = {
                     }
                     data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
                     if (data && typeof data === "string" && data !== null) {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
@@ -620,16 +620,16 @@ export const stake: Action = {
                     }
                     dataScallop = await redis.hGet("STAKE_POOLS_SCALLOP", content.pool_name.toLowerCase());
                     if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
@@ -691,16 +691,16 @@ export const stake: Action = {
                     }
                     dataSuilend = await redis.hGet("STAKE_POOLS_SUILEND", content.pool_name.toLowerCase());
                     if (dataSuilend && typeof dataSuilend === "string" && dataSuilend !== null) {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
@@ -730,16 +730,16 @@ export const stake: Action = {
                             });
                             return true
                         }
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
@@ -855,16 +855,16 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",

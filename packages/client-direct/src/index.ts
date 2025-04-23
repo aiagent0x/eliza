@@ -281,8 +281,6 @@ export class DirectClient {
                     agentId: runtime.agentId,
                 };
 
-
-
                 const memory: Memory = {
                     id: stringToUuid(messageId + "-" + userId),
                     ...userMessage,
@@ -292,13 +290,13 @@ export class DirectClient {
                     content,
                     createdAt: Date.now(),
                 };
-                const messageService = new MessageService();
-                let getDatabyMessage = await messageService.getDataByMessage(text);
-                if (getDatabyMessage && getDatabyMessage.code === 1 && getDatabyMessage.data) {
-                    let dataResponse = await messageService.toggleChooseActionFaster(messageId, type, getDatabyMessage.data, userMessage, memory, runtime);
-                    res.json([dataResponse[1]]);
-                    return;
-                }
+                // const messageService = new MessageService();
+                // let getDatabyMessage = await messageService.getDataByMessage(text);
+                // if (getDatabyMessage && getDatabyMessage.code === 1 && getDatabyMessage.data) {
+                //     let dataResponse = await messageService.toggleChooseActionFaster(messageId, type, getDatabyMessage.data, userMessage, memory, runtime);
+                //     res.json([dataResponse[1]]);
+                //     return;
+                // }
                 // await runtime.messageManager.addEmbeddingToMemory(memory);
                 await runtime.messageManager.createMemory(memory);
 
@@ -323,7 +321,7 @@ export class DirectClient {
                     response = await generateMessageResponse({
                         runtime: runtime,
                         context,
-                        modelClass: ModelClass.SMALL,
+                        modelClass: ModelClass.MEDIUM,
                     });
                     if (!response) {
                         res.status(500).send(

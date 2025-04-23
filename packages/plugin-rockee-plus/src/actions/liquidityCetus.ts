@@ -92,16 +92,16 @@ export const liquidityCetus: Action = {
             if (parseInt(content.amount_token_a) === 0) content.amount_token_a = 5;
             let responseData = await redis.getValue({ key: "liquidity_pools" })
             if (responseData !== undefined) {
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "LIQUIDITY",
-                            data_extract: content
-                        })
+                // if (_options.type !== "toggle_faster") {
+                //     let messageService = new MessageService()
+                //     await messageService.createMessage(
+                //         message.content.text,
+                //         {
+                //             action: "LIQUIDITY",
+                //             data_extract: content
+                //         })
 
-                }
+                // }
                 callback({
                     user: await runtime.character.name,
                     text: "Below is a list of liquidity pools:",
@@ -123,16 +123,16 @@ export const liquidityCetus: Action = {
                 return 0;
             });
             try {
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "LIQUIDITY",
-                            data_extract: content
-                        })
+                // if (_options.type !== "toggle_faster") {
+                //     let messageService = new MessageService()
+                //     await messageService.createMessage(
+                //         message.content.text,
+                //         {
+                //             action: "LIQUIDITY",
+                //             data_extract: content
+                //         })
 
-                }
+                // }
                 callback({
                     user: await runtime.character.name,
                     text: "Below is a list of liquidity pools:",
@@ -186,15 +186,15 @@ export const liquidityCetus: Action = {
             let result = await cetusProvider.fetchLiquidityPoolsByCoinType(`${coinInfoA.type},${coinInfoB.type}`);
 
             try {
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "LIQUIDITY",
-                            data_extract: content
-                        })
-                }
+                // if (_options.type !== "toggle_faster") {
+                //     let messageService = new MessageService()
+                //     await messageService.createMessage(
+                //         message.content.text,
+                //         {
+                //             action: "LIQUIDITY",
+                //             data_extract: content
+                //         })
+                // }
                 callback({
                     user: await runtime.character.name,
                     text: "Please ensure all details are correct before adding liquidity to prevent any potential losses.",

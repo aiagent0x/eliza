@@ -222,15 +222,15 @@ export const projectInfo: Action = {
                 infoDetail = getDetail;
             }
         }
-        if (_options.type !== "toggle_faster") {
-            let messageService = new MessageService()
-            await messageService.createMessage(
-                message.content.text,
-                {
-                    action: "PROJECT_OVERVIEW",
-                    data_extract: content
-                })
-        }
+        // if (_options.type !== "toggle_faster") {
+        //     let messageService = new MessageService()
+        //     await messageService.createMessage(
+        //         message.content.text,
+        //         {
+        //             action: "PROJECT_OVERVIEW",
+        //             data_extract: content
+        //         })
+        // }
         callback({
             user: await runtime.character.name,
             text: responseText,

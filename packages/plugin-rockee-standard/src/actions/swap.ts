@@ -134,20 +134,20 @@ export const swapSui: Action = {
                     ...outputTokenObject,
                     type: content.destination_token_address,
                 }
-
             }
-
             try {
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "SWAP_AND_BUY_AND_SELL_TOKEN",
-                            data_extract: content
-                        })
+                // if (_options.type !== "toggle_faster") {
+                //     console.log("message:", message);
+                //     let messageService = new MessageService()
+                //     await messageService.createMessage(
+                //         message.content.text,
+                //         {
+                //             action: "SWAP_AND_BUY_AND_SELL_TOKEN",
+                //             data_extract: content
+                //         })
 
-                }
+
+                // }
                 callback({
                     user: await runtime.character.name,
                     text: "Please ensure all details are correct before proceeding with the swap to prevent any losses.",
@@ -155,11 +155,8 @@ export const swapSui: Action = {
                     result: {
                         type: "swap",
                         data: responseData,
-
-
                     }
                 })
-
                 return true;
             } catch (error) {
                 console.error("Error during token swap:", error);
@@ -197,16 +194,17 @@ export const swapSui: Action = {
             toToken: outputTokenObject
         }
         try {
-            if (_options.type !== "toggle_faster") {
-                let messageService = new MessageService()
-                await messageService.createMessage(
-                    message.content.text,
-                    {
-                        action: "SWAP_AND_BUY_AND_SELL_TOKEN",
-                        data_extract: content
-                    })
+            // if (_options.type !== "toggle_faster") {
+            //     console.log("message:", message);
+            //     let messageService = new MessageService()
+            //     await messageService.createMessage(
+            //         message.content.text,
+            //         {
+            //             action: "SWAP_AND_BUY_AND_SELL_TOKEN",
+            //             data_extract: content
+            //         })
 
-            }
+            // }
             await callback({
                 user: await runtime.character.name,
                 text: `Please ensure all details are correct before proceeding with the swap to prevent any losses.`,

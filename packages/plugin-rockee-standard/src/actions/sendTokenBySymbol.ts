@@ -108,15 +108,15 @@ export const sendTokenBySymbol: Action = {
             destinationAddress: content.destinationAddress !== null || content.destinationAddress !== "null" ? content.destinationAddress : ""
         }
         try {
-            if (_options.type !== "toggle_faster") {
-                let messageService = new MessageService()
-                await messageService.createMessage(
-                    message.content.text,
-                    {
-                        action: "TRANSFER_TOKENS",
-                        data_extract: content
-                    })
-            }
+            // if (_options.type !== "toggle_faster") {
+            //     let messageService = new MessageService()
+            //     await messageService.createMessage(
+            //         message.content.text,
+            //         {
+            //             action: "TRANSFER_TOKENS",
+            //             data_extract: content
+            //         })
+            // }
             callback({
                 user: await runtime.character.name,
                 text: content.responseMessage,
