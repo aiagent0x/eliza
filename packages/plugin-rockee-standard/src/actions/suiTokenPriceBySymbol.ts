@@ -19,6 +19,7 @@ import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
 import { hashUserMsg } from "../utils/format";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 import MessageService from "../services/messageService";
+import { taggingProvider } from "../providers/taggingProvider";
 
 const promptSuiTokenInfoTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
 
@@ -119,6 +120,7 @@ export const suiTokenPriceBySymbol: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ): Promise<boolean> => {
+        const contentYouWantToPost = await taggingProvider.get(runtime, message, state);
         elizaLogger.info("[suiPools]");
         let content: any = _options.data_extract;
         if (_options.type !== "toggle_faster") {
@@ -174,6 +176,9 @@ export const suiTokenPriceBySymbol: Action = {
                         price: info.price_usd,
                         icon_url: info.image_url,
                     },
+                    action_hint: {
+                        text: contentYouWantToPost.TOKEN_INFO.questions[Math.floor(Math.random() * contentYouWantToPost.TOKEN_INFO.questions.length)]
+                    }
                 }
             });
         }

@@ -17,6 +17,7 @@ import { hashUserMsg } from "../utils/format";
 import GeckoTerminalProvider2 from "../providers/coingeckoTerminalProvider2";
 import getInfoTokenOnSui from "../providers/coinMetaDataSui";
 import MessageService from "../services/messageService";
+import { taggingProvider } from "../providers/taggingProvider";
 const swapTemplate = `
 Recent messages: {{recentMessages}}  
 Extract the token swap parameters from the conversation above, following these rules:  
@@ -103,6 +104,7 @@ export const swapSui: Action = {
                 callback({
                     user: await runtime.character.name,
                     text: `We do not support ${content.inputTokenAddress} token in SUI network yet, We only support swapping token symbol to token symbol or token address to token address.`,
+                   
                 })
                 return false
             }
@@ -145,8 +147,6 @@ export const swapSui: Action = {
                 //             action: "SWAP_AND_BUY_AND_SELL_TOKEN",
                 //             data_extract: content
                 //         })
-
-
                 // }
                 callback({
                     user: await runtime.character.name,
