@@ -882,7 +882,7 @@
   },
   {
     "name": "Lombard Protocol",
-    "symbol": "N/A",
+    "symbol": "LBTC",
     "categories": [
       "Liquid Staking "
     ],
@@ -960,7 +960,7 @@
   },
   {
     "name": "SpringSui",
-    "symbol": "N/A",
+    "symbol": "sSUI",
     "categories": [
       "Liquid Staking "
     ],
@@ -996,5 +996,45 @@
     "congecko_link": "",
     "slogan": "Ika is an MPC (Multi-Party Computation) Network project that focuses on secure and private computations across multiple parties, often used for privacy-preserving applications in blockchain.",
     "img_url": "https://strapi-dev.scand.app/uploads/Ika_1187a8ee05.png"
+  },
+  {
+    "name": "Magma",
+    "symbol": "N/A",
+    "categories": [
+      "DEX"
+    ],
+    "website": "https://ika.xyz/",
+    "x_website": "https://x.com/redstone_defi",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "Modular oracles for DeFi & institutions.",
+    "img_url": "https://strapi-dev.scand.app/uploads/Magma_Finance_logo_7cd45acadb.jpg"
+  },
+  {
+    "name": "Dynamic",
+    "symbol": "N/A",
+    "categories": [
+      "Wallet"
+    ],
+    "website": "https://demo.dynamic.xyz/",
+    "x_website": "https://x.com/dynamic_xyz",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "One SDK for every wallet interaction. Extensive multichain and external wallet support.",
+    "img_url": "https://strapi-dev.scand.app/uploads/Dynamic_logo_4352903630.png"
+  }
+  ,
+  {
+    "name": "Artinals",
+    "symbol": "N/A",
+    "categories": [
+      "Protocol"
+    ],
+    "website": "https://artinals.com/",
+    "x_website": "https://x.com/artinalsnetwork",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "Open Source Protocol on Sui netwoirk to tokenize Real World Assets using enterprise-grade ART20 standard.",
+    "img_url": "https://strapi-dev.scand.app/uploads/Artinals_logo_6dac36d864.jpg"
   }
 ]

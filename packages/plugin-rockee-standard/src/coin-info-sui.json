@@ -7575,7 +7575,8 @@
     "symbol": "sSUI",
     "name": "Spring Staked SUI",
     "iconUrl": "https://suilend-assets.s3.us-east-2.amazonaws.com/lst.png",
-    "verified": true
+    "verified": true,
+    "coinGeckoId": "spring-staked-sui"
   },
   {
     "type": "0x7955047683d856934d80ec35f5e79713fcd6acd6785bfc138791441563ee7905::squide::SQUIDE",
@@ -8907,13 +8908,6 @@
     "symbol": "TURBO",
     "name": "Turbo",
     "iconUrl": "https://r.turbos.finance/icon/1730949256319.png"
-  },
-  {
-    "type": "0xaafc4f740de0dd0dde642a31148fb94517087052f19afb0f7bed1dc41a50c77b::scallop_sui::SCALLOP_SUI",
-    "decimals": 9,
-    "symbol": "sSUI",
-    "name": "sSUI",
-    "iconUrl": "https://kedklfyxuzixrtdeqtieu6g5u7sbrcjr5cgyysbx63mmowgfrfiq.arweave.net/UQallxemUXjMZITQSnjdp-QYiTHojYxIN_bYx1jFiVE"
   },
   {
     "objectId": "0xdc0e051f8aab62d5ba1816bb7a03097faeccb7546c958da571d48882fd8dd0cd",
@@ -10656,5 +10650,16 @@
     "iconUrl":"https://ipfs.io/ipfs/bafkreigt2pvpzokflugamigupuwo3xfw3agg3xcfuiduqpv3j6hfooh65a",
     "verified":true,
     "coinGeckoId":"slove"
+  },
+  {
+    "type": "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
+    "decimals": 8,
+    "symbol": "LBTC",
+    "name": "Lombard Staked BTC(LBTC)",
+    "website":"",
+    "coingeckoUrl":"https://www.coingecko.com/en/coins/lombard-staked-btc",
+    "iconUrl":"https://www.lombard.finance/lbtc/LBTC.png",
+    "verified":true,
+    "coinGeckoId":"lombard-staked-btc"
   }
 ]
