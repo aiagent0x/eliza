@@ -513,7 +513,7 @@ export const stake: Action = {
                     if (!responseData) {
                         callback({
                             user: await runtime.character.name,
-                            text: "We couldn't find staking pools in Navi. You can search in list staking pools of Navi:",
+                            text: "We couldn't find staking pools in Navi.",
                             action: "STAKE_TOKEN",
                             action_hint: getActionHint(
                                 "navi pools",
@@ -646,7 +646,8 @@ export const stake: Action = {
                         if (!poolScallopInfo) {
                             callback({
                                 user: await runtime.character.name,
-                                text: "We couldn't find staking pools in Scallop. You can search in list staking pools of Scallop:",
+                                // text: "We couldn't find staking pools in Scallop. You can search in list staking pools of Scallop:",
+                                text: "We couldn't find staking pools in Scallop.",
                                 action: "STAKE_TOKEN",
                                 action_hint: getActionHint(
                                     "scallop pools",
@@ -718,7 +719,7 @@ export const stake: Action = {
                         if (!poolSuilendInfo || poolSuilendInfo.length === 0) {
                             callback({
                                 user: await runtime.character.name,
-                                text: "We couldn't find staking pools in Suilend. You can search in list staking pools of Suilend:",
+                                text: "We couldn't find staking pools in Suilend",
                                 action: "STAKE_TOKEN",
                                 action_hint: getActionHint(
                                     "suilend pools",
@@ -839,7 +840,8 @@ export const stake: Action = {
                     if (arrayMap.every(item => item === undefined || item === null) || arrayMap.every(item => item === undefined)) {
                         callback({
                             user: await runtime.character.name,
-                            text: "We couldn't find staking pools. You can search in the list of staking pools:",
+                            // text: "We couldn't find staking pools. You can search in the list of staking pools:",
+                            text: "We couldn't find staking pools.",
                             action: "STAKE_TOKEN",
                             action_hint: getActionHint(
                                 "all stake pools",
