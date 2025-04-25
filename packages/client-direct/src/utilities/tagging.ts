@@ -95,21 +95,24 @@ export async function filterByTagging(tag: string, agentName: string) {
                 trendingCoins = await cmsProvider.getTokens("trending");
                 trendingCoins = trendingCoins.data;
             }
+            console.log("trendingCoins:", trendingCoins);
             responseData = {
                 "user": agentName,
                 "text": "Below are trending tokens we have collected:",
                 "action": "TOP_TRENDING_TOKENS",
                 "result": {
                     "type": "sui_trending_tokens",
-                    "data": trendingCoins.map((token: any) => ({
-                        name: token.name,
-                        symbol: token.symbol.toUpperCase(),
-                        price: token.price,
-                        market_cap: token.cap,
-                        price_change_24h: token.change24h,
-                        type: token.address,
-                        iconUrl: token.logo
-                    }))
+                    "data": trendingCoins
+                        .sort((a: any, b: any) => b.change24h - a.change24h)
+                        .map((token: any) => ({
+                            name: token.name,
+                            symbol: token.symbol.toUpperCase(),
+                            price: token.price,
+                            market_cap: token.cap,
+                            price_change_24h: token.change24h,
+                            type: token.address,
+                            iconUrl: token.logo
+                        }))
                 }
             }
             break;
