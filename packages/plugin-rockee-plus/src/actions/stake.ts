@@ -46,7 +46,7 @@ Extract the staking parameters from the latest message only, following these rul
   - If the message contains **"on", "of", or "in"**, assign the protocol that appears after these words.  
   - If no such word exists, assign **"protocol": "all"**.  
 - If the token or pool name appears in the sample list above, use it as pool_name.
-- If the token or pool name does not appear in the sample list but is clearly mentioned (e.g., “stake SEED”, “stake BTC”), treat the word after "stake" or "unstake" as the pool_name and set it as-is.
+- If the token or pool name does not appear in the sample list but is clearly mentioned (e.g., “stake SEED”, “stake BTC”), treat the word after "stake" or "unstake" as the pool_name and set it as-is, even if it's not in the sample list.
 - If the name is unknown but present, assign it directly as pool_name.
 - If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'. The '"protocol"' should default to '"all"'.  
 - Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").  
