@@ -25,6 +25,7 @@ let redis = new RedisClient(REDIS_URL);
 
 const stakeTokenTemplate = `
 Recent messages: {{recentMessages}}  
+
 Extract the staking parameters from the latest message only, following these rules:  
 
 - Sample Pool Names Navi: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, **NAVX**, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, **WAL**.  

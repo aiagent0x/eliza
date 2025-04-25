@@ -29,7 +29,9 @@ Example response:
         "token_symbol": "CRAFT",
     }
     \`\`\`
+
 {{recentMessages}}
+
 Extract ONLY from the current message (ignore any previous context or messages):
 
 Given the recent messages, extract the following information:

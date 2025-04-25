@@ -22,6 +22,7 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 const topTemplate = `
 Recent messages: {{recentMessages}}  
+
 Extract the ranking parameters from the conversation above, following these rules:  
 
 - Return only a JSON object with the specified fields in this format: 

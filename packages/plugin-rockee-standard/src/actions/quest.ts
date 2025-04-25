@@ -13,6 +13,7 @@ import MessageService from "../services/messageService";
 import CMSProvider from "../providers/CMS/cmsProvider";
 
 const questTemplate = `Recent messages: {{recentMessages}}  
+
 {{listProjects}}  
 
 Extract the relevant project information from the conversation above, following these rules:  
