@@ -14,19 +14,31 @@ import { findByVerifiedAndSymbol } from "../providers/searchCoinInAggre";
 import { hashUserMsg } from "../utils/format";
 import { isValidSuiAddress } from "@mysten/sui/utils";
 import MessageService from "../services/messageService";
-const sendTokenTemplate = `Please extract the following swap details for SUI network:
-{
-    "amount": number | 0,               // Amount of tokens to transfer
-    "tokenSymbol": string | SUI,          // Token symbol on the SUI network (e.g., "SUI", "UNI")
-    "destinationAddress": string | null,    // Recipient's wallet address
-}
-Recent messages: {{recentMessages}}
-Extract the token transfer parameters from the conversation and wallet context above. Return only a JSON object with the specified fields. Use null for any values that cannot be determined.
-All property names must use double quotes
-All string values must use double quotes
-null values should not use quotes
-No trailing commas allowed
-No single quotes anywhere in the JSON
+const sendTokenTemplate = `Recent messages: {{recentMessages}}
+
+Extract the token transfer parameters from the conversation and wallet context above. Return only a JSON object with the specified fields.
+
+- If the message follows the format "send [TOKEN_NAME] to [WALLET_ADDRESS]", extract:
+
+Example response:
+    \`\`\`json
+    {
+        "amount": number | 0,               // Amount of tokens to transfer
+        "tokenSymbol": string | SUI,          // Token symbol on the SUI network (e.g., "SUI", "UNI")
+        "destinationAddress": string | null,    // Recipient's wallet address
+    }
+    \`\`\`
+
+- Use "amount": 0 if the amount is not explicitly specified.
+- Set "tokenSymbol" to the token name found in the message (e.g., "CETUS").
+- Set "destinationAddress" to the wallet address if it's present and valid (starts with 0x and has 64+ hex characters).
+- Use null for any values that cannot be determined.
+- All property names must use double quotes.
+- All string values must use double quotes.
+- null values should not use quotes.
+- No trailing commas allowed.
+- No single quotes anywhere in the JSON.
+- Only return the JSON object — no explanation, no markdown.
 `;
 
 
