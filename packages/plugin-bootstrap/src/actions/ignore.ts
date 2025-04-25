@@ -14,7 +14,7 @@ export const ignoreAction: Action = {
             count: 10,
             unique: false,
         });
-        const ignoredKeywords = ["swap", "sell", "buy", "trade", "offer"];
+        const ignoredKeywords = ["swap", "sell", "buy", "trade", "offer", "send"];
         const containsIgnoredKeyword = recentMessagesData.some((m: Memory) =>
             ignoredKeywords.some((keyword) =>
                 m.content?.text?.toLowerCase().includes(keyword)
