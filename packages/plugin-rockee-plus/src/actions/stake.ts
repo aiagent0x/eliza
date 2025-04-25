@@ -27,8 +27,8 @@ const stakeTokenTemplate = `
 Recent messages: {{recentMessages}}  
 Extract the staking parameters from the latest message only, following these rules:  
 
-- Sample Pool Names Navi: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, **NAVX**, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI.  
-- Sample Pool Names Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd".  
+- Sample Pool Names Navi: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, **NAVX**, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, **WAL**.  
+- Sample Pool Names Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd", **WAL**.  
 - **Extract data only from the latest message** and discard any previous messages.  
 - Return only a **single JSON object** with the specified fields in this format: 
     \`\`\`json
@@ -47,7 +47,7 @@ Extract the staking parameters from the latest message only, following these rul
   - If no such word exists, assign **"protocol": "all"**.  
 - If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'. The '"protocol"' should default to '"all"'.  
 - Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").  
-- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
+- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX", "stake 1 WAL").  
 - Use '"type_action": "stake"' when the request involves staking tokens.  
 - Use '"type_action": "unstake"' when the request involves unstaking tokens.  
 - **If the message explicitly mentions "Navi", "Scallop", or "Suilend", set '"protocol"' accordingly. Otherwise, set '"protocol": "all"'.**  
