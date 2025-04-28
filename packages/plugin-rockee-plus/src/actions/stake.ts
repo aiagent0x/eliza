@@ -44,6 +44,7 @@ Extract the staking parameters from the latest message only, following these rul
 Rules:
 - NAVX is always treated as a token symbol, not a protocol.
 - Navi is always treated as a protocol, not a token symbol.
+- If the message does not mention Navi, Scallop, or Suilend, set "protocol": "all".
 - If multiple protocols ("Navi", "Scallop", "Suilend") appear together, determine the correct protocol as follows:
   - If the message contains "on", "of", or "in", assign the protocol that appears after these words.
   - If no such word exists, assign "protocol": "all".
