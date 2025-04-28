@@ -121,11 +121,12 @@ export const stake: Action = {
             }
         }
 
-        elizaLogger.info("content:", content)
+        elizaLogger.info("content1:", content)
         if (content.pool_name !== "null" && content.type === "list") {
             delete content.protocol;
             content.protocol = "all";
         }
+        elizaLogger.info("content2:", content)
         const scallopProvider = new ScallopProvider();
         let listPoolsNaviOnSite = await getPoolsInfo()
         if (content.type === "list") {
