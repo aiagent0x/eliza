@@ -123,6 +123,7 @@ export const stake: Action = {
 
         elizaLogger.info("content:", content)
         if (content.pool_name !== "null" && content.type === "list") {
+            delete content.protocol;
             content.protocol = "all";
         }
         const scallopProvider = new ScallopProvider();
