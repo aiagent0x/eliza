@@ -122,6 +122,9 @@ export const stake: Action = {
         }
 
         elizaLogger.info("content:", content)
+        if (content.pool_name !== "null" && content.type === "list") {
+            content.protocol = "all";
+        }
         const scallopProvider = new ScallopProvider();
         let listPoolsNaviOnSite = await getPoolsInfo()
         if (content.type === "list") {
@@ -403,7 +406,7 @@ export const stake: Action = {
                     }
                     if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
                         parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-                        if(content.pool_name !== "null"){
+                        if (content.pool_name !== "null") {
                             parsedData = parsedData.filter(
                                 (pool) =>
                                     pool.symbol.toLowerCase() === content.pool_name.toLowerCase()
@@ -413,7 +416,7 @@ export const stake: Action = {
                             (a: any, b: any) =>
                                 b.total_supply_rate - a.total_supply_rate
                         );
-                        
+
                         // if (_options.type !== "toggle_faster") {
                         //     let messageService = new MessageService()
                         //     await messageService.createMessage(
@@ -489,7 +492,7 @@ export const stake: Action = {
                         listPoolsNavi = [];
                     }
                     responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
-                    if(content.pool_name !== "null"){
+                    if (content.pool_name !== "null") {
                         responseData = responseData.filter(
                             (pool) =>
                                 pool.symbol.toLowerCase() === content.pool_name.toLowerCase()
