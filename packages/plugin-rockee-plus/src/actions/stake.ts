@@ -127,7 +127,7 @@ export const stake: Action = {
             delete content.protocol;
             content.protocol = "all";
         }
-     
+
         const scallopProvider = new ScallopProvider();
         let listPoolsNaviOnSite = await getPoolsInfo()
         if (content.type === "list") {
@@ -432,7 +432,7 @@ export const stake: Action = {
                         // }
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of staking pools:",
+                            text: parsedData.length === 1 ? "Below is a list of staking pools:" : "",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -518,7 +518,7 @@ export const stake: Action = {
                         // }
                         callback({
                             user: await runtime.character.name,
-                            text: "Below is a list of stake pools:",
+                            text: responseData.length === 1 ? "Below is a list of staking pools:" : "",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
