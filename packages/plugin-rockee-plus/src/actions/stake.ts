@@ -432,7 +432,7 @@ export const stake: Action = {
                         // }
                         callback({
                             user: await runtime.character.name,
-                            text: parsedData.length === 1 ? "Below is a list of staking pools:" : "",
+                            text: parsedData.length !== 1 ? "Below is a list of staking pools:" : "",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
@@ -518,7 +518,7 @@ export const stake: Action = {
                         // }
                         callback({
                             user: await runtime.character.name,
-                            text: responseData.length === 1 ? "Below is a list of staking pools:" : "",
+                            text: responseData.length !== 1 ? "Below is a list of staking pools:" : "",
                             action: "STAKE_POOLS",
                             result: {
                                 type: "stake_pools",
