@@ -64,10 +64,10 @@ Special Rules:
   - Set "pool_name": null
   - Set "amount": 0
   - Set "protocol": "all"
-- If the message mentions a list related to a specific token or pool name (e.g., "list of WAL token staking pools", "list of NAVX staking pools", "list of WETH staking pools", "deep pools please ", "sui pools please", "Sca staking pools", "list of [token_name] token staking pools", etc.), then:
+- If the message mentions a list related to a specific token or pool name (e.g., "list of WAL token staking pools", "list of NAVX staking pools", "list of WETH staking pools", "deep pools please ", "sui pools please", "Sca staking pools", "list of [pool_name] token staking pools", etc.), then:
   - Set "type_action": "stake"
   - Set "type": "list"
-  - Set "pool_name" : "[token name]"
+  - Set "pool_name" : "[pool_name]"
   - Set "amount": 0
   - Set "protocol": "all"
 
