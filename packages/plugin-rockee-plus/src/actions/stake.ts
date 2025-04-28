@@ -116,7 +116,7 @@ export const stake: Action = {
                 content = await generateObjectDeprecated({
                     runtime,
                     context: stakeContext,
-                    modelClass: ModelClass.SMALL,
+                    modelClass: ModelClass.MEDIUM,
                 });
                 await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
             }
