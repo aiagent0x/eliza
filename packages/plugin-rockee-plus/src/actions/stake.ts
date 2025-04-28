@@ -29,7 +29,8 @@ Recent messages: {{recentMessages}}
 Extract the staking parameters from the latest message only, following these rules:  
 
 - Sample Pool Names Navi: SUI, USDT, WETH, CETUS, VoloSui, HaedalSui, **NAVX**, WBTC, AUSD, wUSDC, nUSDC, ETH, USDY, NS, stBTC, DEEP, FDUSD, BLUE, BUCK, suiUSDT, stSUI, **WAL**.  
-- Sample Pool Names Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd", **WAL**.  
+- Sample Pool Names Scallop: "usdc", "sbeth", "sbusdt", "sbwbtc", "weth", "wbtc", "wusdc", "wusdt", "sui", "wapt", "wsol", "cetus", "afsui", "hasui", "vsui", "sca", "fud", "deep", "fdusd", "blub", "musd", **WAL**.
+- Sample Pool Names Suilend: "SUI", "SEND", "WAL", "DEEP", "mUSD", "suiUSDT", "wBTC", "AUSD", "trevinSUI", "LBTC", "sSUI", "USDC", "BUCK", "SOL", "upSUI", "fudSUI", "mSUI", "kSUI", "suiETH", "wUSDT", "HIPPO", "HIPPO", "wUSDC", "WETH", "NS", "BLUE", "FUD", "yapSUI", "iSUI"
 - **Extract data only from the latest message** and discard any previous messages.  
 - Return only a **single JSON object** with the specified fields in this format: 
     \`\`\`json
