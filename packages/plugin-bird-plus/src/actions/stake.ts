@@ -45,20 +45,44 @@ Extract the staking parameters from the latest message only, following these rul
          "protocol": "navi" | "scallop"  | "suilend" | "all"
     }  
     \`\`\`
-- If multiple staking requests are detected, return only the **first valid** request found in the conversation.  
-- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set '"type"' to '"my_stake"', '"type_action"' to '"stake"', '"pool_name"' to 'null', and '"amount"' to '0'. The '"protocol"' should default to '"all"'.  
-- Use '"type": "list"' when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").  
-- Use '"type": "pool_name"' when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX").  
-- Use '"type_action": "stake"' when the request involves staking tokens.  
-- Use '"type_action": "unstake"' when the request involves unstaking tokens.  
-- **If the message explicitly mentions "Navi" or "Scallop" or "Suilend" or "navi" or "scallop" or "suilend" , set '"protocol"'accordingly. Otherwise, set '"protocol": "all"'**.  
-- **Ensure '"pool_name"' is always a valid pool name or token symbol from the sample lists above. If an invalid name is detected, set it to 'null'.**  
-- Use 'null' for any values that cannot be determined.  
-- **Only return one JSON object, not an array.**  
-- All property names must use double quotes.  
-- Null values should not use quotes.  
-- No trailing commas allowed.  
-- No single quotes anywhere in the JSON. 
+Rules:
+- NAVX is always treated as a token symbol, not a protocol.
+- Navi is always treated as a protocol, not a token symbol.
+- If multiple protocols ("Navi", "Scallop", "Suilend") appear together, determine the correct protocol as follows:
+  - If the message contains "on", "of", or "in", assign the protocol that appears after these words.
+  - If no such word exists, assign "protocol": "all".
+- If the token or pool name appears in the sample list above, use it as pool_name.
+- If the token or pool name does not appear in the sample list but is clearly mentioned (e.g., “stake SEED”, “stake BTC”, "stake [POOL_NAME]", “unstake SEED”, “unstake [POOL_NAME]”), treat the word after "stake" or "unstake" as the pool_name and set it as-is, even if it's not in the sample list.
+- If the name is unknown but present, assign it directly as pool_name.
+- If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set "type" to "my_stake", "type_action" to "stake", "pool_name" to null, "amount" to 0, and "protocol" to "all".
+- Use "type": "list" when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").
+- Use "type": "pool_name" when the request specifies a pool name (e.g., "stake 10 SUI", "unstake 5 NAVX", "stake 1 WAL").
+- Use "type_action": "stake" when the request involves staking tokens.
+- Use "type_action": "unstake" when the request involves unstaking tokens.
+- If the message explicitly mentions "Navi", "Scallop", or "Suilend", set "protocol" accordingly. Otherwise, set "protocol": "all".
+
+Special Rules:
+- If the message is about listing pools generally without mentioning a specific token or pool (e.g., "list of staking pools", "show me staking pools"), then:
+  - Set "type_action": "stake"
+  - Set "type": "list"
+  - Set "pool_name": null
+  - Set "amount": 0
+  - Set "protocol": "all"
+- If the message mentions a list related to a specific token or pool name (e.g., "list of WAL token staking pools", "list of NAVX staking pools", "list of WETH staking pools", etc.), then:
+  - Set "type_action": "stake"
+  - Set "type": "list"
+  - Set "pool_name" to the token or pool name mentioned
+  - Set "amount": 0
+  - Set "protocol": "all"
+
+Other notes:
+- Ensure "pool_name" is always a valid pool name or token symbol from the sample lists above. If an invalid name is detected, set it to null.
+- Use null for any values that cannot be determined.
+- Only return one JSON object, not an array.
+- All property names must use double quotes.
+- Null values should not use quotes.
+- No trailing commas allowed.
+- No single quotes anywhere in the JSON.
 `;
 
 export const stake: Action = {
@@ -351,11 +375,18 @@ export const stake: Action = {
                     // if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
                     if ((parsedData && parsedData.length > 0)) {
                         // parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+                        if(content.pool_name !== "null"){
+                            parsedData = parsedData.filter(
+                                (pool) =>
+                                    pool.symbol.toLowerCase() === content.pool_name.toLowerCase()
+                            );
+                        }
                         parsedData.sort((a: any, b: any) => {
                             if (a.name.toLowerCase() === "sui") return -1;
                             if (b.name.toLowerCase() === "sui") return 1;
                             return b.total_supply_rate - a.total_supply_rate;
                         });
+
                         if (_options.type !== "toggle_faster") {
                             let messageService = new MessageService()
                             await messageService.createMessage(
@@ -770,7 +801,13 @@ export const stake: Action = {
                     //     });
                     //     return true;
                     // }
-                    const arrayMap = [responseData];
+                    let arrayMap = [responseData];
+                    if(content.pool_name !== "null"){
+                        arrayMap = arrayMap.filter(
+                            (pool) =>
+                                pool.symbol.toLowerCase() === content.pool_name.toLowerCase()
+                        );
+                    }
                     arrayMap.sort(
                         (a, b) =>
                             b.total_supply_rate - a.total_supply_rate
