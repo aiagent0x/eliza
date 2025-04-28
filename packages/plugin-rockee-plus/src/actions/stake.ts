@@ -123,6 +123,8 @@ export const stake: Action = {
 
         elizaLogger.info("content1:", content)
         if (content.pool_name !== "null" && content.type === "list") {
+            console.log("content.pool_name:", content.pool_name);
+            console.log("content.type:", content.type);
             delete content.protocol;
             content.protocol = "all";
         }
