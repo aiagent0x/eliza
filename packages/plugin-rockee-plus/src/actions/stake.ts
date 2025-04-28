@@ -122,6 +122,8 @@ export const stake: Action = {
         }
 
         elizaLogger.info("content1:", content)
+        console.log("content.pool_name:", content.pool_name);
+        console.log("content.type:", content.type);
         if (content.pool_name !== "null" && content.type === "list") {
             console.log("content.pool_name:", content.pool_name);
             console.log("content.type:", content.type);
