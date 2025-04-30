@@ -98,12 +98,13 @@
     {
       "id": 9,
       "name": "Haedal",
-      "symbol": "NA",
+      "symbol": "HAEDAL",
       "categories": ["Liquid Staking"],
       "website": "https://www.haedal.xyz/",
       "x_website": "https://x.com/HaedalProtocol",
       "verified": "Yes",
-      "congecko_link": "https://www.coingecko.com/en/coins/haedal-staked-sui"
+      "congecko_link": "https://www.coingecko.com/en/coins/haedal-protocol"
+      
     },
     {
       "id": 10,
