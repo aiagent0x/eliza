@@ -627,7 +627,7 @@ export const stake: Action = {
                         }
 
                     }
-                    try {
+                    try { 
                         if (_options.type !== "toggle_faster") {
                             let messageService = new MessageService()
                             await messageService.createMessage(
