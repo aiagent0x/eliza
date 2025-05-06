@@ -132,7 +132,7 @@ export const liquidityCetus: Action = {
                     
                     callback({
                         user: await runtime.character.name,
-                        text: "Please ensure all details are correct before adding liquidity to prevent any potential losses.",
+                        text: "Below is a list of liquidity pools:",
                         action: "LIQUIDITY_POOLS",
                         result: {
                             type: "liquidity_pools",
@@ -207,8 +207,8 @@ export const liquidityCetus: Action = {
         else {
 
             let cetusProvider = new CetusProvider();
-            let coinA = content.pair_name.split("-")[0];
-            let coinB = content.pair_name.split("-")[1];
+            let coinA = content.token_a;
+            let coinB = content.token_b!;
             let coinInfoA = await findByVerifiedAndSymbol(coinA);
             let coinInfoB = await findByVerifiedAndSymbol(coinB);
             if (!coinInfoA) {
