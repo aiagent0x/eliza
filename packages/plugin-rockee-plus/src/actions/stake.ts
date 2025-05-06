@@ -88,7 +88,7 @@ export const stake: Action = {
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
-    description: "Stake token and stake pool",
+    description: "Stake token, stake pool, unstake token, withdraw token",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -627,7 +627,7 @@ export const stake: Action = {
                         }
 
                     }
-                    try {
+                    try { 
                         if (_options.type !== "toggle_faster") {
                             let messageService = new MessageService()
                             await messageService.createMessage(
