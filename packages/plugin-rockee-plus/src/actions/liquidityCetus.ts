@@ -35,7 +35,7 @@ Extract the liquidity pool parameters from the conversation above, following the
             "amount_token_b": number | 0
         }  
     \`\`\`
-- Use "type_action": "show_list" when the message is about displaying or listing pools (e.g., “liquidity pools”, “8 liquidity USDC pools”).
+- Use "type_action": "show_list" when the message is about displaying or listing pools (e.g., “liquidity pools”, “8 liquidity USDC pools”, "farm {TOKEN_NAME} pools", "8 farming {TOKEN_NAME} pools").
 - Use "type_action": "add" when the message refers to adding liquidity to a pool (e.g., “add liquidity USDC-SUI”).
 - Set "token_a" and "token_b" based on the tokens mentioned. If only one token is mentioned, assign it to "token_a" and set "token_b" to null.
 - If a number is mentioned without specific token context, treat it as "amount_token_a" indicating the number of pools to list.
@@ -295,6 +295,38 @@ export const liquidityCetus: Action = {
                 user: "{{agent}}",
                 content: {
                     text: "add liquidity",
+                    action: "LIQUIDITY",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "farm {{TOKEN_NAME}} pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "farm {{TOKEN_NAME}} pools",
+                    action: "LIQUIDITY",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "farming {{TOKEN_NAME}} pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "farming {{TOKEN_NAME}} pools",
                     action: "LIQUIDITY",
 
                 },
