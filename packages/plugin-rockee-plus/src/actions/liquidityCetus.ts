@@ -58,7 +58,7 @@ export const liquidityCetus: Action = {
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
-    description: "liquidity cetus",
+    description: "liquidity cetus pools and farm pools",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
