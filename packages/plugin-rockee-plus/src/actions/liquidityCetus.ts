@@ -23,27 +23,27 @@ import MessageService from "../services/messageService";
 const topLiquidityPoolTemplate = `Recent messages: {{recentMessages}}  
 Extract the liquidity pool parameters from the conversation above, following these rules:  
 
-- Sample Pair Names: SUI-USDC, USDC-suiUSDT, DEEP-SUI, USDC-SUI, CETUS-SUI, HIPPO-SUI, USDC-ETH, LOFI-SUI, NS-SUI, USDC-USDY, USDC-BUCK, BUCK-SUI, wUSDC-SUI, haSUI-SUI, USDC-CETUS, afSUI-SUI, USDC-wUSDT, BLUE-SUI, ETH-WETH, USDC-WSOL, USDC-AUSD , stSUI-SUI, BUT-SUI, Sonic-SUI, AXOL-SUI, SEND-SUI, WSOL-SUI, etc. 
+- Sample Token Names: SUI, USDC, DEEP, CETUS, HIPPO, ETH, LOFI, NS, USDY, BUCK, BUCK, wUSDC, haSUI, afSUI, wUSDT, BLUE, WETH, WSOL, AUSD , stSUI, BUT, Sonic, AXOL, SEND, etc. 
 - **Extract data only from the latest message** and discard any previous messages.
 - Return only a JSON object with the specified fields in this format:  
     \`\`\`json
         {  
-            "type_action": "show_list" | "add",  
-            "pair_name": string | SUI-USDC,  
-            "amount_token_a": number | 0,  //is size list or amount token a
-            "amount_token_b": number | 0, 
+            "type_action": "show_list" | "add",
+            "token_a": string | null,
+            "token_b": string | null,
+            "amount_token_a": number | 0,
+            "amount_token_b": number | 0
         }  
     \`\`\`
-- Use '"type_action": "show_list"' when the request is about listing liquidity pools (e.g., "liquidity pools", "top 5 liquidity pools").  
-- Use '"type_action": "add"' when the request specifies adding liquidity (e.g., "add liquidity SUI-USDC").  
-- Set '"pair_name"' to null if no specific pair is mentioned.  
-- If a specific token and amount are provided, assign it to the corresponding field ('amount_token_a' or 'amount_token_b').  
-- If both tokens have amounts, only assign 'amount_token_a' and set 'amount_token_b' to '0'.  
-- Use 'null' for any values that cannot be determined.  
-- All property names must use double quotes.  
-- Null values should not use quotes.  
-- No trailing commas allowed.  
-- No single quotes anywhere in the JSON.  
+- Use "type_action": "show_list" when the message is about displaying or listing pools (e.g., “liquidity pools”, “8 liquidity USDC pools”).
+- Use "type_action": "add" when the message refers to adding liquidity to a pool (e.g., “add liquidity USDC-SUI”).
+- Set "token_a" and "token_b" based on the tokens mentioned. If only one token is mentioned, assign it to "token_a" and set "token_b" to null.
+- If a number is mentioned without specific token context, treat it as "amount_token_a" indicating the number of pools to list.
+- If both token amounts are present, assign the first one to "amount_token_a" and set "amount_token_b" to 0.
+- Use null (without quotes) for any values that cannot be determined.
+- All property names must use double quotes.
+- Do not use single quotes.
+- Do not include trailing commas. 
 `;
 export const liquidityCetus: Action = {
     name: "LIQUIDITY",
@@ -90,6 +90,62 @@ export const liquidityCetus: Action = {
 
         if (content.type_action === "show_list") {
             if (parseInt(content.amount_token_a) === 0) content.amount_token_a = 5;
+            if (content.token_a !== "null") {
+                let cetusProvider = new CetusProvider();
+                let coinA = content.token_a;
+                let coinB = content.token_b;
+                let coinInfoA = await findByVerifiedAndSymbol(coinA);
+                let coinInfoB;
+                if (coinB !== "null") {
+                    coinInfoB = await findByVerifiedAndSymbol(coinB);
+                }
+                if (!coinInfoA) {
+                    callback({
+                        user: await runtime.character.name,
+                        text: `Could not find the symbol for ${coinA}:`,
+                        action: "LIQUIDITY_POOLS",
+                        action_hint: getActionHint(
+                            "navi pools",
+                            "button_generate_text",
+                            "navi",
+                            "liquidity"
+                        )
+                    })
+                    return true;
+                }
+                let coinTypeList;
+                if (coinInfoA && coinInfoB) {
+                    coinTypeList = `${coinInfoA.type},${coinInfoB.type}`;
+                }
+                else {
+                    coinTypeList = coinInfoA.type;
+                }
+                let result = await cetusProvider.fetchLiquidityPoolsByCoinType(coinTypeList);
+                result.data.lp_list.sort((a: any, b: any) => {
+                    a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
+                    b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
+                    if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
+                    if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
+                    return 0;
+                });
+                try {
+                    
+                    callback({
+                        user: await runtime.character.name,
+                        text: "Please ensure all details are correct before adding liquidity to prevent any potential losses.",
+                        action: "LIQUIDITY_POOLS",
+                        result: {
+                            type: "liquidity_pools",
+                            data: result.data.lp_list.slice(0, parseInt(content.amount_token_a)),
+                        }
+                    })
+                    return true;
+                } catch (error) {
+                    console.error("Error during token add:", error);
+                    return false;
+                }
+            }
+            
             let responseData = await redis.getValue({ key: "liquidity_pools" })
             if (responseData !== undefined) {
                 // if (_options.type !== "toggle_faster") {
