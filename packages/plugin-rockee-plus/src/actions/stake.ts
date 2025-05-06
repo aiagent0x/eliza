@@ -49,7 +49,7 @@ Rules:
   - If the message contains "on", "of", or "in", assign the protocol that appears after these words.
   - If no such word exists, assign "protocol": "all".
 - If the token or pool name appears in the sample list above, use it as pool_name.
-- If the token or pool name does not appear in the sample list but is clearly mentioned (e.g., “stake SEED”, “stake BTC”, "stake [POOL_NAME]", “unstake SEED”, “unstake [POOL_NAME]”, "list of [POOL_NAME] staking pools", "[POOL_NAME] pools please", "[POOL_NAME] staking pools"), treat the word after "stake" or "unstake" as the pool_name and set it as-is, even if it's not in the sample list.
+- If the token or pool name does not appear in the sample list but is clearly mentioned (e.g., “stake SEED”, “stake BTC”, "stake [POOL_NAME]", “unstake SEED”, “unstake [POOL_NAME]”, "list of [POOL_NAME] staking pools", "[POOL_NAME] pools please", "[POOL_NAME] staking pools", "[POOL_NAME] lending pools"), treat the word after "stake" or "unstake" as the pool_name and set it as-is, even if it's not in the sample list.
 - If the name is unknown but present, assign it directly as pool_name.
 - If the message mentions anything related to "my stake", "show me my stake", or similar phrases, set "type" to "my_stake", "type_action" to "stake", "pool_name" to null, "amount" to 0, and "protocol" to "all".
 - Use "type": "list" when the request is about listing pools (e.g., "stake pools", "top 10 stake pools", "staking pools").
@@ -65,7 +65,7 @@ Special Rules:
   - Set "pool_name": null
   - Set "amount": 0
   - Set "protocol": "all"
-- If the message mentions a list related to a specific token or pool name (e.g., "list of WAL token staking pools", "list of NAVX staking pools", "list of WETH staking pools", "deep pools please", "sui pools please", "Sca staking pools", "list of [token_name] token staking pools", "list of [pool_name] token staking pools", etc.), then:
+- If the message mentions a list related to a specific token or pool name (e.g., "list of WAL token staking pools", "list of NAVX staking pools", "list of WETH staking pools", "deep pools please", "sui pools please", "Sca staking pools", "list of [token_name] token staking pools", "list of [pool_name] token staking pools", "list of [pool_name] token lending pools", "list of [token_name] token lending pools", etc.), then:
   - Set "type_action": "stake"
   - Set "type": "list"
   - Set "pool_name" : "[pool_name]"
@@ -88,7 +88,7 @@ export const stake: Action = {
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
-    description: "Stake token, stake pool, unstake token, withdraw token",
+    description: "Stake token, stake pool, unstake token, withdraw token, lending pools",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
