@@ -121,13 +121,11 @@ export const stake: Action = {
                 await runtime.cacheManager.set(msgHash, content, { expires: Date.now() + 300000 });
             }
         }
-
         elizaLogger.info("content:", content)
         if (content.pool_name !== "null" && content.type === "list") {
             delete content.protocol;
             content.protocol = "all";
         }
-
         const scallopProvider = new ScallopProvider();
         let listPoolsNaviOnSite = await getPoolsInfo()
         if (content.type === "list") {
@@ -625,7 +623,6 @@ export const stake: Action = {
                             }
                             delete responseData.typeCoin;
                         }
-
                     }
                     try { 
                         if (_options.type !== "toggle_faster") {

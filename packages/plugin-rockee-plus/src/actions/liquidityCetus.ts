@@ -23,7 +23,7 @@ import MessageService from "../services/messageService";
 const topLiquidityPoolTemplate = `Recent messages: {{recentMessages}}  
 Extract the liquidity pool parameters from the conversation above, following these rules:  
 
-- Sample Token Names: SUI, USDC, DEEP, CETUS, HIPPO, ETH, LOFI, NS, USDY, BUCK, BUCK, wUSDC, haSUI, afSUI, wUSDT, BLUE, WETH, WSOL, AUSD , stSUI, BUT, Sonic, AXOL, SEND, etc. 
+- Sample Token Names: SUI, USDC, DEEP, CETUS, HIPPO, ETH, LOFI, NS, USDY, BUCK, BUCK, wUSDC, haSUI, afSUI, wUSDT, BLUE, WETH, WSOL, AUSD , stSUI, BUT, Sonic, AXOL, SEND, **WAL**, SUI, NS, kSUI, WBNB, USDY, CAPO, SEND, USDT, DEEP, FLX, ALPHA, SPAM, FDUSD, AFSUI, WETH, SPT, SUIP, HOPI, CETUS, MOVE, wUSDC, WFTM, ARTFI, SOL, USDC, haSUI, PIGU, PRH, FUD, AXOL, SCB, KOTO, JWLSUI, BLUB, AUSD, TYPUS, ETH, SCA, vSUI, SSWP, sSUI, stSUI, SUIA, SCUBA, Chad, WMATIC, NAVX, BLUE, PDO, OINK, HSUI, TURBOS, BUCK, WBTC, WAVAX, APT, REAP, PSH, ROCK, etc. All token symbols are recognized regardless of case format. 
 - **Extract data only from the latest message** and discard any previous messages.
 - Return only a JSON object with the specified fields in this format:  
     \`\`\`json
@@ -35,7 +35,7 @@ Extract the liquidity pool parameters from the conversation above, following the
             "amount_token_b": number | 0
         }  
     \`\`\`
-- Use "type_action": "show_list" when the message is about displaying or listing pools (e.g., “liquidity pools”, “8 liquidity USDC pools”, "farm {TOKEN_NAME} pools", "8 farming {TOKEN_NAME} pools").
+- Use "type_action": "show_list" when the message is about displaying or listing pools (e.g., “liquidity pools”, “8 liquidity USDC pools”, "farm {TOKEN_NAME} pools", "8 farming {TOKEN_NAME} pools", "{TOKEN_NAME} liquidity pools", "{TOKEN_NAME} farm pool").
 - Use "type_action": "add" when the message refers to adding liquidity to a pool (e.g., “add liquidity USDC-SUI”).
 - Set "token_a" and "token_b" based on the tokens mentioned. If only one token is mentioned, assign it to "token_a" and set "token_b" to null.
 - If a number is mentioned without specific token context, treat it as "amount_token_a" indicating the number of pools to list.
@@ -83,7 +83,7 @@ export const liquidityCetus: Action = {
             content = await generateObjectDeprecated({
                 runtime,
                 context: topLiquidityPoolContext,
-                modelClass: ModelClass.SMALL,
+                modelClass: ModelClass.MEDIUM,
             });
         }
         elizaLogger.info("content:", content);
@@ -327,6 +327,38 @@ export const liquidityCetus: Action = {
                 user: "{{agent}}",
                 content: {
                     text: "farming {{TOKEN_NAME}} pools",
+                    action: "LIQUIDITY",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "{{TOKEN_NAME}} liquidity pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "{{TOKEN_NAME}} liquidity pools",
+                    action: "LIQUIDITY",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "{{TOKEN_NAME}} farm pool",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "{{TOKEN_NAME}} farm pool",
                     action: "LIQUIDITY",
 
                 },
