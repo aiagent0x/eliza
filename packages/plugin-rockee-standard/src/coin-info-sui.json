@@ -7581,7 +7581,7 @@
     "type": "0x83556891f4a0f233ce7b05cfe7f957d4020492a34f5405b2cb9377d060bef4bf::spring_sui::SPRING_SUI",
     "decimals": 9,
     "symbol": "sSUI",
-    "name": "Spring Staked SUI",
+    "name": "SpringSUI",
     "iconUrl": "https://suilend-assets.s3.us-east-2.amazonaws.com/lst.png",
     "verified": true,
     "coinGeckoId": "spring-staked-sui"
