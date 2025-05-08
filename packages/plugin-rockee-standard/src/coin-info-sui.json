@@ -4747,7 +4747,7 @@
     "type": "0x5a4e465a6dfac6063d4940331dc1660f8ed881de7fa8f2cfbe3f090b939bed1c::omni::OMNI",
     "decimals": 9,
     "symbol": "OMNI",
-    "name": "OmniCat (Wormhole)",
+    "name": "OmniCat(Omni)",
     "iconUrl": "https://dd.dexscreener.com/ds-data/tokens/solana/7UNCa2KBnJrbpML5CoUvmUffReMK8i8FDcxkn9FEguPd.png?size=lg&key=c8abd3"
   },
   {
@@ -5164,7 +5164,11 @@
     "decimals": 6,
     "symbol": "PYTH",
     "name": "Pyth Network",
-    "iconUrl": null
+    "website": "https://www.pyth.network/",
+    "coingeckoUrl": "https://www.coingecko.com/en/coins/pyth-network",
+    "iconUrl": "https://strapi-dev.scand.app/uploads/Pyth_Network_35c9b827bf.jpg",
+    "verified": true,
+    "coinGeckoId": "pyth-network"
   },
   {
     "type": "0xe4cbb9bcb343ce93182725da11050640c7872453cdb7809e8b7e654581e32774::frog::FROG",
@@ -10664,5 +10668,28 @@
     "iconUrl": "https://www.lombard.finance/lbtc/LBTC.png",
     "verified": true,
     "coinGeckoId": "lombard-staked-btc"
+  },
+  {
+    "type": "0xc5b61b1e1f7f88511c9c0c6f475f823c66cc4e2d39a49beb6777059710be8404::toilet::TOILET",
+    "decimals": 6,
+    "symbol": "Toilet",
+    "name": "Toilet Dust",
+    "website": "https://toiletdust.com/",
+    "coingeckoUrl": "https://www.coingecko.com/en/coins/toilet-dust",
+    "iconUrl": "https://api.movepump.com/uploads/IMG_4034_ef8df5844a.jpeg",
+    "verified": true,
+    "coinGeckoId": "toilet-dust"
+  }
+  ,
+  {
+    "type": "0xc5b61b1e1f7f88511c9c0c6f475f823c66cc4e2d39a49beb6777059710be8404::toilet::TOILET",
+    "decimals": 6,
+    "symbol": "Toilet",
+    "name": "Toilet Dust",
+    "website": "https://toiletdust.com/",
+    "coingeckoUrl": "https://www.coingecko.com/en/coins/toilet-dust",
+    "iconUrl": "https://api.movepump.com/uploads/IMG_4034_ef8df5844a.jpeg",
+    "verified": true,
+    "coinGeckoId": "toilet-dust"
   }
 ]
