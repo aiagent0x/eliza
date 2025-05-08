@@ -151,7 +151,14 @@ export const suiTokenPriceBySymbol: Action = {
         elizaLogger.info("content: ", content);
 
         const tokenInfo = await findByVerifiedAndSymbol(content.token_symbol);
-
+        if (!tokenInfo) {
+            callback({
+                user: await runtime.character.name,
+                text: `We do not have information about the price of ${content.token_symbol}.`,
+                action: 'TOKEN_PRICE_INFO_BY_SYMBOL',
+                
+            });
+        }
         const coninGeckoTeminal = new GeckoTerminalProvider2()
         const info = await coninGeckoTeminal.getTokenDetails("sui-network", tokenInfo.type);
 
