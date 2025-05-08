@@ -158,6 +158,7 @@ export const suiTokenPriceBySymbol: Action = {
                 action: 'TOKEN_PRICE_INFO_BY_SYMBOL',
                 
             });
+            return true;
         }
         const coninGeckoTeminal = new GeckoTerminalProvider2()
         const info = await coninGeckoTeminal.getTokenDetails("sui-network", tokenInfo.type);
