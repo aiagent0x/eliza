@@ -918,6 +918,7 @@
     "x_website": "https://x.com/astros_ag",
     "verified": "Yes",
     "congecko_link": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Astros_logo_0e1c659ead.jpg",
     "slogan": "Astro is a DEX (Decentralized Exchange) platform that enables users to trade cryptocurrencies directly without intermediaries."
   },
   {
@@ -930,6 +931,7 @@
     "website": "https://springsui.com/",
     "x_website": "https://x.com/springsui_",
     "verified": "Yes",
+    "img_url": "https://strapi-dev.scand.app/uploads/Spring_Sui_logo_c595de8bd8.png",
     "congecko_link": "https://www.coingecko.com/en/coins/spring-staked-sui",
     "slogan": "SpringSui is a Liquid Staking project that allows users to stake their crypto assets while keeping them liquid for other uses, such as trading or lending."
   },
@@ -942,6 +944,7 @@
     ],
     "website": "https://steamm.fi/",
     "x_website": "https://x.com/steammfi",
+    "img_url": "https://strapi-dev.scand.app/uploads/STEAMM_logo_ff9f5ee6c4.png",
     "verified": "Yes",
     "congecko_link": "",
     "slogan": "STEAMM is an AMM (Automated Market Maker)  platform that facilitates decentralized trading by using liquidity pools instead of traditional order books."
@@ -957,6 +960,7 @@
     "x_website": "https://x.com/ikadotxyz",
     "verified": "Yes",
     "congecko_link": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Ika_1187a8ee05.png",
     "slogan": "Ika is an MPC (Multi-Party Computation) Network project that focuses on secure and private computations across multiple parties, often used for privacy-preserving applications in blockchain."
   },
   {
@@ -970,7 +974,8 @@
     "x_website": "https://x.com/Magma_Finance",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": ""
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Magma_Finance_logo_7cd45acadb.jpg"
   },
   {
     "id": 76,
@@ -983,7 +988,8 @@
     "x_website": "https://x.com/redstone_defi",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Modular oracles for DeFi & institutions."
+    "slogan": "Modular oracles for DeFi & institutions.",
+    "img_url": "https://strapi-dev.scand.app/uploads/Red_Stone_logo_20aa40af33.png"
   },
   {
     "id": 77,
@@ -996,7 +1002,8 @@
     "x_website": "https://x.com/dynamic_xyz",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "One SDK for every wallet interaction. Extensive multichain and external wallet support."
+    "slogan": "One SDK for every wallet interaction. Extensive multichain and external wallet support.",
+    "img_url": "https://strapi-dev.scand.app/uploads/Dynamic_logo_4352903630.png"
   },
   {
     "id": 78,
@@ -1009,6 +1016,7 @@
     "website": "https://lofitheyeti.com/",
     "x_website": "https://x.com/lofitheyeti",
     "verified": "Yes",
+    "img_url": "https://strapi-dev.scand.app/uploads/LOFI_PFP_d5e19fc6d0.png",
     "congecko_link": "https://www.coingecko.com/en/coins/lofi-2",
     "slogan": "My name is $LOFI 💧🌍 I was frozen for centuries, but I've awakened and am ready to build a brighter future 🧊"
   },
@@ -1023,6 +1031,7 @@
     "x_website": "https://x.com/artinalsnetwork",
     "verified": "Yes",
     "congecko_link": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Artinals_logo_6dac36d864.jpg",
     "slogan": "Open Source Protocol on Sui netwoirk to tokenize Real World Assets using enterprise-grade ART20 standard."
   },
   {
@@ -1036,6 +1045,7 @@
     "x_website": "https://x.com/nemoprotocol",
     "verified": "Yes",
     "congecko_link": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Nemo_Protocol_logo_e213d467f3.jpg",
     "slogan": "Everything you need to maximize yield: Fixed return, points multiplier, leveraged spread, only on Nemo."
   }
 ]
