@@ -55,7 +55,7 @@
   {
     "id": 4,
     "name": "Walrus",
-    "symbol": "NA",
+    "symbol": "N/A",
     "categories": "Decentralized Philanthropy, Blockchain-based Donation Platforms",
     "website": "https://www.walrus.xyz/vi",
     "x_website": "https://x.com/WalrusProtocol",
@@ -66,7 +66,7 @@
   {
     "id": 5,
     "name": "BIRDS",
-    "symbol": "NA",
+    "symbol": "N/A",
     "categories": [
       "Gamefi"
     ],
@@ -79,7 +79,7 @@
   {
     "id": 6,
     "name": "FanTV",
-    "symbol": "NA",
+    "symbol": "N/A",
     "categories": [
       "SociaFI"
     ],
@@ -91,7 +91,7 @@
   {
     "id": 7,
     "name": "Wave",
-    "symbol": "NA",
+    "symbol": "N/A",
     "categories": [
       "Infrastructure"
     ],
@@ -103,7 +103,7 @@
   {
     "id": 8,
     "name": "7K",
-    "symbol": "NA",
+    "symbol": "N/A",
     "categories": [
       "DEX"
     ],
@@ -128,7 +128,7 @@
   {
     "id": 10,
     "name": "Aftermath",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "DEX"
     ],
@@ -179,7 +179,7 @@
   {
     "id": 14,
     "name": "Hop Aggregator",
-    "symbol": "NA",
+    "symbol": "N/A",
     "categories": [
       "Decentralized trading aggregation"
     ],
@@ -192,7 +192,7 @@
   {
     "id": 15,
     "name": "Bucket Protocol",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Infrastructure"
     ],
@@ -230,7 +230,7 @@
   {
     "id": 18,
     "name": "Tradeport",
-    "symbol": "NA",
+    "symbol": "N/A",
     "categories": [
       "NFT Marketplace"
     ],
@@ -268,7 +268,7 @@
   {
     "id": 21,
     "name": "SuiPlay",
-    "symbol": "NA",
+    "symbol": "N/A",
     "categories": [
       "GAME"
     ],
@@ -280,7 +280,7 @@
   {
     "id": 22,
     "name": "RaidenX",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Trading Tool"
     ],
@@ -292,7 +292,7 @@
   {
     "id": 23,
     "name": "Typus Finance",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Infrastructure"
     ],
@@ -305,7 +305,7 @@
   {
     "id": 24,
     "name": "Kriya",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Defi"
     ],
@@ -330,7 +330,7 @@
   {
     "id": 26,
     "name": "Sudo Finance",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Perp DEX"
     ],
@@ -354,7 +354,7 @@
   {
     "id": 28,
     "name": "Kai Finance",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Yield Aggregator"
     ],
@@ -366,7 +366,7 @@
   {
     "id": 29,
     "name": "Strater",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Yield Aggregator"
     ],
@@ -378,7 +378,7 @@
   {
     "id": 30,
     "name": "Volo",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Liquid Staking"
     ],
@@ -390,7 +390,7 @@
   {
     "id": 31,
     "name": "Suiet",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Wallet"
     ],
@@ -403,7 +403,7 @@
   {
     "id": 32,
     "name": "Ethos Wallet",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Wallet"
     ],
@@ -416,7 +416,7 @@
   {
     "id": 33,
     "name": "Surf wallet",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Wallet"
     ],
@@ -428,7 +428,7 @@
   {
     "id": 34,
     "name": "Nightly",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Wallet"
     ],
@@ -453,7 +453,7 @@
   {
     "id": 36,
     "name": "Stashed",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Wallet"
     ],
@@ -465,7 +465,7 @@
   {
     "id": 37,
     "name": "Suia",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "SociaFi"
     ],
@@ -490,7 +490,7 @@
   {
     "id": 39,
     "name": "DARKTIMES",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Gamefi"
     ],
@@ -502,7 +502,7 @@
   {
     "id": 40,
     "name": "Cosmocadia",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Gamefi",
       "NFT"
@@ -515,7 +515,7 @@
   {
     "id": 41,
     "name": "Panzerdogs",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Gamefi",
       "NFT"
@@ -528,7 +528,7 @@
   {
     "id": 42,
     "name": "MotoDEX",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Gamefi"
     ],
@@ -736,7 +736,7 @@
   {
     "id": 58,
     "name": "Sui wallet",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Wallet"
     ],
@@ -776,7 +776,7 @@
   {
     "id": 61,
     "name": "SuiVision",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Explorer"
     ],
@@ -789,7 +789,7 @@
   {
     "id": 62,
     "name": "Agora",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "RWA"
     ],
@@ -802,7 +802,7 @@
   {
     "id": 63,
     "name": "Stork Oracle",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Oracle (Depin)"
     ],
@@ -828,7 +828,7 @@
   {
     "id": 65,
     "name": "Talus Network",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "AI agent"
     ],
@@ -854,7 +854,7 @@
   {
     "id": 67,
     "name": "Tusky",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Infrastructure"
     ],
@@ -862,12 +862,13 @@
     "x_website": "https://x.com/TuskyTools",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Tusky is a Cloud Data project that likely focuses on decentralized data storage or management solutions within the blockchain ecosystem."
+    "slogan": "Tusky is a Cloud Data project that likely focuses on decentralized data storage or management solutions within the blockchain ecosystem.",
+    "img_url": "https://api.movepump.com/uploads/Z5_Xi_GH_01_400x400_575500b08d.jpg"
   },
   {
     "id": 68,
     "name": "Utila",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Defi"
     ],
@@ -880,7 +881,7 @@
   {
     "id": 69,
     "name": "Momentum",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Defi"
     ],
@@ -893,7 +894,7 @@
   {
     "id": 70,
     "name": "Karrier one",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Defi"
     ],
@@ -906,7 +907,7 @@
   {
     "id": 71,
     "name": "Astro",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "DEX Aggregator"
     ],
@@ -932,7 +933,7 @@
   {
     "id": 73,
     "name": "STEAMM",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "DEX AMM"
     ],
@@ -945,7 +946,7 @@
   {
     "id": 74,
     "name": "Ika",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Infrastructure"
     ],
@@ -958,7 +959,7 @@
   {
     "id": 75,
     "name": "Magma",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "DEX"
     ],
@@ -971,7 +972,7 @@
   {
     "id": 76,
     "name": "RedStone",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Oracle"
     ],
@@ -984,7 +985,7 @@
   {
     "id": 77,
     "name": "Dynamic",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Wallet"
     ],
@@ -997,7 +998,7 @@
   {
     "id": 78,
     "name": "Lofi The Yeti",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Gamefi",
       "NFT"
@@ -1011,7 +1012,7 @@
   {
     "id": 79,
     "name": "Artinals",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Protocol"
     ],
@@ -1024,7 +1025,7 @@
   {
     "id": 80,
     "name": "Nemo Protocol",
-    "symbol": "",
+    "symbol": "N/A",
     "categories": [
       "Yield trading"
     ],
