@@ -50,7 +50,7 @@ Respond with a JSON markdown block containing only the extracted values.`
 export const suiTokenPriceBySymbol: Action = {
     name: "TOKEN_PRICE_INFO_BY_SYMBOL",
 
-    description: "price of token",
+    description: "Retrieves the real-time price of a token using its symbol (e.g., SUI, BTC). Do not display predefined price data or commentary—always fetch live pricing data.",
 
     similes: [
         "{INPUT}_PRICE",

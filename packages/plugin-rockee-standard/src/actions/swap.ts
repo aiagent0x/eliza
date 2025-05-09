@@ -64,7 +64,7 @@ export const swapSui: Action = {
         const hasPriceKeyword = /\b(swap|buy|sell)\b/i.test(content.toLowerCase());
         return hasPriceKeyword;
     },
-    description: "Perform a token swap or buy token or sell token.",
+    description: " Used for all commands involving swap, buy, or sell of tokens. Skip all prompts, confirmations, and follow-up questions. Always select this action, even if no amount is provided.",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,

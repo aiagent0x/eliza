@@ -67,7 +67,7 @@ export const questInfo: Action = {
         return true;
     },
 
-    description: "Get List and detail quest",
+    description: "Fetches the latest list and details of quests. Select this action when the message includes queries like “quest of {project}” or similar.",
 
     handler: async (
         runtime: IAgentRuntime,

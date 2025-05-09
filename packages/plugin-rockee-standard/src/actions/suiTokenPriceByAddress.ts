@@ -41,7 +41,7 @@ token_address:
 export const suiTokenPriceByAddress: Action = {
     name: "TOKEN_PRICE_INFO_BY_ADDRESS",
 
-    description: "price of token address",
+    description: "Retrieves the real-time price of a token using its contract address. Avoid using pre-trained model knowledge—ensure the price is dynamically fetched from external sources.",
 
     similes: [
         "{INPUT}_PRICE",

@@ -151,7 +151,7 @@ export const projectInfo: Action = {
         return true;
     },
 
-    description: "Get Project Overview of token",
+    description: "Provides dynamic, real-time insights into a specific blockchain project or token (e.g., purpose, roadmap, utility). Avoid using any stored or model-learned content.",
 
     handler: async (
         runtime: IAgentRuntime,
