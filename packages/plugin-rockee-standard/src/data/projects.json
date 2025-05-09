@@ -797,7 +797,8 @@
     "x_website": "https://twitter.com/AgoraDefi",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Agora is a Money Market & AMM for Lending, Borrowing and Swapping on Metis."
+    "slogan": "Agora is a Money Market & AMM for Lending, Borrowing and Swapping on Metis.",
+    "img_url" : "https://strapi-dev.scand.app/uploads/Agora_Logo_4896eaef9f.jpg"
   },
   {
     "id": 63,
