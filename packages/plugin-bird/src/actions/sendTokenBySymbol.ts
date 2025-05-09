@@ -110,15 +110,15 @@ export const sendTokenBySymbol: Action = {
         }
         
         try {
-            if (_options.type !== "toggle_faster") {
-                let messageService = new MessageService()
-                await messageService.createMessage(
-                    message.content.text,
-                    {
-                        action: "TRANSFER_TOKENS",
-                        data_extract: content
-                    })
-            }
+            // if (_options.type !== "toggle_faster") {
+            //     let messageService = new MessageService()
+            //     await messageService.createMessage(
+            //         message.content.text,
+            //         {
+            //             action: "TRANSFER_TOKENS",
+            //             data_extract: content
+            //         })
+            // }
             callback({
                 user: await runtime.character.name,
                 text: "Double-check all the details before takeoff to dodge any turbulence!",

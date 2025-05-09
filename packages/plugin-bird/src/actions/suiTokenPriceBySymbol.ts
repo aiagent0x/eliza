@@ -153,15 +153,15 @@ export const suiTokenPriceBySymbol: Action = {
 
         if (callback) {
 
-            if (_options.type !== "toggle_faster") {
-                let messageService = new MessageService()
-                await messageService.createMessage(
-                    message.content.text,
-                    {
-                        action: "TOKEN_PRICE_INFO_BY_SYMBOL",
-                        data_extract: content
-                    })
-            }
+            // if (_options.type !== "toggle_faster") {
+            //     let messageService = new MessageService()
+            //     await messageService.createMessage(
+            //         message.content.text,
+            //         {
+            //             action: "TOKEN_PRICE_INFO_BY_SYMBOL",
+            //             data_extract: content
+            //         })
+            // }
             callback({
                 user: await runtime.character.name,
                 text: `Here are the token prices—let’s lock in the best deal! `,

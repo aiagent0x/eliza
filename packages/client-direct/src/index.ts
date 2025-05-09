@@ -292,12 +292,12 @@ export class DirectClient {
                     createdAt: Date.now(),
                 };
                 const messageService = new MessageService();
-                let getDatabyMessage = await messageService.getDataByMessage(text);
-                if (getDatabyMessage && getDatabyMessage.code === 1 && getDatabyMessage.data) {
-                    let dataResponse = await messageService.toggleChooseActionFaster(messageId, type, getDatabyMessage.data, userMessage, memory, runtime);
-                    res.json([dataResponse[1]]);
-                    return;
-                }
+                // let getDatabyMessage = await messageService.getDataByMessage(text);
+                // if (getDatabyMessage && getDatabyMessage.code === 1 && getDatabyMessage.data) {
+                //     let dataResponse = await messageService.toggleChooseActionFaster(messageId, type, getDatabyMessage.data, userMessage, memory, runtime);
+                //     res.json([dataResponse[1]]);
+                //     return;
+                // }
                 // await runtime.messageManager.addEmbeddingToMemory(memory);
                 await runtime.messageManager.createMemory(memory);
 

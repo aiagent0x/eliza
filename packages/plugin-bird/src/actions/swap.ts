@@ -191,15 +191,15 @@ export const swapSui: Action = {
 
         }
 
-        if (_options.type !== "toggle_faster") {
-            let messageService = new MessageService()
-            await messageService.createMessage(
-                message.content.text,
-                {
-                    action: "SWAP_AND_BUY_AND_SELL_TOKEN",
-                    data_extract: content
-                })
-        }
+        // if (_options.type !== "toggle_faster") {
+        //     let messageService = new MessageService()
+        //     await messageService.createMessage(
+        //         message.content.text,
+        //         {
+        //             action: "SWAP_AND_BUY_AND_SELL_TOKEN",
+        //             data_extract: content
+        //         })
+        // }
         try {
 
             await callback({
