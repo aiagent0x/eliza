@@ -23,28 +23,27 @@ import MessageService from "../services/messageService";
 const topLiquidityPoolTemplate = `Recent messages: {{recentMessages}}  
 Extract the liquidity pool parameters from the conversation above, following these rules:  
 
-- Sample Pair Names: SUI-USDC, USDC-suiUSDT, DEEP-SUI, USDC-SUI, CETUS-SUI, HIPPO-SUI, USDC-ETH, LOFI-SUI, NS-SUI, USDC-USDY, USDC-BUCK, BUCK-SUI, wUSDC-SUI, haSUI-SUI, USDC-CETUS, afSUI-SUI, USDC-wUSDT, BLUE-SUI, ETH-WETH, USDC-WSOL, USDC-AUSD , stSUI-SUI, BUT-SUI, Sonic-SUI, AXOL-SUI, SEND-SUI, WSOL-SUI, etc. 
+- Sample Token Names: SUI, USDC, DEEP, CETUS, HIPPO, ETH, LOFI, NS, USDY, BUCK, BUCK, wUSDC, haSUI, afSUI, wUSDT, BLUE, WETH, WSOL, AUSD , stSUI, BUT, Sonic, AXOL, SEND, **WAL**, SUI, NS, kSUI, WBNB, USDY, CAPO, SEND, USDT, DEEP, FLX, ALPHA, SPAM, FDUSD, AFSUI, WETH, SPT, SUIP, HOPI, CETUS, MOVE, wUSDC, WFTM, ARTFI, SOL, USDC, haSUI, PIGU, PRH, FUD, AXOL, SCB, KOTO, JWLSUI, BLUB, AUSD, TYPUS, ETH, SCA, vSUI, SSWP, sSUI, stSUI, SUIA, SCUBA, Chad, WMATIC, NAVX, BLUE, PDO, OINK, HSUI, TURBOS, BUCK, WBTC, WAVAX, APT, REAP, PSH, ROCK, etc. All token symbols are recognized regardless of case format. 
 - **Extract data only from the latest message** and discard any previous messages.
 - Return only a JSON object with the specified fields in this format:  
     \`\`\`json
         {  
-            "type_action": "show_list" | "add" | "remove",  
-            "pair_name": string | SUI-USDC,  
-            "amount_token_a": number | 0,  //is size list or amount token a
-            "amount_token_b": number | 0, 
+            "type_action": "show_list" | "add",
+            "token_a": string | null,
+            "token_b": string | null,
+            "amount_token_a": number | 0,
+            "amount_token_b": number | 0
         }  
     \`\`\`
-- Use '"type_action": "show_list"' when the request is about listing liquidity pools (e.g., "liquidity pools", "top 5 liquidity pools").  
-- Use '"type_action": "add"' when the request specifies adding liquidity (e.g., "add liquidity SUI-USDC").  
-- Use '"type_action": "remove"' when the request specifies removing liquidity (e.g., "remove liquidity SUI-USDC"). 
-- Set '"pair_name"' to null if no specific pair is mentioned.  
-- If a specific token and amount are provided, assign it to the corresponding field ('amount_token_a' or 'amount_token_b').  
-- If both tokens have amounts, only assign 'amount_token_a' and set 'amount_token_b' to '0'.  
-- Use 'null' for any values that cannot be determined.  
-- All property names must use double quotes.  
-- Null values should not use quotes.  
-- No trailing commas allowed.  
-- No single quotes anywhere in the JSON.  
+- Use "type_action": "show_list" when the message is about displaying or listing pools (e.g., “liquidity pools”, “8 liquidity USDC pools”, "farm {TOKEN_NAME} pools", "8 farming {TOKEN_NAME} pools", "{TOKEN_NAME} liquidity pools", "{TOKEN_NAME} farm pool").
+- Use "type_action": "add" when the message refers to adding liquidity to a pool (e.g., “add liquidity USDC-SUI”).
+- Set "token_a" and "token_b" based on the tokens mentioned. If only one token is mentioned, assign it to "token_a" and set "token_b" to null.
+- If a number is mentioned without specific token context, treat it as "amount_token_a" indicating the number of pools to list.
+- If both token amounts are present, assign the first one to "amount_token_a" and set "amount_token_b" to 0.
+- Use null (without quotes) for any values that cannot be determined.
+- All property names must use double quotes.
+- Do not use single quotes.
+- Do not include trailing commas. 
 `;
 export const liquidityCetus: Action = {
     name: "LIQUIDITY",
@@ -55,13 +54,11 @@ export const liquidityCetus: Action = {
         "FARM_{PAIR_NAME}",
         "FARMING_{PAIR_NAME}",
         "FARMING_LIQUIDITY",
-        "REMOVE_LIQUIDITY",
-        "REMOVE_LIQUIDITY_{PAIR_NAME}"
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
         return true;
     },
-    description: "liquidity cetus",
+    description: "liquidity cetus pools and farm pools",
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -86,30 +83,85 @@ export const liquidityCetus: Action = {
             content = await generateObjectDeprecated({
                 runtime,
                 context: topLiquidityPoolContext,
-                modelClass: ModelClass.SMALL,
+                modelClass: ModelClass.MEDIUM,
             });
         }
-
         elizaLogger.info("content:", content);
 
         if (content.type_action === "show_list") {
             if (parseInt(content.amount_token_a) === 0) content.amount_token_a = 5;
+            if (content.token_a !== "null") {
+                let cetusProvider = new CetusProvider();
+                let coinA = content.token_a;
+                let coinB = content.token_b;
+                let coinInfoA = await findByVerifiedAndSymbol(coinA);
+                let coinInfoB;
+                if (coinB !== "null") {
+                    coinInfoB = await findByVerifiedAndSymbol(coinB);
+                }
+                if (!coinInfoA) {
+                    callback({
+                        user: await runtime.character.name,
+                        text: `Could not find the symbol for ${coinA}:`,
+                        action: "LIQUIDITY_POOLS",
+                        action_hint: getActionHint(
+                            "navi pools",
+                            "button_generate_text",
+                            "navi",
+                            "liquidity"
+                        )
+                    })
+                    return true;
+                }
+                let coinTypeList;
+                if (coinInfoA && coinInfoB) {
+                    coinTypeList = `${coinInfoA.type},${coinInfoB.type}`;
+                }
+                else {
+                    coinTypeList = coinInfoA.type;
+                }
+                let result = await cetusProvider.fetchLiquidityPoolsByCoinType(coinTypeList);
+                result.data.lp_list.sort((a: any, b: any) => {
+                    a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
+                    b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
+                    if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
+                    if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
+                    return 0;
+                });
+                try {
+                    
+                    callback({
+                        user: await runtime.character.name,
+                        text: "Below is a list of liquidity pools:",
+                        action: "LIQUIDITY_POOLS",
+                        result: {
+                            type: "liquidity_pools",
+                            data: result.data.lp_list.slice(0, parseInt(content.amount_token_a)),
+                        }
+                    })
+                    return true;
+                } catch (error) {
+                    console.error("Error during token add:", error);
+                    return false;
+                }
+            }
+            
             let responseData = await redis.getValue({ key: "liquidity_pools" })
             if (responseData !== undefined) {
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "LIQUIDITY_POOLS",
-                            data_extract: content
-                        })
+                // if (_options.type !== "toggle_faster") {
+                //     let messageService = new MessageService()
+                //     await messageService.createMessage(
+                //         message.content.text,
+                //         {
+                //             action: "LIQUIDITY",
+                //             data_extract: content
+                //         })
 
-                }
+                // }
                 callback({
                     user: await runtime.character.name,
-                    text: "Here's a rundown of liquidity pools—check them out before diving in!",
-                    action: "LIQUIDITY_POOLS",
+                    text: "Below is a list of liquidity pools:",
+                    action: "LIQUIDITY",
                     result: {
                         type: "liquidity_pools",
                         data: JSON.parse(responseData).slice(0, parseInt(content.amount_token_a)),
@@ -119,99 +171,44 @@ export const liquidityCetus: Action = {
             }
             let cetusProvider = new CetusProvider();
             let result: any = await cetusProvider.fetchLiquidityPools();
+            result.data.lp_list.sort((a: any, b: any) => {
+                a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
+                b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
+                if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
+                if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
+                return 0;
+            });
             try {
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "LIQUIDITY_POOLS",
-                            data_extract: content
-                        })
+                // if (_options.type !== "toggle_faster") {
+                //     let messageService = new MessageService()
+                //     await messageService.createMessage(
+                //         message.content.text,
+                //         {
+                //             action: "LIQUIDITY",
+                //             data_extract: content
+                //         })
 
-                }
+                // }
                 callback({
                     user: await runtime.character.name,
-                    text: "Here's a rundown of liquidity pools—check them out before diving in!",
-                    action: "LIQUIDITY_POOLS",
+                    text: "Below is a list of liquidity pools:",
+                    action: "LIQUIDITY",
                     result: {
                         type: "liquidity_pools",
-                        data: result.data.lp_list.slice(0, parseInt(content.amount_token_a)),
+                        data: result.data.lp_list.slice(0, content.amount_token_a),
                     }
                 })
                 return true;
             } catch (error) {
-                console.error("Error during token swap:", error);
-                return false;
-            }
-        }
-        else if(content.type_action === "remove"){
-            let cetusProvider = new CetusProvider();
-            let coinA = content.pair_name.split("-")[0];
-            let coinB = content.pair_name.split("-")[1];
-            let coinInfoA = await findByVerifiedAndSymbol(coinA);
-            let coinInfoB = await findByVerifiedAndSymbol(coinB);
-            if (!coinInfoA) {
-                callback({
-                    user: await runtime.character.name,
-                    text: `Could not find the symbol for ${coinA}:`,
-                    action: "LIQUIDITY_POOLS",
-                    action_hint: getActionHint(
-                        "navi pools",
-                        "button_generate_text",
-                        "navi",
-                        "liquidity"
-                    )
-                })
-                return true;
-            }
-            if (!coinInfoB) {
-                callback({
-                    user: await runtime.character.name,
-                    text: `Could not find the symbol for ${coinB}:`,
-                    action: "LIQUIDITY_POOLS",
-                    action_hint: getActionHint(
-                        "navi pools",
-                        "button_generate_text",
-                        "navi",
-                        "liquidity"
-                    )
-                })
-                return true;
-            }
-            let result = await cetusProvider.fetchLiquidityPoolsByCoinType(`${coinInfoA.type},${coinInfoB.type}`);
-
-            try {
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "LIQUIDITY_POOLS",
-                            data_extract: content
-                        })
-
-                }
-                callback({
-                    user: await runtime.character.name,
-                    text: "Double-check all the details before takeoff to dodge any turbulence!",
-                    action: "LIQUIDITY_POOLS",
-                    result: {
-                        type: "remove_liquidity",
-                        data: result.data.lp_list[0],
-                    }
-                })
-                return true;
-            } catch (error) {
-                console.error("Error during token swap:", error);
+                console.error("Error during token add liquidity:", error);
                 return false;
             }
         }
         else {
 
             let cetusProvider = new CetusProvider();
-            let coinA = content.pair_name.split("-")[0];
-            let coinB = content.pair_name.split("-")[1];
+            let coinA = content.token_a;
+            let coinB = content.token_b!;
             let coinInfoA = await findByVerifiedAndSymbol(coinA);
             let coinInfoB = await findByVerifiedAndSymbol(coinB);
             if (!coinInfoA) {
@@ -245,19 +242,18 @@ export const liquidityCetus: Action = {
             let result = await cetusProvider.fetchLiquidityPoolsByCoinType(`${coinInfoA.type},${coinInfoB.type}`);
 
             try {
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "LIQUIDITY_POOLS",
-                            data_extract: content
-                        })
-
-                }
+                // if (_options.type !== "toggle_faster") {
+                //     let messageService = new MessageService()
+                //     await messageService.createMessage(
+                //         message.content.text,
+                //         {
+                //             action: "LIQUIDITY",
+                //             data_extract: content
+                //         })
+                // }
                 callback({
                     user: await runtime.character.name,
-                    text: "Double-check all the details before takeoff to dodge any turbulence!",
+                    text: "Please ensure all details are correct before adding liquidity to prevent any potential losses.",
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "add_liquidity",
@@ -266,7 +262,7 @@ export const liquidityCetus: Action = {
                 })
                 return true;
             } catch (error) {
-                console.error("Error during token swap:", error);
+                console.error("Error during token add:", error);
                 return false;
             }
         }
@@ -308,13 +304,61 @@ export const liquidityCetus: Action = {
             {
                 user: "{{user1}}",
                 content: {
-                    text: "remove liquidity",
+                    text: "farm {{TOKEN_NAME}} pools",
                 },
             },
             {
                 user: "{{agent}}",
                 content: {
-                    text: "remove liquidity",
+                    text: "farm {{TOKEN_NAME}} pools",
+                    action: "LIQUIDITY",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "farming {{TOKEN_NAME}} pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "farming {{TOKEN_NAME}} pools",
+                    action: "LIQUIDITY",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "{{TOKEN_NAME}} liquidity pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "{{TOKEN_NAME}} liquidity pools",
+                    action: "LIQUIDITY",
+
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "{{TOKEN_NAME}} farm pool",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "{{TOKEN_NAME}} farm pool",
                     action: "LIQUIDITY",
 
                 },
