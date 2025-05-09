@@ -42,7 +42,7 @@ Given the recent messages, extract the following information about the requested
 Respond with a JSON markdown block containing only the extracted values.
 `;
 
-export const swapSui: Action = {
+export const  swapSui: Action = {
     name: "SWAP_AND_BUY_AND_SELL_TOKEN",
     similes: [
         "SWAP_TOKENS",
@@ -117,7 +117,6 @@ export const swapSui: Action = {
             }
             // const coninGeckoTeminal = new GeckoTerminalProvider2();
 
-
             let amount = content.amount;
             if (!content.from_token_address || content.from_token_address === "null") {
                 const coinGecko = new GeckoTerminalProvider2();
@@ -137,9 +136,7 @@ export const swapSui: Action = {
                 }
 
             }
-
             try {
-
                 callback({
                     user: await runtime.character.name,
                     text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -147,8 +144,6 @@ export const swapSui: Action = {
                     result: {
                         type: "swap",
                         data: responseData,
-
-
                     }
                 })
 
