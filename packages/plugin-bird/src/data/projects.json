@@ -55,16 +55,13 @@
   {
     "id": 4,
     "name": "Walrus",
-    "symbol": "WAL",
-    "categories": [
-      "Decentralized storage"
-    ],
-    "website": "https://www.walrus.xyz",
+    "symbol": "N/A",
+    "categories": "Decentralized Philanthropy, Blockchain-based Donation Platforms",
+    "website": "https://www.walrus.xyz/vi",
     "x_website": "https://x.com/WalrusProtocol",
-    "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/walrus-2",
-    "slogan": "Walrus, decentralized storage network for blockchain apps, is now available as a developer preview for Sui builders to gather feedback.",
-    "img_url": "https://public.rootdata.com/images/b6/1723721140493.jpg"
+    "verified": "No",
+    "congecko_link": "x",
+    "slogan": "Walrus, decentralized storage network for blockchain apps, is now available as a developer preview for Sui builders to gather feedback."
   },
   {
     "id": 5,
@@ -77,8 +74,7 @@
     "x_website": "https://x.com/TheBirdsDogs",
     "verified": "No",
     "congecko_link": "x",
-    "slogan": "MemeFi is the Leading Telegram gaming ecosystem with over 50M users",
-    "img_url": "https://i.imgur.com/lTaYcf7.jpeg"
+    "slogan": "MemeFi is the Leading Telegram gaming ecosystem with over 50M users"
   },
   {
     "id": 6,
@@ -90,23 +86,19 @@
     "website": "https://fantv.world/",
     "x_website": "https://x.com/FanTV_official",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Create. Consume. Earn. Democratizing Creativity with AI.",
-    "img_url": "https://media.licdn.com/dms/image/v2/D560BAQGRn-q-Cx7HcA/company-logo_200_200/company-logo_200_200/0/1730096193191/fantv_official_logo?e=2147483647&v=beta&t=npppfHLAsV1Yo0QWypjJjvLVBG4piot1Dh35fF6evbU"
+    "congecko_link": "x"
   },
   {
     "id": 7,
     "name": "Wave",
-    "symbol": "WAV",
+    "symbol": "N/A",
     "categories": [
       "Infrastructure"
     ],
     "website": "https://waveonsui.com/",
     "x_website": "https://x.com/WaveOnSui",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Wave Wallet is a Telegram-based wallet offering simplicity, security, and limitless earning potential within the SUI ecosystem.",
-    "img_url": "https://waveonsui.com/_next/static/media/logo_wave1.2c504e33.webp"
+    "congecko_link": "x"
   },
   {
     "id": 8,
@@ -119,21 +111,19 @@
     "x_website": "https://x.com/7k_ag_",
     "verified": "No",
     "congecko_link": "x",
-    "slogan": "As the first dynamic trading route aggregator on Sui, 7K Aggregator optimizes your trading strategies.",
-    "img_url": "https://public.rootdata.com/images/b12/1721716107047.jpg"
+    "slogan": "FlowX Finance is an ecosystem-focused decentralized exchange built on the Sui blockchain, designed to offer a seamless, user-friendly trading experience for the entire ecosystem."
   },
   {
     "id": 9,
     "name": "Haedal",
-    "symbol": "N/A",
+    "symbol": "HAEDAL",
     "categories": [
       "Liquid Staking"
     ],
     "website": "https://www.haedal.xyz/",
     "x_website": "https://x.com/HaedalProtocol",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/haedal-staked-sui",
-    "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEDlq7JCqvvdFDNCzKYyHFen_4AN8NYqj_l2lrmcqidZB5vVTju6MKfSuH45xrdk_YpvU&usqp=CAU"
+    "congecko_link": "https://www.coingecko.com/en/coins/haedal-protocol"
   },
   {
     "id": 10,
@@ -146,8 +136,7 @@
     "x_website": "https://x.com/AftermathFi",
     "verified": "No",
     "congecko_link": "x",
-    "slogan": "Aftermath is building an all-in-one platform for trading, investing, and earning yield that is fast, inexpensive, and fully transparent. ",
-    "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPUdnZDCdYRGJpxvEe-LjwUXgbsVfUeOxw00IAkBFCyQ9Bg3kRIOAOHqTld5Ife52u0K0&usqp=CAU"
+    "slogan": "Aftermath is building an all-in-one platform for trading, investing, and earning yield that is fast, inexpensive, and fully transparent. "
   },
   {
     "id": 11,
@@ -198,8 +187,7 @@
     "x_website": "https://x.com/HopAggregator",
     "verified": "No",
     "congecko_link": "x",
-    "slogan": "Swap on Sui Network for the best price with zero fees on Hop Aggregator",
-    "img_url": "https://dappradar-icons.s3.amazonaws.com/original-size-domains/hop.ag.png"
+    "slogan": "Swap on Sui Network for the best price with zero fees on Hop Aggregator"
   },
   {
     "id": 15,
@@ -211,8 +199,7 @@
     "website": "https://legacy.bucketprotocol.io/dashboard",
     "x_website": "https://x.com/bucket_protocol",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/bucket-protocol-buck-stablecoin",
-    "img_url": "https://pbs.twimg.com/profile_images/1873625481091985408/qRr0_a0s_400x400.jpg"
+    "congecko_link": "https://www.coingecko.com/en/coins/bucket-protocol-buck-stablecoin"
   },
   {
     "id": 16,
@@ -250,8 +237,7 @@
     "website": "https://www.tradeport.xyz/",
     "x_website": "https://x.com/tradeportxyz",
     "verified": "No",
-    "congecko_link": "x",
-    "img_url": "https://media.licdn.com/dms/image/v2/D560BAQHvY9jwNW8Nsw/company-logo_200_200/company-logo_200_200/0/1719256799147/tradeportxyz_logo?e=2147483647&v=beta&t=YvplfQj7n0MgTfjo69k7KQ94s99gohznPoHseiDpHso"
+    "congecko_link": "x"
   },
   {
     "id": 19,
@@ -289,9 +275,7 @@
     "website": "https://www.suiplay0x1.com/",
     "x_website": "https://x.com/suiplay",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "The SuiPlay0X1 is a first-of-its-kind handheld gaming console. It supports a wide range of PC games, as well as new AAA titles developed using Sui technology.",
-    "img_url": "https://cdn.prod.website-files.com/66cf3cbcef83aa4c33ac95de/66d5860848c914d8f021d369_Frame%202147257066.svg"
+    "congecko_link": "x"
   },
   {
     "id": 22,
@@ -303,9 +287,7 @@
     "website": "https://raidenx.io/",
     "x_website": "https://x.com/raidenx_io",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "The fastest trading bot for Sui. Millions of trading opportunities delivered in milliseconds.",
-    "img_url": "https://pbs.twimg.com/profile_images/1879391901784436736/n-OpE4Ai_400x400.png"
+    "congecko_link": "x"
   },
   {
     "id": 23,
@@ -323,7 +305,7 @@
   {
     "id": 24,
     "name": "Kriya",
-    "symbol": "KDX",
+    "symbol": "N/A",
     "categories": [
       "Defi"
     ],
@@ -355,9 +337,7 @@
     "website": "https://www.sudo.finance/",
     "x_website": "https://x.com/sudofinance",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Sudo is the first perpetual protocol built with Move on Sui that offers you sub-second and zero price impact trading experience on-chain.",
-    "img_url": "https://public.rootdata.com/images/b6/1704878192022.jpg"
+    "congecko_link": "x"
   },
   {
     "id": 27,
@@ -381,9 +361,7 @@
     "website": "https://kai.finance/",
     "x_website": "https://x.com/kai_finance_sui",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Choose steady growth with Single Asset Vaults or boost returns with Leveraged LP Vaults — yield solutions for every investment style.",
-    "img_url": "https://pbs.twimg.com/profile_images/1846243048620990464/J5yaW_wl_400x400.jpg"
+    "congecko_link": "x"
   },
   {
     "id": 29,
@@ -395,9 +373,7 @@
     "website": "https://www.strater.xyz/",
     "x_website": "https://x.com/strater_sui",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Starter is a one-stop DeFi strategy hub for the Sui ecosystem. By integrating protocols like lending, DEX, and LST, we simplify complex and tedious operations, allowing users to effortlessly enhance their capital efficiency and potentially increase their returns.",
-    "img_url": "https://avatars.githubusercontent.com/u/151643515?s=280&v=4"
+    "congecko_link": "x"
   },
   {
     "id": 30,
@@ -409,9 +385,7 @@
     "website": "https://www.volosui.com/",
     "x_website": "https://x.com/volo_sui",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/volo-staked-sui",
-    "slogan": "Volo is a liquid staking solution that helps you maximize utility and liquidity for SUI by offering voloSUI.",
-    "img_url": "https://pbs.twimg.com/profile_images/1663223221317926912/7AlD35vg_400x400.jpg"
+    "congecko_link": "https://www.coingecko.com/en/coins/volo-staked-sui"
   },
   {
     "id": 31,
@@ -424,8 +398,7 @@
     "x_website": "https://x.com/suiet_wallet",
     "verified": "No",
     "congecko_link": "x",
-    "slogan": "Suiet Wallet is a user-friendly, secure wallet designed for the Sui blockchain, offering seamless transactions, storage, and interaction with dApps. ",
-    "img_url": "https://framerusercontent.com/images/eDZRos3xvCrlWxmLFr72sFtiyQ.png"
+    "slogan": "Suiet Wallet is a user-friendly, secure wallet designed for the Sui blockchain, offering seamless transactions, storage, and interaction with dApps. "
   },
   {
     "id": 32,
@@ -438,8 +411,7 @@
     "x_website": "https://x.com/EthosWalletXYZ",
     "verified": "No",
     "congecko_link": "x",
-    "slogan": "Ethos Wallet is a user-friendly crypto wallet built on Sui, designed to make managing digital assets and interacting with dApps seamless and secure.",
-    "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq8alvoGZzBwhQJitD9XBpeoalFGKIjSiE-w&s"
+    "slogan": "Ethos Wallet is a user-friendly crypto wallet built on Sui, designed to make managing digital assets and interacting with dApps seamless and secure."
   },
   {
     "id": 33,
@@ -451,9 +423,7 @@
     "website": "https://surf.tech/",
     "x_website": "https://x.com/surf_wallet",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Surfing Sui in a whole new way. Secure, easy, powerful, and seamless on Sui Network.",
-    "img_url": "https://play-lh.googleusercontent.com/JWCEgmEfIFast6RL5qC86EHnpFQFLMDqfqw_N2Iy0SFYCPvFiRjOlk4ZHgr9bnNNTDU4"
+    "congecko_link": "x"
   },
   {
     "id": 34,
@@ -465,14 +435,12 @@
     "website": "https://nightly.app/",
     "x_website": "https://x.com/Nightly_app",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Nightly Wallet is a multi-chain wallet created to embrace the full potential of blockchain. It includes Nightly Wallet - an extension and mobile wallet working on Solana, Near, Aptos, Sui, Aleph Zero, Vara, Movement, Sonic, EVMs and Polkadot.",
-    "img_url": "https://play-lh.googleusercontent.com/FVDtw6vCV9RFTAO7jjFf0juosjuQql3dHJIJtE30okJEn4R1om2YzJHclmiwd10CuIFi=w240-h480-rw"
+    "congecko_link": "x"
   },
   {
     "id": 35,
     "name": "Martian wallet",
-    "symbol": "N/A",
+    "symbol": "",
     "categories": [
       "Wallet"
     ],
@@ -480,8 +448,7 @@
     "x_website": "https://x.com/martian_wallet",
     "verified": "No",
     "congecko_link": "x",
-    "slogan": "Martian wallet is a crypto wallet that can be used to manage digital assets and access decentralized applications on the Sui and Aptos blockchain. ",
-    "img_url": "https://pbs.twimg.com/profile_images/1596164591750348800/slgh620r_400x400.jpg"
+    "slogan": "Martian wallet is a crypto wallet that can be used to manage digital assets and access decentralized applications on the Sui and Aptos blockchain. "
   },
   {
     "id": 36,
@@ -493,9 +460,7 @@
     "website": "https://getstashed.com/auth",
     "x_website": "https://x.com/stashedofficial",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Stashed is a web-based unhosted blockchain wallet that allows people to store, send and receive assets on the Sui blockchain. Stashed allows you to create a wallet using a regular web account (e.g. Google & Twitch).",
-    "img_url": "https://public.rootdata.com/images/b12/1716869003249.jpg"
+    "congecko_link": "x"
   },
   {
     "id": 37,
@@ -507,9 +472,7 @@
     "website": "https://suia.io/",
     "x_website": "https://x.com/Suia2023",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/suia",
-    "slogan": "SUIA v2 coming soon.",
-    "img_url": "https://sui.directory/wp-content/uploads/2023/03/avatar-suia-512.jpg"
+    "congecko_link": "https://www.coingecko.com/en/coins/suia"
   },
   {
     "id": 38,
@@ -519,7 +482,7 @@
       "Launchpad"
     ],
     "website": "https://t.co/7HJlSBc80p",
-    "x_website": "hhttps://x.com/SeaFi_AI",
+    "x_website": "https://x.com/SeaPad_defi",
     "verified": "Yes",
     "congecko_link": "https://www.coingecko.com/en/coins/seapad",
     "slogan": "SeaFi is the DeFi AI and Launchpad, empowering project launches, smart trading, yield optimization, and AI-driven innovation"
@@ -527,16 +490,14 @@
   {
     "id": 39,
     "name": "DARKTIMES",
-    "symbol": "TIMES",
+    "symbol": "N/A",
     "categories": [
       "Gamefi"
     ],
     "website": "https://playdarktimes.com/",
     "x_website": "https://x.com/playDARKTIMES",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/times",
-    "slogan": "DARKTIMES is a free-to-play Brawler Royale with a physics-based combat system. Fight friend and foe for survival in the high-stakes, winner-takes-all world.",
-    "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwH-e8JADC9_fkMywaOcNqJXUfenQfQD0DAQ&s"
+    "congecko_link": "https://www.coingecko.com/en/coins/times"
   },
   {
     "id": 40,
@@ -549,9 +510,7 @@
     "website": "https://discord.com/invite/cosmocadia",
     "x_website": "https://x.com/Cosmocadia",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Set in an ominous, Nordic-inspired mediaeval environment, DARKTIMES is a free-to-play Brawler Royale with a physics-based combat system. Fight friend and foe for survival in the high-stakes, winner-takes-all world.",
-    "img_url": "https://sui.directory/wp-content/uploads/2023/04/cosmocadia_logo_compact_color-540x540.png"
+    "congecko_link": "x"
   },
   {
     "id": 41,
@@ -564,9 +523,7 @@
     "website": "https://www.panzerdogs.io/",
     "x_website": "https://x.com/panzerdogs",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "The epic PvP tank brawler game available on desktop and mobile by Lucky Kat Studios.",
-    "img_url": "https://ipfs.bluemove.net/uploads2/aaa/panzerdogs.webp"
+    "congecko_link": "x"
   },
   {
     "id": 42,
@@ -578,23 +535,19 @@
     "website": "https://www.DEXstudios.net/",
     "x_website": "https://x.com/motoDEX_game",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Dive in the ecosystem of DEXStudios, a convergence of innovation and entertainment",
-    "img_url": "https://pbs.twimg.com/profile_images/1818287502454673408/ktF-IIId_400x400.jpg"
+    "congecko_link": "x"
   },
   {
     "id": 43,
     "name": "Capybara",
-    "symbol": "N/A",
+    "symbol": "",
     "categories": [
       "Gamefi"
     ],
     "website": "https://www.capybara.vip/",
     "x_website": "https://x.com/capybaraonsui",
     "verified": "No",
-    "congecko_link": "x",
-    "slogan": "Telegram meme Mini app on Sui. Play to earn in-game currency",
-    "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsn1p06rsZ2Q1J_mvjpZarVyQVRw4HmEeUNQ&s"
+    "congecko_link": "x"
   },
   {
     "id": 44,
@@ -606,9 +559,7 @@
     "website": "https://linktr.ee/sacabamfun",
     "x_website": "https://x.com/sacabamfun",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/sacabam",
-    "slogan": "Community Memecoin on Sui",
-    "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7OeDokvww-6Y8OZ595Kfhs02FlLc2mdgnxQ&s"
+    "congecko_link": "https://www.coingecko.com/en/coins/sacabam"
   },
   {
     "id": 45,
@@ -651,15 +602,14 @@
   {
     "id": 48,
     "name": "Suiman",
-    "symbol": "N/A",
+    "symbol": "",
     "categories": [
       "Meme"
     ],
     "website": "https://linktr.ee/suimanmeme",
     "x_website": "https://x.com/SuimanFanPage",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/suiman",
-    "slogan": "The Telegram bot to trade any meme coin on Sui"
+    "congecko_link": "https://www.coingecko.com/en/coins/suiman"
   },
   {
     "id": 49,
@@ -671,8 +621,7 @@
     "website": "",
     "x_website": "https://x.com/SuiPadxyz",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/suipad",
-    "slogan": "Launchpad on Sui Network"
+    "congecko_link": "https://www.coingecko.com/en/coins/suipad"
   },
   {
     "id": 50,
@@ -684,7 +633,7 @@
     "website": "https://rockee.ai/",
     "x_website": "https://x.com/RockeeAI",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/rockee-ai",
+    "congecko_link": "",
     "slogan": "Rockee is an AI-driven DeFi protocol that fundamentally reshapes how users interact with decentralized finance. Leveraging cutting-edge AI technologies, real-time data from trusted sources, and extensive expertise in crypto, particularly DeFi protocols - Rockee promises to deliver a seamless, user-centric experience to everyone, whether they come from a traditional Web2 environment or are already immersed in Web3."
   },
   {
@@ -697,8 +646,7 @@
     "website": "https://lofitheyeti.com/",
     "x_website": "https://x.com/lofitheyeti",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/lofi-2",
-    "slogan": "A yeti memecoin frozen in time, awakened by the $SUI legends"
+    "congecko_link": "https://www.coingecko.com/en/coins/lofi-2"
   },
   {
     "id": 53,
@@ -710,8 +658,7 @@
     "website": "https://suiagents.ai/",
     "x_website": "https://x.com/SUI_agents",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/sui-agents",
-    "slogan": "Launch and Co-Create Onchain AI Agents on SuiNetwork"
+    "congecko_link": "https://www.coingecko.com/en/coins/sui-agents"
   },
   {
     "id": 53,
@@ -735,8 +682,7 @@
     "website": "https://www.axolcoin.xyz/",
     "x_website": "https://x.com/Axolonsui",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/axol",
-    "slogan": "The culture memecoin on Sui, offering users a fun and engaging way to explore decentralized finance."
+    "congecko_link": "https://www.coingecko.com/en/coins/axol"
   },
   {
     "id": 54,
@@ -777,6 +723,18 @@
   },
   {
     "id": 57,
+    "name": "Toilet Dust",
+    "symbol": "Toilet",
+    "categories": [
+      "Meme"
+    ],
+    "website": "https://toiletdust.com/",
+    "x_website": "https://x.com/toiletdustsui",
+    "verified": "Yes",
+    "congecko_link": "https://www.coingecko.com/en/coins/toilet-dust"
+  },
+  {
+    "id": 58,
     "name": "Sui wallet",
     "symbol": "N/A",
     "categories": [
@@ -785,50 +743,51 @@
     "website": "https://suiwallet.com/",
     "x_website": "",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/bucket-token",
-    "slogan": "Sui super app for digital assets"
+    "congecko_link": "",
+    "slogan": ""
   },
   {
-    "id": 58,
+    "id": 59,
     "name": "Wormhole",
     "symbol": "W",
     "categories": [
       "Bridge"
     ],
     "website": "https://wormhole.com/",
-    "x_website": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Wormhole_6a8d5a1587.jpg",
+    "x_website": "https://x.com/wormhole",
     "verified": "Yes",
-    "congecko_link": "https://www.coingecko.com/en/coins/bucket-token",
+    "congecko_link": "https://www.coingecko.com/en/coins/wormhole",
     "slogan": "Wormhole is a cross-chain protocol that connects multiple blockchains, enabling seamless asset and data transfers across networks like Ethereum, Solana, and Sui."
   },
   {
-    "id": 59,
+    "id": 60,
     "name": "Pyth",
     "symbol": "PYTH",
     "categories": [
       "Oracle"
     ],
-    "website": "",
-    "x_website": "",
+    "website": "https://www.pyth.network/",
+    "x_website": "https://x.com/PythNetwork",
     "verified": "Yes",
-    "congecko_link": "",
+    "congecko_link": "https://www.coingecko.com/en/coins/pyth-network",
     "slogan": "Pyth Network is an oracle connecting market data providers to blockchain apps, securing over 350 protocols on 55+ blockchains with data from 100+ top publishers."
   },
   {
-    "id": 60,
+    "id": 61,
     "name": "SuiVision",
     "symbol": "N/A",
     "categories": [
       "Explorer"
     ],
     "website": "",
-    "x_website": "https://suivision.xyz/",
+    "x_website": "",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "SuiVision is a Sui explorer for Sui Network, where you can discover transactions, wallets, staking, validators, and dive into immersive Sui data.",
-    "img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6FNywVmnvx6vInfG-_OfC82iBiWfYO7eaHg&s"
+    "slogan": "SuiVision is a Sui explorer for Sui Network, where you can discover transactions, wallets, staking, validators, and dive into immersive Sui data."
   },
   {
+    "id": 62,
     "name": "Agora",
     "symbol": "N/A",
     "categories": [
@@ -838,25 +797,25 @@
     "x_website": "https://twitter.com/AgoraDefi",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Agora is a Money Market & AMM for Lending, Borrowing and Swapping on Metis.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Agora_Logo_4896eaef9f.jpg"
+    "slogan": "Agora is a Money Market & AMM for Lending, Borrowing and Swapping on Metis."
   },
   {
+    "id": 63,
     "name": "Stork Oracle",
     "symbol": "N/A",
     "categories": [
-      "Oracle"
+      "Oracle (Depin)"
     ],
     "website": "https://storkoracle.io/",
     "x_website": "https://twitter.com/StorkOracle",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Stork Oracle is decentralized oracle service, providing off-chain data (like price feeds) to smart contracts on the blockchain. It may also be part of the DePIN (Decentralized Physical Infrastructure Networks) ecosystem, supporting real-world data integration. ",
-    "img_url": "https://pbs.twimg.com/profile_images/1899474008195637248/-nVBNuKn_400x400.jpg"
+    "slogan": "Stork Oracle is decentralized oracle service, providing off-chain data (like price feeds) to smart contracts on the blockchain. It may also be part of the DePIN (Decentralized Physical Infrastructure Networks) ecosystem, supporting real-world data integration. "
   },
   {
+    "id": 64,
     "name": "Nansen",
-    "symbol": "N/A",
+    "symbol": "",
     "categories": [
       "AI"
     ],
@@ -864,25 +823,25 @@
     "x_website": "https://twitter.com/nansen_ai",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Nansen is a well-known blockchain analytics platform that uses AI to provide insights into on-chain data, such as wallet tracking, token movements, and market trends, helping users make informed decisions in crypto trading and investing.",
-    "img_url": "hhttps://ens.suiscan.xyz/uploads/posts/2024-09/thumbs/nansen.jpg"
+    "slogan": "Nansen is a well-known blockchain analytics platform that uses AI to provide insights into on-chain data, such as wallet tracking, token movements, and market trends, helping users make informed decisions in crypto trading and investing."
   },
   {
+    "id": 65,
     "name": "Talus Network",
     "symbol": "N/A",
     "categories": [
-      "Ai agent"
+      "AI agent"
     ],
     "website": "https://talus.network/",
     "x_website": "https://twitter.com/TalusNetwork",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Talus Network is a blockchain project leveraging AI agents, possibly for autonomous decision-making, smart contract automation, or decentralized AI applications, aiming to integrate AI with blockchain technology.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Talus_logo_cbd2bc13e7.png"
+    "slogan": "Talus Network is a blockchain project leveraging AI agents, possibly for autonomous decision-making, smart contract automation, or decentralized AI applications, aiming to integrate AI with blockchain technology."
   },
   {
+    "id": 66,
     "name": "Lombard Protocol",
-    "symbol": "N/A",
+    "symbol": "LBTC",
     "categories": [
       "Liquid Staking "
     ],
@@ -890,10 +849,10 @@
     "x_website": "https://twitter.com/Lombard_Finance",
     "verified": "Yes",
     "congecko_link": "https://www.coingecko.com/en/coins/lombard-staked-btc",
-    "slogan": "Lombard Protocol is a liquid staking platform, allowing users to stake their tokens (e.g., in proof-of-stake networks) while receiving liquid tokens in return, which can be used in DeFi for additional yield or trading without locking up assets",
-    "img_url": "https://www.lombard.finance/lbtc/LBTC.png"
+    "slogan": "Lombard Protocol is a liquid staking platform, allowing users to stake their tokens (e.g., in proof-of-stake networks) while receiving liquid tokens in return, which can be used in DeFi for additional yield or trading without locking up assets"
   },
   {
+    "id": 67,
     "name": "Tusky",
     "symbol": "N/A",
     "categories": [
@@ -907,6 +866,7 @@
     "img_url": "https://api.movepump.com/uploads/Z5_Xi_GH_01_400x400_575500b08d.jpg"
   },
   {
+    "id": 68,
     "name": "Utila",
     "symbol": "N/A",
     "categories": [
@@ -916,10 +876,11 @@
     "x_website": "https://x.com/utila_io",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Utila is a DeFi (Decentralized Finance) platform. It aims to offer financial services such as lending, borrowing, or yield farming, leveraging blockchain technology.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Utila_logo_71eab93023.jpg"
+    "img_url": "https://strapi-dev.scand.app/uploads/Utila_logo_71eab93023.jpg",
+    "slogan": "Utila is a DeFi (Decentralized Finance) platform. It aims to offer financial services such as lending, borrowing, or yield farming, leveraging blockchain technology."
   },
   {
+    "id": 69,
     "name": "Momentum",
     "symbol": "N/A",
     "categories": [
@@ -929,11 +890,12 @@
     "x_website": "https://x.com/MMTFinance",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Momentum is a DeFi project focused on decentralized financial services, possibly including staking, trading, or yield optimization.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Momentum_logo_2f4bd6f8e9.jpg"
+    "img_url": "https://strapi-dev.scand.app/uploads/Momentum_logo_2f4bd6f8e9.jpg",
+    "slogan": "Momentum is a DeFi project focused on decentralized financial services, possibly including staking, trading, or yield optimization."
   },
   {
-    "name": "Karrier",
+    "id": 70,
+    "name": "Karrier one",
     "symbol": "N/A",
     "categories": [
       "Defi"
@@ -942,10 +904,11 @@
     "x_website": "https://x.com/karrier_one",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Karrier provides decentralized financial solutions, such as peer-to-peer transactions or financial products, with a focus on accessibility and innovation.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Karrier_One_Logo_1c82d1f30c.jpg"
+    "img_url": "https://strapi-dev.scand.app/uploads/Karrier_One_Logo_1c82d1f30c.jpg",
+    "slogan": "Karrier provides decentralized financial solutions, such as peer-to-peer transactions or financial products, with a focus on accessibility and innovation."
   },
   {
+    "id": 71,
     "name": "Astro",
     "symbol": "N/A",
     "categories": [
@@ -955,23 +918,25 @@
     "x_website": "https://x.com/astros_ag",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Astro is a DEX (Decentralized Exchange) platform that enables users to trade cryptocurrencies directly without intermediaries.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Astros_logo_0e1c659ead.jpg"
+    "img_url": "https://strapi-dev.scand.app/uploads/Astros_logo_0e1c659ead.jpg",
+    "slogan": "Astro is a DEX (Decentralized Exchange) platform that enables users to trade cryptocurrencies directly without intermediaries."
   },
   {
+    "id": 72,
     "name": "SpringSui",
-    "symbol": "N/A",
+    "symbol": "SSUI",
     "categories": [
-      "Liquid Staking "
+      "Liquid Staking"
     ],
     "website": "https://springsui.com/",
     "x_website": "https://x.com/springsui_",
     "verified": "Yes",
-    "congecko_link": "",
-    "slogan": "SpringSui is a Liquid Staking project that allows users to stake their crypto assets while keeping them liquid for other uses, such as trading or lending.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Spring_Sui_logo_c595de8bd8.png"
+    "img_url": "https://strapi-dev.scand.app/uploads/Spring_Sui_logo_c595de8bd8.png",
+    "congecko_link": "https://www.coingecko.com/en/coins/spring-staked-sui",
+    "slogan": "SpringSui is a Liquid Staking project that allows users to stake their crypto assets while keeping them liquid for other uses, such as trading or lending."
   },
   {
+    "id": 73,
     "name": "STEAMM",
     "symbol": "N/A",
     "categories": [
@@ -979,12 +944,13 @@
     ],
     "website": "https://steamm.fi/",
     "x_website": "https://x.com/steammfi",
+    "img_url": "https://strapi-dev.scand.app/uploads/STEAMM_logo_ff9f5ee6c4.png",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "STEAMM is an AMM (Automated Market Maker)  platform that facilitates decentralized trading by using liquidity pools instead of traditional order books.",
-    "img_url": "https://strapi-dev.scand.app/uploads/STEAMM_logo_ff9f5ee6c4.png"
+    "slogan": "STEAMM is an AMM (Automated Market Maker)  platform that facilitates decentralized trading by using liquidity pools instead of traditional order books."
   },
   {
+    "id": 74,
     "name": "Ika",
     "symbol": "N/A",
     "categories": [
@@ -994,23 +960,39 @@
     "x_website": "https://x.com/ikadotxyz",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Ika is an MPC (Multi-Party Computation) Network project that focuses on secure and private computations across multiple parties, often used for privacy-preserving applications in blockchain.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Ika_1187a8ee05.png"
+    "img_url": "https://strapi-dev.scand.app/uploads/Ika_1187a8ee05.png",
+    "slogan": "Ika is an MPC (Multi-Party Computation) Network project that focuses on secure and private computations across multiple parties, often used for privacy-preserving applications in blockchain."
   },
   {
+    "id": 75,
     "name": "Magma",
     "symbol": "N/A",
     "categories": [
       "DEX"
     ],
-    "website": "https://ika.xyz/",
+    "website": "https://magmafinance.io/",
+    "x_website": "https://x.com/Magma_Finance",
+    "verified": "Yes",
+    "congecko_link": "",
+    "slogan": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Magma_Finance_logo_7cd45acadb.jpg"
+  },
+  {
+    "id": 76,
+    "name": "RedStone",
+    "symbol": "N/A",
+    "categories": [
+      "Oracle"
+    ],
+    "website": "https://www.redstone.finance/",
     "x_website": "https://x.com/redstone_defi",
     "verified": "Yes",
     "congecko_link": "",
     "slogan": "Modular oracles for DeFi & institutions.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Magma_Finance_logo_7cd45acadb.jpg"
+    "img_url": "https://strapi-dev.scand.app/uploads/Red_Stone_logo_20aa40af33.png"
   },
   {
+    "id": 77,
     "name": "Dynamic",
     "symbol": "N/A",
     "categories": [
@@ -1022,9 +1004,24 @@
     "congecko_link": "",
     "slogan": "One SDK for every wallet interaction. Extensive multichain and external wallet support.",
     "img_url": "https://strapi-dev.scand.app/uploads/Dynamic_logo_4352903630.png"
-  }
-  ,
+  },
   {
+    "id": 78,
+    "name": "Lofi The Yeti",
+    "symbol": "LOFI",
+    "categories": [
+      "Gamefi",
+      "NFT"
+    ],
+    "website": "https://lofitheyeti.com/",
+    "x_website": "https://x.com/lofitheyeti",
+    "verified": "Yes",
+    "img_url": "https://strapi-dev.scand.app/uploads/LOFI_PFP_d5e19fc6d0.png",
+    "congecko_link": "https://www.coingecko.com/en/coins/lofi-2",
+    "slogan": "My name is $LOFI 💧🌍 I was frozen for centuries, but I've awakened and am ready to build a brighter future 🧊"
+  },
+  {
+    "id": 79,
     "name": "Artinals",
     "symbol": "N/A",
     "categories": [
@@ -1034,7 +1031,21 @@
     "x_website": "https://x.com/artinalsnetwork",
     "verified": "Yes",
     "congecko_link": "",
-    "slogan": "Open Source Protocol on Sui netwoirk to tokenize Real World Assets using enterprise-grade ART20 standard.",
-    "img_url": "https://strapi-dev.scand.app/uploads/Artinals_logo_6dac36d864.jpg"
+    "img_url": "https://strapi-dev.scand.app/uploads/Artinals_logo_6dac36d864.jpg",
+    "slogan": "Open Source Protocol on Sui netwoirk to tokenize Real World Assets using enterprise-grade ART20 standard."
+  },
+  {
+    "id": 80,
+    "name": "Nemo Protocol",
+    "symbol": "N/A",
+    "categories": [
+      "Yield trading"
+    ],
+    "website": "http://nemoprotocol.com",
+    "x_website": "https://x.com/nemoprotocol",
+    "verified": "Yes",
+    "congecko_link": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Nemo_Protocol_logo_e213d467f3.jpg",
+    "slogan": "Everything you need to maximize yield: Fixed return, points multiplier, leveraged spread, only on Nemo."
   }
 ]
