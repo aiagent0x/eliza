@@ -29,8 +29,6 @@ No trailing commas allowed
 No single quotes anywhere in the JSON
 `;
 
-
-
 export const sendTokenBySymbol: Action = {
     name: "TRANSFER_TOKENS",
     similes: [
@@ -51,7 +49,6 @@ export const sendTokenBySymbol: Action = {
         "ASSET_TRANSFER_OUT",
         "TOKENS_SEND_OUT",
         "ASSETS_DELIVER",
-
 
     ],
     validate: async (_runtime: IAgentRuntime, _message: Memory) => {
