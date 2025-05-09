@@ -206,16 +206,16 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_POOLS",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_POOLS",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Here’s a lineup of Navi staking pools for you!",
@@ -430,16 +430,16 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_POOLS",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_POOLS",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Here’s a lineup of staking pools for you!",
@@ -549,16 +549,16 @@ export const stake: Action = {
                         delete responseData.typeCoin;
                     }
                     try {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_POOLS",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_POOLS",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -769,16 +769,16 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_POOLS",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_POOLS",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Double-check all the details before takeoff to dodge any turbulence!",
@@ -804,16 +804,16 @@ export const stake: Action = {
                 // // Convert the Map to an object
                 // const portfolioObject = Object.fromEntries(portfolio);
                 // const scallopPortfolio = await scallopProvider.myStake(message.userId);
-                if (_options.type !== "toggle_faster") {
-                    let messageService = new MessageService()
-                    await messageService.createMessage(
-                        message.content.text,
-                        {
-                            action: "STAKE_POOLS",
-                            data_extract: content
-                        })
+                // if (_options.type !== "toggle_faster") {
+                //     let messageService = new MessageService()
+                //     await messageService.createMessage(
+                //         message.content.text,
+                //         {
+                //             action: "STAKE_POOLS",
+                //             data_extract: content
+                //         })
 
-                }
+                // }
                 callback({
                     user: await runtime.character.name,
                     text: "Here’s your staking portfolio, all set and ready!",

@@ -110,7 +110,6 @@ Response format should be formatted in a JSON block like this:
 { "lookAt": "{{nearby}}" or null, "emote": "{{emotes}}" or null, "say": "string" or null, "actions": (array of strings) or null }
 \`\`\`
 `;
-
 export class DirectClient {
     public app: express.Application;
     private agents: Map<string, AgentRuntime>; // container management
