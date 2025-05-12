@@ -132,7 +132,7 @@ export const liquidityCetus: Action = {
                     
                     callback({
                         user: await runtime.character.name,
-                        text: "Below is a list of liquidity pools:",
+                        text: "Here's a rundown of liquidity pools—check them out before diving in!",
                         action: "LIQUIDITY_POOLS",
                         result: {
                             type: "liquidity_pools",
@@ -160,7 +160,7 @@ export const liquidityCetus: Action = {
                 // }
                 callback({
                     user: await runtime.character.name,
-                    text: "Below is a list of liquidity pools:",
+                    text: "Here's a rundown of liquidity pools—check them out before diving in!",
                     action: "LIQUIDITY",
                     result: {
                         type: "liquidity_pools",
@@ -191,7 +191,7 @@ export const liquidityCetus: Action = {
                 // }
                 callback({
                     user: await runtime.character.name,
-                    text: "Below is a list of liquidity pools:",
+                    text: "Here's a rundown of liquidity pools—check them out before diving in!",
                     action: "LIQUIDITY",
                     result: {
                         type: "liquidity_pools",
@@ -253,7 +253,7 @@ export const liquidityCetus: Action = {
                 // }
                 callback({
                     user: await runtime.character.name,
-                    text: "Please ensure all details are correct before adding liquidity to prevent any potential losses.",
+                    text: "Double-check all the details before takeoff to dodge any turbulence!",
                     action: "LIQUIDITY_POOLS",
                     result: {
                         type: "add_liquidity",
