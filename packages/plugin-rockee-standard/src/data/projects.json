@@ -1048,5 +1048,19 @@
     "congecko_link": "",
     "img_url": "https://strapi-dev.scand.app/uploads/Nemo_Protocol_logo_e213d467f3.jpg",
     "slogan": "Everything you need to maximize yield: Fixed return, points multiplier, leveraged spread, only on Nemo."
+  },
+  {
+    "id": 81,
+    "name": "aiSui",
+    "symbol": "SUIAGENT",
+    "categories": [
+      "AI"
+    ],
+    "website": "https://www.aisui.org/",
+    "x_website": "https://x.com/suidefai",
+    "verified": "Yes",
+    "congecko_link": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Nemo_Protocol_logo_e213d467f3.jpg",
+    "slogan": "aiSUI is a groundbreaking AI dApp suite developed on the Sui blockchain"
   }
 ]
