@@ -1062,5 +1062,19 @@
     "congecko_link": "",
     "img_url": "https://strapi-dev.scand.app/uploads/Nemo_Protocol_logo_e213d467f3.jpg",
     "slogan": "aiSUI is a groundbreaking AI dApp suite developed on the Sui blockchain"
+  },
+  {
+    "id": 82,
+    "name": "DoubleUp",
+    "symbol": "UP",
+    "categories": [
+      "Defi"
+    ],
+    "website": "https://www.doubleup.fun/",
+    "x_website": "https://x.com/doubleup_app",
+    "verified": "Yes",
+    "congecko_link": "https://www.coingecko.com/en/coins/doubleup",
+    "img_url": "https://www.doubleup.fun/Diamond_Only.png",
+    "slogan": "Decentralized casino on sui"
   }
 ]
