@@ -274,58 +274,58 @@ export const pool: Pool = {
     supplyBalanceParentId:
       "0x6dffc3d05e79b055749eae1c27e93a47b5a9999214ce8a2f6173574151d120bf",
   },
-  BLUE: {
-    name: "BLUE",
-    assetId: 17,
-    poolId:
-      "0xe2cfd1807f5b44b44d7cabff5376099e76c5f0e4b35a01bdc4b0ef465a23e32c",
-    type: "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
-    reserveObjectId:
-      "0xcc993cdfc8fcf421115bb4b2c2247abbfecff35bcab777bb368b4b829d39b073",
-    borrowBalanceParentId:
-      "0x897b75f0e55b9cfaae65e818d02ebefa5c91d4cf581f9c7c86d6e39749c87020",
-    supplyBalanceParentId:
-      "0xc12b3d04d566fb418a199a113c09c65c121fd878172084ec0c60e08def51726f",
-  },
-  BUCK: {
-    name: "BUCK",
-    assetId: 18,
-    poolId:
-      "0x98953e1c8af4af0cd8f59a52f9df6e60c9790b8143f556751f10949b40c76c50",
-    type: "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK",
-    reserveObjectId:
-      "0xe1182350b6756e664f824aa1448f5fc741ddc868168dbe09ed3a6e79b7bf249c",
-    borrowBalanceParentId:
-      "0x6ae3645ff5936c10ab98c2529d3a316b0d4b22eff46d0d262e27db41371af597",
-    supplyBalanceParentId:
-      "0xdcd4fd6c686eebb54b1816e9851183647a306817303d306bbf70f82757f3eff9",
-  },
-  suiUSDT: {
-    name: "suiUSDT",
-    assetId: 19,
-    poolId:
-      "0xa3e0471746e5d35043801bce247d3b3784cc74329d39f7ed665446ddcf22a9e2",
-    type: "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT",
-    reserveObjectId:
-      "0x2abb6f2b007fef1e59133b027f53eca568f3af79e310e6f16d4b37bc09664a50",
-    borrowBalanceParentId:
-      "0x2ad9fe604fb74c1acfe646fe79fc27acf7b62cf4e7d0c6cbb23f6d440ce79306",
-    supplyBalanceParentId:
-      "0xe0399b39ca6127a879071371aff22ca98d8e7f24872afa8435a12e2a77c00e15",
-  },
-  stSUI: {
-    name: "stSUI",
-    assetId: 20,
-    poolId:
-      "0x0bccd5189d311002f4e10dc98270a3362fb3f7f9d48164cf40828f6c09f351e2",
-    type: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
-    reserveObjectId:
-      "0x9a91a751ff83ef1eb940066a60900d479cbd39c6eaccdd203632c97dedd10ce9",
-    borrowBalanceParentId:
-      "0x67bbcb4d8ef039883c568fe74016ba85839d14f158d9926d68cf930a4d16b169",
-    supplyBalanceParentId:
-      "0xfa30b3db35ee961f702f259ea42fb9c5524dce630187e3a7e0b0e24eb0187fef",
-  },
+  // BLUE: {
+  //   name: "BLUE",
+  //   assetId: 17,
+  //   poolId:
+  //     "0xe2cfd1807f5b44b44d7cabff5376099e76c5f0e4b35a01bdc4b0ef465a23e32c",
+  //   type: "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
+  //   reserveObjectId:
+  //     "0xcc993cdfc8fcf421115bb4b2c2247abbfecff35bcab777bb368b4b829d39b073",
+  //   borrowBalanceParentId:
+  //     "0x897b75f0e55b9cfaae65e818d02ebefa5c91d4cf581f9c7c86d6e39749c87020",
+  //   supplyBalanceParentId:
+  //     "0xc12b3d04d566fb418a199a113c09c65c121fd878172084ec0c60e08def51726f",
+  // },
+  // BUCK: {
+  //   name: "BUCK",
+  //   assetId: 18,
+  //   poolId:
+  //     "0x98953e1c8af4af0cd8f59a52f9df6e60c9790b8143f556751f10949b40c76c50",
+  //   type: "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK",
+  //   reserveObjectId:
+  //     "0xe1182350b6756e664f824aa1448f5fc741ddc868168dbe09ed3a6e79b7bf249c",
+  //   borrowBalanceParentId:
+  //     "0x6ae3645ff5936c10ab98c2529d3a316b0d4b22eff46d0d262e27db41371af597",
+  //   supplyBalanceParentId:
+  //     "0xdcd4fd6c686eebb54b1816e9851183647a306817303d306bbf70f82757f3eff9",
+  // },
+  // suiUSDT: {
+  //   name: "suiUSDT",
+  //   assetId: 19,
+  //   poolId:
+  //     "0xa3e0471746e5d35043801bce247d3b3784cc74329d39f7ed665446ddcf22a9e2",
+  //   type: "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT",
+  //   reserveObjectId:
+  //     "0x2abb6f2b007fef1e59133b027f53eca568f3af79e310e6f16d4b37bc09664a50",
+  //   borrowBalanceParentId:
+  //     "0x2ad9fe604fb74c1acfe646fe79fc27acf7b62cf4e7d0c6cbb23f6d440ce79306",
+  //   supplyBalanceParentId:
+  //     "0xe0399b39ca6127a879071371aff22ca98d8e7f24872afa8435a12e2a77c00e15",
+  // },
+  // stSUI: {
+  //   name: "stSUI",
+  //   assetId: 20,
+  //   poolId:
+  //     "0x0bccd5189d311002f4e10dc98270a3362fb3f7f9d48164cf40828f6c09f351e2",
+  //   type: "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
+  //   reserveObjectId:
+  //     "0x9a91a751ff83ef1eb940066a60900d479cbd39c6eaccdd203632c97dedd10ce9",
+  //   borrowBalanceParentId:
+  //     "0x67bbcb4d8ef039883c568fe74016ba85839d14f158d9926d68cf930a4d16b169",
+  //   supplyBalanceParentId:
+  //     "0xfa30b3db35ee961f702f259ea42fb9c5524dce630187e3a7e0b0e24eb0187fef",
+  // },
   // suiBTC: {
   //   name: "suiBTC",
   //   assetId: 21,
@@ -359,10 +359,10 @@ export interface Pool {
   LorenzoBTC: PoolConfig;
   DEEP: PoolConfig;
   FDUSD: PoolConfig;
-  BLUE: PoolConfig;
-  BUCK: PoolConfig;
-  suiUSDT: PoolConfig;
-  stSUI: PoolConfig;
+  // BLUE: PoolConfig;
+  // BUCK: PoolConfig;
+  // suiUSDT: PoolConfig;
+  // stSUI: PoolConfig;
   // suiBTC: PoolConfig;
 }
 export interface PoolConfig {
