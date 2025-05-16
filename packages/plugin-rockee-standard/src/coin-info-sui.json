@@ -255,7 +255,7 @@
   {
     "type": "0x8993129d72e733985f7f1a00396cbd055bad6f817fee36576ce483c8bbb8b87b::sudeng::SUDENG",
     "decimals": 9,
-    "symbol": "HIPPO",
+    "symbol": "SUDENG",
     "name": "sudeng(HIPPO)",
     "iconUrl": "https://i.imgur.com/j2EuFh5.png",
     "tags": [
