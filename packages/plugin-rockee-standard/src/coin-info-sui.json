@@ -10661,5 +10661,27 @@
     "iconUrl":"https://www.lombard.finance/lbtc/LBTC.png",
     "verified":true,
     "coinGeckoId":"lombard-staked-btc"
+  },
+  {
+    "type": "0xc5b61b1e1f7f88511c9c0c6f475f823c66cc4e2d39a49beb6777059710be8404::toilet::TOILET",
+    "decimals": 6,
+    "symbol": "Toilet",
+    "name": "Toilet Dust",
+    "website":"https://toiletdust.com/",
+    "coingeckoUrl":"https://www.coingecko.com/en/coins/toilet-dust",
+    "iconUrl":"https://api.movepump.com/uploads/IMG_4034_ef8df5844a.jpeg",
+    "verified":true,
+    "coinGeckoId":"toilet-dust"
+  },
+  {
+    "type": "0x87dfe1248a1dc4ce473bd9cb2937d66cdc6c30fee63f3fe0dbb55c7a09d35dec::up::UP",
+    "decimals": 6,
+    "symbol": "UP",
+    "name": "DoubleUp",
+    "website":"https://www.doubleup.fun/",
+    "coingeckoUrl":"https://www.coingecko.com/en/coins/doubleup",
+    "iconUrl":"https://www.doubleup.fun/Diamond_Only.png",
+    "verified":true,
+    "coinGeckoId":"doubleup"
   }
 ]
