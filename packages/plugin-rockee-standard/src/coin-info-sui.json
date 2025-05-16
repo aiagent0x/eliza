@@ -10683,5 +10683,16 @@
     "iconUrl":"https://www.doubleup.fun/Diamond_Only.png",
     "verified":true,
     "coinGeckoId":"doubleup"
+  },
+  {
+    "type": "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL",
+    "decimals": 9,
+    "symbol": "HAEDAL",
+    "name": "Haedal Protocol",
+    "website":"https://www.haedal.xyz/",
+    "coingeckoUrl":"https://www.coingecko.com/fr/coins/haedal-protocol",
+    "iconUrl":"https://node1.irys.xyz/Rp80fmqZS3qBDnfyxyKEvc65nVdTunjOG3NY8T6AjpI",
+    "verified":true,
+    "coinGeckoId":"haedal"
   }
 ]
