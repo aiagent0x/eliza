@@ -16,6 +16,7 @@ export const fetchNaviPool = async (job: any) => {
                     address: pool[key].type,
                     decimal: responseData[index].decimal
                 });
+                console.log("poolInfo:", poolInfo)
                 responseData[index].name = key;
                 responseData[index].total_supply = poolInfo.total_supply;
                 responseData[index].token_price = poolInfo.tokenPrice;
@@ -49,7 +50,7 @@ export const fetchNaviPool = async (job: any) => {
             }
         }
         delete responseData[i].typeCoin;
-    } 
+    }
     for (let data of responseData) {
         const success = await redis.hSet("STAKE_POOLS", data.name.toLowerCase(), JSON.stringify(data), 300);
         if (!success) {

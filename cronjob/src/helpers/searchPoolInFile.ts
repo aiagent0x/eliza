@@ -358,62 +358,62 @@ export const pool: Pool = {
   //     "0xf99e9bbd4c2b5dee460abeddc0f96042f2fb51420cb634d5a378d5d7643dd189",
   //   rewardFundId: "",
   // },
-  WSOL: {
-    name: "WSOL",
-    assetId: 22,
-    poolId:
-      "0xac5f6d750063244cc5abceef712b7ea1aa377f73762099b31c0051a842c13b10",
-    type: "0xb7844e289a8410e50fb3ca48d69eb9cf29e27d223ef90353fe1bd8e27ff8f3f8::coin::COIN",
-    reserveObjectId:
-      "0x2e2f8b1c34b23b1db894e08a87adda35b387a289fe644ca479fc4f7ec9065c8e",
-    borrowBalanceParentId:
-      "0x9bb2749aa677392295d0951fe72440884f286e3db069506916004b30a08f3a04",
-    supplyBalanceParentId:
-      "0xca1ec4793c0d1ec3ab58fbb5ccb2366c962dc5b903ff9ce809c6384c6e07aeb6",
-    rewardFundId: "",
-  },
-  LBTC: {
-    name: "LBTC",
-    assetId: 23,
-    poolId:
-      "0x377b8322c0d349b44b5873d418192eefe871b9372bb3a86f288cafe97317de04",
-    type: "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
-    reserveObjectId:
-      "0x1acee7192fe5dd422ee6e0376417f80a709172d67cec1bf0e660666eee6eb627",
-    borrowBalanceParentId:
-      "0x81b4063de499c8fba76523fde33b3dc4579047e7b815ffbf2f1eb82510314daa",
-    supplyBalanceParentId:
-      "0x71b90679af894cd5f0fdefee87a228e4bdacc8a1ad444e39011476208a1eb9d4",
-      rewardFundId: "",
-  },
-  WAL: {
-    name: "WAL",
-    assetId: 24,
-    poolId:
-      "0xef76883525f5c2ff90cd97732940dbbdba0b391e29de839b10588cee8e4fe167",
-    type: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
-    reserveObjectId:
-      "0xe6824edab84affecc78646e87fe85ca8fd4374335680e9daee2c981f13dce202",
-    borrowBalanceParentId:
-      "0xf8741f2550b0d7f7a3179ba2a0363c73e206ca6691d2d1ebbb95b6018359e17b",
-    supplyBalanceParentId:
-      "0xa476b12f8b45c7cb595cf1648822d48e4e82d63a47ba94304f3ad3bb19247ff9",
-      rewardFundId: "0xe65f2d9ea46cd8d44a08ec9b7728173a3b9383c7346c496eb88543574db1db51",
-  },
-  HAEDAL: {
-    name: "HAEDAL",
-    assetId: 25,
-    poolId:
-      "0x930f5cf61dcb66d699ba57b2eb72da6fd04c64a53073cc40f751ef12c77aaa6a",
-    type: "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL",
-    reserveObjectId:
-      "0x09c7b740981a2aa81b407e83d052a46cf1830c7470f80d053e6a49715eb29876",
-    borrowBalanceParentId:
-      "0x1b16a14873c5dfdf3b3a81be095420c67225a922ace939feaf66b18c20f39569",
-    supplyBalanceParentId:
-      "0xf761d46deb8df8114b2e39f364716644dc84c8f2e8a82a011b899be45427bac0",
-      rewardFundId: "0xa1d5ba382609b8cb209f3be8003f73b16fd58b17b5af007c01206eaaa27ad0df",
-  },
+  // WSOL: {
+  //   name: "WSOL",
+  //   assetId: 22,
+  //   poolId:
+  //     "0xac5f6d750063244cc5abceef712b7ea1aa377f73762099b31c0051a842c13b10",
+  //   type: "0xb7844e289a8410e50fb3ca48d69eb9cf29e27d223ef90353fe1bd8e27ff8f3f8::coin::COIN",
+  //   reserveObjectId:
+  //     "0x2e2f8b1c34b23b1db894e08a87adda35b387a289fe644ca479fc4f7ec9065c8e",
+  //   borrowBalanceParentId:
+  //     "0x9bb2749aa677392295d0951fe72440884f286e3db069506916004b30a08f3a04",
+  //   supplyBalanceParentId:
+  //     "0xca1ec4793c0d1ec3ab58fbb5ccb2366c962dc5b903ff9ce809c6384c6e07aeb6",
+  //   rewardFundId: "",
+  // },
+  // LBTC: {
+  //   name: "LBTC",
+  //   assetId: 23,
+  //   poolId:
+  //     "0x377b8322c0d349b44b5873d418192eefe871b9372bb3a86f288cafe97317de04",
+  //   type: "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC",
+  //   reserveObjectId:
+  //     "0x1acee7192fe5dd422ee6e0376417f80a709172d67cec1bf0e660666eee6eb627",
+  //   borrowBalanceParentId:
+  //     "0x81b4063de499c8fba76523fde33b3dc4579047e7b815ffbf2f1eb82510314daa",
+  //   supplyBalanceParentId:
+  //     "0x71b90679af894cd5f0fdefee87a228e4bdacc8a1ad444e39011476208a1eb9d4",
+  //     rewardFundId: "",
+  // },
+  // WAL: {
+  //   name: "WAL",
+  //   assetId: 24,
+  //   poolId:
+  //     "0xef76883525f5c2ff90cd97732940dbbdba0b391e29de839b10588cee8e4fe167",
+  //   type: "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
+  //   reserveObjectId:
+  //     "0xe6824edab84affecc78646e87fe85ca8fd4374335680e9daee2c981f13dce202",
+  //   borrowBalanceParentId:
+  //     "0xf8741f2550b0d7f7a3179ba2a0363c73e206ca6691d2d1ebbb95b6018359e17b",
+  //   supplyBalanceParentId:
+  //     "0xa476b12f8b45c7cb595cf1648822d48e4e82d63a47ba94304f3ad3bb19247ff9",
+  //     rewardFundId: "0xe65f2d9ea46cd8d44a08ec9b7728173a3b9383c7346c496eb88543574db1db51",
+  // },
+  // HAEDAL: {
+  //   name: "HAEDAL",
+  //   assetId: 25,
+  //   poolId:
+  //     "0x930f5cf61dcb66d699ba57b2eb72da6fd04c64a53073cc40f751ef12c77aaa6a",
+  //   type: "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL",
+  //   reserveObjectId:
+  //     "0x09c7b740981a2aa81b407e83d052a46cf1830c7470f80d053e6a49715eb29876",
+  //   borrowBalanceParentId:
+  //     "0x1b16a14873c5dfdf3b3a81be095420c67225a922ace939feaf66b18c20f39569",
+  //   supplyBalanceParentId:
+  //     "0xf761d46deb8df8114b2e39f364716644dc84c8f2e8a82a011b899be45427bac0",
+  //     rewardFundId: "0xa1d5ba382609b8cb209f3be8003f73b16fd58b17b5af007c01206eaaa27ad0df",
+  // },
 };
 
 export interface Pool {
@@ -439,10 +439,10 @@ export interface Pool {
   // suiUSDT: PoolConfig;
   // stSUI: PoolConfig;
   // suiBTC: PoolConfig;
-  WSOL: PoolConfig;
-  LBTC: PoolConfig;
-  WAL: PoolConfig;
-  HAEDAL: PoolConfig;
+  // WSOL: PoolConfig;
+  // LBTC: PoolConfig;
+  // WAL: PoolConfig;
+  // HAEDAL: PoolConfig;
 }
 export interface PoolConfig {
   name: string; // Customized Names
