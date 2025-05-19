@@ -9,11 +9,14 @@ import {
     SuilendClient,
 
 } from "@suilend/sdk";
+import { elizaLogger } from "@elizaos/core";
 import { formatRewards } from "@suilend/sdk";
 import { SuiClient } from "@mysten/sui/client";
 import BigNumber from "bignumber.js";
 import SuilendProvider from "../helpers/suilendProvider";
-
+import { RedisClient } from "@elizaos/adapter-redis";
+const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+let redis = new RedisClient(REDIS_URL)
 
 export enum Side {
     DEPOSIT = "deposit",
@@ -24,6 +27,7 @@ const suiClient = new SuiClient({
 });
 
 export async function listSuilendPool() {
+    console.log("listSuilendPool");
     const suilendClient = await SuilendClient.initialize(
         LENDING_MARKET_ID,
         LENDING_MARKET_TYPE,
@@ -91,6 +95,11 @@ export async function listSuilendPool() {
             total_supply_rate: parseFloat(totalDepositAprPercent.toString())
         }
         dataLendingMarket.push(obj)
+        const success = await redis.hSet("STAKE_POOLS_SUILEND", obj.symbol, JSON.stringify(obj), 300);
+        if (!success) {
+            elizaLogger.error(`Failed to set data for pool ${obj.symbol} in Redis.`);
+        }
     }
+    
     return dataLendingMarket;
 }

@@ -31,7 +31,7 @@ const scheduledJobs = [
     { jobName: "fetchLiquidityPoolsCetus", data: {}, cron: "*/5 * * * *" },  
     { jobName: "fetchSuiDexCongecko", data: {}, cron: "*/5 * * * *" },
     { jobName: "fetchScallopPool", data: {}, cron: "*/5 * * * *" },
-    { jobName: "fetchSuilendPool", data: {}, cron: "*/5 * * * *" },
+    { jobName: "fetchSuilendPool", data: {}, cron: "* * * * *" },
 ];
 
 (async () => {
