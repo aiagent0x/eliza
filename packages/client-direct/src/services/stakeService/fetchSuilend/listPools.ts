@@ -66,7 +66,7 @@ export async function listPool() {
             Side.DEPOSIT,
             reserve.depositAprPercent,
             getFilteredRewards(rewardMap[reserve.coinType].deposit),
-            // getStakingYieldAprPercent(Side.DEPOSIT, reserve.coinType, lstAprPercentMap)
+            getStakingYieldAprPercent(Side.DEPOSIT, reserve.coinType, lstAprPercentMap)
         );
         const totalBorrowAprPercent = getTotalAprPercent(
             Side.BORROW,
