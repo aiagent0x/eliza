@@ -8,11 +8,9 @@
     "@elizaos/adapter-redis": "workspace:*",
     "@elizaos/core": "workspace:*",
     "@elizaos/plugin-tee": "^0.1.7",
-    "@mysten/sui": "1.20.0",
     "@mysten/sui.js": "^0.53.0",
     "@scallop-io/sui-scallop-sdk": "^1.4.28",
-    "@suilend/sdk": "1.1.36",
-    "@suilend/springsui-sdk": "1.0.19",
+    "@suilend/sdk": "1.1.55",
     "axios": "^1.7.9",
     "bignumber": "1.1.0",
     "bignumber.js": "9.1.2",
@@ -35,6 +33,6 @@
     "whatwg-url": "7.1.0"
   },
   "devDependencies": {
-    "@mysten/sui": "^1.21.1"
+    "@mysten/sui": "^1.29.1"
   }
 }
