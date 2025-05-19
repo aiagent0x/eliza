@@ -14,7 +14,6 @@ import { SuiClient } from "@mysten/sui/client";
 import BigNumber from "bignumber.js";
 import SuilendProvider from "./suilendProvider";
 
-
 export enum Side {
     DEPOSIT = "deposit",
     BORROW = "borrow",
@@ -76,11 +75,10 @@ export async function listPool() {
         
         let obj = {
             protocol: "suilend",
-            type: reserve.token.coinType,
-            decimals: reserve.token.decimals,
-            symbol: reserve.token.symbol,
-            description: reserve.token.symbol,
-            img_icon: reserve.token.iconUrl,
+            type: reserve.token?.coinType ?? "",
+            decimals: reserve.token?.decimals ?? 0,
+            symbol: reserve.token?.symbol ?? "",
+            img_icon: reserve.token?.iconUrl ?? "",
             deposit_apr_percent: reserve.depositAprPercent.toString(),
             total_deposit_apr_percent: totalDepositAprPercent.toString(),
             borrow_apr_percent: reserve.borrowAprPercent.toString(),

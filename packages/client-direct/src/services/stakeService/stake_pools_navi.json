@@ -1,6 +1,6 @@
 [
 	{
-		"name": "NAVI",
+		"name": "NAVX",
 		"symbol": "NAVX",
 		"assetId": 7,
 		"poolId": "0xc0e02e7a245e855dd365422faf76f87d9f5b2148a26d48dda6e8253c3fe9fa60",
@@ -12,7 +12,7 @@
 		"decimal": 9
 	},
 	{
-		"name": "SUI",
+		"name": "Sui",
 		"symbol": "SUI",
 		"assetId": 0,
 		"poolId": "0x96df0fce3c471489f4debaaa762cf960b3d97820bd1f3f025ff8190730e958c5",
@@ -60,7 +60,7 @@
 		"decimal": 9
 	},
 	{
-		"name": "VoloSui",
+		"name": "vSui",
 		"symbol": "vSUI",
 		"assetId": 5,
 		"poolId": "0x9790c2c272e15b6bf9b341eb531ef16bcc8ed2b20dfda25d060bf47f5dd88d01",
@@ -72,7 +72,7 @@
 		"decimal": 9
 	},
 	{
-		"name": "HaedalSui",
+		"name": "haSui",
 		"symbol": "haSUI",
 		"assetId": 6,
 		"poolId": "0x6fd9cb6ebd76bc80340a9443d72ea0ae282ee20e2fd7544f6ffcd2c070d9557a",
