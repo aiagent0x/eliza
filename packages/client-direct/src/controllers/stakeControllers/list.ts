@@ -12,7 +12,7 @@ let redis = new RedisClient(REDIS_URL);
 import { Request, Response } from "express";
 import ScallopProvider from "../../services/stakeService/stakeScallop";
 import { listPool } from "../../services/stakeService/fetchSuilend/listPools";
-
+import BigNumber from "bignumber.js";
 export default async function listStakes(req: Request, res: Response) {
     let parsedData: { [key: string]: string }[] = [];
     let poolsScallopData: { [key: string]: string }[] = [];
@@ -53,54 +53,31 @@ export default async function listStakes(req: Request, res: Response) {
     const listScallopPools = await scallopProvider.listPools();
     let listPoolsNaviOnSite = await getPoolsInfo();
     let listPoolsNavi = await listPoolsInFileJson();
-    console.log("listPoolsNaviOnSite:", listPoolsNaviOnSite);
+    
     if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
-        let index = 0;
-        for (let key in pool) {
-            if (pool.hasOwnProperty(key)) {
-                let poolInfo;
-                if (pool[key]) {
-                    poolInfo = await getPoolInfo({
-                        symbol: key,
-                        address: pool[key].type,
-                        decimal: listPoolsNavi[index].decimal,
-                    });
-                    listPoolsNavi[index].name = key;
-                    listPoolsNavi[index].total_supply = poolInfo.total_supply;
-                    listPoolsNavi[index].token_price = poolInfo.tokenPrice;
-                    listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
-                    listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
-                    listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                    listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                    listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                    listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                    listPoolsNavi[index].protocol = "navi";
-                } else {
-                    elizaLogger.error(`Pool information for key ${key} is undefined.`);
-                }
-            }
-            index++;
-        }
-
         for (let i = 0; i < listPoolsNavi.length; i++) {
             if (listPoolsNavi[i].type === "0x2::sui::SUI") {
                 listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
             } else {
                 listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
             }
-
             for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
                 if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                    delete listPoolsNavi[i].base_supply_rate;
-                    delete listPoolsNavi[i].total_supply_rate;
-                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                    listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[i].totalSupplyAmount).dividedBy(1e9).toString();
+                    listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[i].borrowedAmount).dividedBy(1e9).toString();
+                    listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[i].currentSupplyRate).dividedBy(1e9).toString();
+                    listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].currentBorrowRate).dividedBy(1e9).toString();
+                    listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[i].supplyIncentiveApyInfo.boostedApr).toString();
+                    listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].borrowIncentiveApyInfo.boostedApr).toString();
+                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
+                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
+                    listPoolsNavi[i].protocol = "navi";
                 }
             }
             delete listPoolsNavi[i].typeCoin;
-
         }
-    } else {
+    }
+    else {
         listPoolsNavi = [];
     }
     responseData = responseData.concat(listScallopPools, listSuilendPools, listPoolsNavi);

@@ -196,7 +196,6 @@ export const  swapSui: Action = {
         //         })
         // }
         try {
-
             await callback({
                 user: await runtime.character.name,
                 text: `Double-check all the details before takeoff to dodge any turbulence!`,
@@ -211,9 +210,6 @@ export const  swapSui: Action = {
             console.error("Error during token swap:", error);
             return false;
         }
-
-
-
     },
     examples: [
         [
