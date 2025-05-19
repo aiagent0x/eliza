@@ -73,6 +73,7 @@ export async function listPool() {
             reserve.borrowAprPercent,
             getFilteredRewards(rewardMap[reserve.coinType].borrow)
         );
+        
         let obj = {
             protocol: "suilend",
             type: reserve.token.coinType,
