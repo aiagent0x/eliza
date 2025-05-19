@@ -2,56 +2,39 @@ import { getPoolInfo, getPoolsInfo } from "navi-sdk";
 import { elizaLogger } from "@elizaos/core"
 import { listPoolsInFileJson, pool } from "../helpers/searchPoolInFile";
 import { RedisClient } from "@elizaos/adapter-redis";
+import BigNumber from "bignumber.js";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 export const fetchNaviPool = async (job: any) => {
-    let responseData = await listPoolsInFileJson();
-    let index = 0;
-    for (let key in pool) {
-        if (pool.hasOwnProperty(key)) {
-            let poolInfo;
-            if (pool[key]) {
-                poolInfo = await getPoolInfo({
-                    symbol: key,
-                    address: pool[key].type,
-                    decimal: responseData[index].decimal
-                });
-                console.log("poolInfo:", poolInfo)
-                responseData[index].name = key;
-                responseData[index].total_supply = poolInfo.total_supply;
-                responseData[index].token_price = poolInfo.tokenPrice;
-                responseData[index].total_borrow = poolInfo.total_borrow;
-                responseData[index].base_supply_rate = poolInfo.base_supply_rate;
-                responseData[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                responseData[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                responseData[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                responseData[index].total_supply_rate = (poolInfo.boosted_supply_rate && poolInfo.boosted_borrow_rate) ? parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate) : 0
-                responseData[index].protocol = "navi";
+    let listPoolsNaviOnSite = await getPoolsInfo();
+    let listPoolsNavi = await listPoolsInFileJson();
+    if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
+        for (let i = 0; i < listPoolsNavi.length; i++) {
+            if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
             } else {
-                elizaLogger.error(`Pool information for key ${key} is undefined.`);
+                listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
             }
-        }
-        index++;
-    }
-    let listPoolsNaviOnSite = await getPoolsInfo()
-    for (let i = 0; i < responseData.length; i++) {
-        if (responseData[i].type === "0x2::sui::SUI") {
-            responseData[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
-        } else {
-            responseData[i].typeCoin = responseData[i].type;
-        }
-
-        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
-            if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData[i].typeCoin) {
-                delete responseData[i].base_supply_rate;
-                delete responseData[i].total_supply_rate;
-                responseData[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                responseData[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+            for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                    listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[i].totalSupplyAmount).dividedBy(1e9).toString();
+                    listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[i].borrowedAmount).dividedBy(1e9).toString();
+                    listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[i].currentSupplyRate).dividedBy(1e9).toString();
+                    listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].currentBorrowRate).dividedBy(1e9).toString();
+                    listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[i].supplyIncentiveApyInfo.boostedApr).toString();
+                    listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].borrowIncentiveApyInfo.boostedApr).toString();
+                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
+                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
+                    listPoolsNavi[i].protocol = "navi";
+                }
             }
+            delete listPoolsNavi[i].typeCoin;
         }
-        delete responseData[i].typeCoin;
     }
-    for (let data of responseData) {
+    else {
+        listPoolsNavi = [];
+    }
+    for (let data of listPoolsNavi) {
         const success = await redis.hSet("STAKE_POOLS", data.name.toLowerCase(), JSON.stringify(data), 300);
         if (!success) {
             elizaLogger.error(`Failed to set data for pool ${data.name} in Redis.`);
