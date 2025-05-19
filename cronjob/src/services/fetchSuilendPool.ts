@@ -23,7 +23,7 @@ const suiClient = new SuiClient({
     url: "https://fullnode.mainnet.sui.io"
 });
 
-export async function listPool() {
+export async function listSuilendPool() {
     const suilendClient = await SuilendClient.initialize(
         LENDING_MARKET_ID,
         LENDING_MARKET_TYPE,
