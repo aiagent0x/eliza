@@ -102,6 +102,14 @@ const listCoins: any = [{
 {
     coin_name: "usdy",
     img_icon: "https://ondo.finance/images/tokens/usdy.svg"
+},
+{
+    coin_name: "wal",
+    img_icon: "https://www.walrus.xyz/wal-icon.svg"
+},
+{
+    coin_name: "haedal",
+    img_icon: "https://node1.irys.xyz/Rp80fmqZS3qBDnfyxyKEvc65nVdTunjOG3NY8T6AjpI"
 }
 ]
 export class ScallopProvider {
@@ -117,7 +125,7 @@ export class ScallopProvider {
         Object.keys(marketPools).forEach((key, index) => {
             const coin = listCoins.find((c: any) => c.coin_name === marketPools[key].coinName);
             marketPoolsArray[index] = {
-                img_icon: coin.img_icon,
+                img_icon: coin ? coin.img_icon : "",
                 coin_name: marketPools[key].coinName,
                 symbol: marketPools[key].symbol,
                 market_coin_type: marketPools[key].marketCoinType,

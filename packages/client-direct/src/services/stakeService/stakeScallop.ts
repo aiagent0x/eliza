@@ -105,6 +105,10 @@ const listCoins: any = [{
 {
     coin_name: "wal",
     img_icon: "https://www.walrus.xyz/wal-icon.svg"
+},
+{
+    coin_name: "haedal",
+    img_icon: "https://node1.irys.xyz/Rp80fmqZS3qBDnfyxyKEvc65nVdTunjOG3NY8T6AjpI"
 }
 ]
 export class ScallopProvider {
