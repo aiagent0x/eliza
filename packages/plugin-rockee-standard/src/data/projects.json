@@ -1076,5 +1076,34 @@
     "congecko_link": "https://www.coingecko.com/en/coins/doubleup",
     "img_url": "https://www.doubleup.fun/Diamond_Only.png",
     "slogan": "Decentralized casino on sui"
+  },
+  {
+    "id": 83,
+    "name": "RWADepin Protocol", 
+    "symbol": "SUIRWAPIN",
+    "categories": [
+      "RWA",
+      "DEPIN"
+    ],
+    "website": "https://rwadepin.io/",
+    "x_website": "https://x.com/rwadepin",
+    "verified": "Yes",
+    "congecko_link": "https://www.coingecko.com/en/coins/rwadepin-protocol",
+    "img_url": "https://cdn.apeterminal.io/project/rwa_depin/icon.png",
+    "slogan": "RWA DePIN Protocol is the next-gen RWA-tokenized DePIN platform, redefining wealth management and the tokenization of real-world assets. Powered by SUI."
+  },
+  {
+    "id": 84,
+    "name": "Giverep", 
+    "symbol": "ATTN",
+    "categories": [
+      "SociaFi"
+    ],
+    "website": "https://giverep.com/",
+    "x_website": "https://x.com/GiveRep",
+    "verified": "Yes",
+    "congecko_link": "",
+    "img_url": "https://strapi-dev.scand.app/uploads/Give_Rep_logo_1ff8193383.jpg",
+    "slogan": "Track engagement. Earn trophies. Build reputation."
   }
 ]

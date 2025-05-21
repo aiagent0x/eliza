@@ -10694,5 +10694,16 @@
     "iconUrl":"https://node1.irys.xyz/Rp80fmqZS3qBDnfyxyKEvc65nVdTunjOG3NY8T6AjpI",
     "verified":true,
     "coinGeckoId":"haedal"
+  },
+  {
+    "type": "0xa784ee99f7ed95f19a1a8dba8f3953cd2f92be2d721f379fa1dc4e1f488f2364::suirwapin::SUIRWAPIN",
+    "decimals": 9,
+    "symbol": "SUIRWAPIN",
+    "name": "SUIRWAPIN",
+    "website":"https://rwadepin.io/",
+    "coingeckoUrl":"https://www.coingecko.com/en/coins/rwadepin-protocol",
+    "iconUrl":"https://cdn.apeterminal.io/project/rwa_depin/icon.png",
+    "verified":true,
+    "coinGeckoId":"rwadepin-protocol"
   }
 ]
