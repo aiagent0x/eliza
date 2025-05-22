@@ -562,14 +562,14 @@ export const stake: Action = {
                                 responseData = listPoolsNavi[i];
                                 for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
                                     if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                                        responseData.total_supply = new BigNumber(listPoolsNaviOnSite[i].totalSupplyAmount).dividedBy(1e9).toString();
-                                        responseData.total_borrow = new BigNumber(listPoolsNaviOnSite[i].borrowedAmount).dividedBy(1e9).toString();
-                                        responseData.base_supply_rate = new BigNumber(listPoolsNaviOnSite[i].currentSupplyRate).dividedBy(1e9).toString();
-                                        responseData.base_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].currentBorrowRate).dividedBy(1e9).toString();
-                                        responseData.boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[i].supplyIncentiveApyInfo.boostedApr).toString();
-                                        responseData.boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].borrowIncentiveApyInfo.boostedApr).toString();
-                                        responseData.base_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
-                                        responseData.total_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
+                                        responseData.total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                                        responseData.total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                                        responseData.base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                                        responseData.base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                                        responseData.boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                                        responseData.boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
+                                        responseData.base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                        responseData.total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
                                         responseData.protocol = "navi";
                                     }
                                 }
@@ -768,40 +768,37 @@ export const stake: Action = {
                         }
                         else {
                             if (symbolOnPoolNavi) {
-                                poolInfo = await getPoolInfo({
-                                    symbol: symbolOnPoolNavi,
-                                    address: responseData.type,
-                                    decimal: responseData.decimal,
-                                });
-
-                                responseData.name = symbolOnPoolNavi;
-                                responseData.total_supply = poolInfo.total_supply;
-                                responseData.total_borrow = poolInfo.total_borrow;
-                                responseData.base_supply_rate = poolInfo.base_supply_rate;
-                                responseData.base_borrow_rate = poolInfo.base_borrow_rate;
-                                responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
-                                responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                                responseData.total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                                responseData.protocol = "navi";
-                                responseData.amount = content.amount;
-                                if (listPoolsNaviOnSite.length > 0 && listPoolsNaviOnSite) {
-                                    if (responseData.type === "0x2::sui::SUI") {
-                                        responseData.typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
-                                    } else {
-                                        responseData.typeCoin = responseData.type;
-                                    }
-                                    for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
-                                        if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData.typeCoin) {
-                                            delete responseData.base_supply_rate;
-                                            delete responseData.total_supply_rate;
-                                            responseData.base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                                            responseData.total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                listPoolsNavi = await listPoolsInFileJson();
+                                if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
+                                    for (let i = 0; i < listPoolsNavi.length; i++) {
+                                        if (listPoolsNavi[i].name.toLowerCase() !== symbolOnPoolNavi.toLowerCase()) {
+                                            continue;
                                         }
-                                    }
-                                    delete responseData.typeCoin;
-                                    data = responseData;
-                                }
+                                        if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                                            listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                                        } else {
+                                            listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                                        }
+                                        data = listPoolsNavi[i];
+                                        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                                            if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                                                data.total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                                                data.total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                                                data.base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                                                data.base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                                                data.boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                                                data.boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
+                                                data.base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                                data.total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                                data.protocol = "navi";
+                                            }
+                                        }
 
+                                    }
+                                }
+                                else {
+                                    data = {};
+                                }
                             }
                         }
                     }
