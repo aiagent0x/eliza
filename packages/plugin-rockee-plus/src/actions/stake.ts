@@ -136,7 +136,6 @@ export const stake: Action = {
             let dataScallop;
             let dataSuilend;
             let listPoolsNavi;
-            let index;
             let listPoolsScallop;
             let listPoolSuilend;
             switch (content.protocol) {
@@ -488,15 +487,11 @@ export const stake: Action = {
         }
         if (content.type === "pool_name") {
             let type_action;
-            let responseData;
             let dataNavi;
-            let poolInfo;
             let dataScallop;
             let poolScallopInfo;
-            let symbolOnPoolNavi;
             let dataSuilend;
             let poolSuilendInfo;
-            let listPoolsNavi
             switch (content.protocol) {
                 case "navi":
                     type_action = content.type_action;
