@@ -141,7 +141,7 @@ export const stake: Action = {
             let listPoolSuilend;
             switch (content.protocol) {
                 case "navi":
-                    data = await redis.hGetAll("STAKE_POOLS");
+                    data = await redis.hGetAll("STAKE_NAVI_POOLS");
                     if (data && Object.keys(data).length > 0) {
                         let parsedData: { [key: string]: string }[] = [];
                         for (let key in data) {
@@ -183,14 +183,14 @@ export const stake: Action = {
                             }
                             for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
                                 if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                                    listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[i].totalSupplyAmount).dividedBy(1e9).toString();
-                                    listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[i].borrowedAmount).dividedBy(1e9).toString();
-                                    listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[i].currentSupplyRate).dividedBy(1e9).toString();
-                                    listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].currentBorrowRate).dividedBy(1e9).toString();
-                                    listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[i].supplyIncentiveApyInfo.boostedApr).toString();
-                                    listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].borrowIncentiveApyInfo.boostedApr).toString();
-                                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
-                                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
+                                    listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                                    listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                                    listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                                    listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                                    listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                                    listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
+                                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
                                     listPoolsNavi[i].protocol = "navi";
                                 }
                             }
@@ -363,7 +363,7 @@ export const stake: Action = {
                     let parsedData: { [key: string]: string }[] = [];
                     let poolsScallopData: { [key: string]: string }[] = [];
                     let poolsSuilendData: { [key: string]: string }[] = [];
-                    data = await redis.hGetAll("STAKE_POOLS");
+                    data = await redis.hGetAll("STAKE_NAVI_POOLS");
                     dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
                     dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
                     if (data && Object.keys(data).length > 0) {
@@ -420,50 +420,27 @@ export const stake: Action = {
                     listPoolsScallop = await scallopProvider.listPools();
                     listPoolsNavi = await listPoolsInFileJson();
                     if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
-                        index = 0;
-                        for (let key in pool) {
-                            if (pool.hasOwnProperty(key)) {
-                                let poolInfo;
-                                if (pool[key]) {
-                                    poolInfo = await getPoolInfo({
-                                        symbol: key,
-                                        address: pool[key].type,
-                                        decimal: listPoolsNavi[index].decimal,
-                                    });
-                                    listPoolsNavi[index].name = key;
-                                    listPoolsNavi[index].total_supply = poolInfo.total_supply;
-                                    listPoolsNavi[index].token_price = poolInfo.tokenPrice;
-                                    listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
-                                    listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
-                                    listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                                    listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                                    listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                                    listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                                    listPoolsNavi[index].protocol = "navi";
-                                } else {
-                                    elizaLogger.error(`Pool information for key ${key} is undefined.`);
-                                }
-                            }
-                            index++;
-                        }
                         for (let i = 0; i < listPoolsNavi.length; i++) {
                             if (listPoolsNavi[i].type === "0x2::sui::SUI") {
                                 listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
                             } else {
                                 listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
                             }
-
                             for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
                                 if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                                    delete listPoolsNavi[i].base_supply_rate;
-                                    delete listPoolsNavi[i].total_supply_rate;
+                                    listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                                    listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                                    listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                                    listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                                    listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                                    listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
                                     listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
                                     listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                    listPoolsNavi[i].protocol = "navi";
                                 }
                             }
                             delete listPoolsNavi[i].typeCoin;
                         }
-
                     }
                     else {
                         listPoolsNavi = [];
@@ -510,22 +487,20 @@ export const stake: Action = {
         if (content.type === "pool_name") {
             let type_action;
             let responseData;
-            let data;
-            let poolInfo;
+            let dataNavi;
             let dataScallop;
             let poolScallopInfo;
             let symbolOnPoolNavi;
             let dataSuilend;
             let poolSuilendInfo
-            let listPoolsNavi
             switch (content.protocol) {
                 case "navi":
                     type_action = content.type_action;
                     if (content.pool_name === null || content.pool_name === "null") {
                         content.pool_name = "Sui"
                     }
-                    responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
-                    if (!responseData) {
+                    dataNavi = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
+                    if (!dataNavi) {
                         callback({
                             user: await runtime.character.name,
                             text: "We couldn't find staking pools in Navi.",
@@ -540,13 +515,8 @@ export const stake: Action = {
                         return true
                     }
 
-                    for (let key in pool) {
-                        if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
-                            symbolOnPoolNavi = key;
-                        }
-                    }
-                    data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
-                    if (data && typeof data === "string" && data !== null) {
+                    let resultNavi = await redis.hGet("STAKE_NAVI_POOLS", dataNavi.name);
+                    if (resultNavi && typeof resultNavi === "string" && resultNavi !== null) {
                         // if (_options.type !== "toggle_faster") {
                         //     let messageService = new MessageService()
                         //     await messageService.createMessage(
@@ -563,45 +533,38 @@ export const stake: Action = {
                             action: "STAKE_TOKEN",
                             result: {
                                 type: type_action === "stake" ? "stake_token" : "unstake_token",
-                                data: { ...JSON.parse(data), amount: content.amount, protocol: "navi" },
+                                data: { ...JSON.parse(resultNavi), amount: content.amount, protocol: "navi" },
                             },
                         });
                         return true;
                     }
-                     if (symbolOnPoolNavi) {
-                        listPoolsNavi = await listPoolsInFileJson();
-                        if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
-                            for (let i = 0; i < listPoolsNavi.length; i++) {
-                                if(listPoolsNavi[i].name.toLowerCase() !== symbolOnPoolNavi.toLowerCase()){
-                                    continue;
-                                }
-                                if (listPoolsNavi[i].type === "0x2::sui::SUI") {
-                                    listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
-                                } else {
-                                    listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
-                                }
-                                responseData = listPoolsNavi[i];
-                                for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
-                                    if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                                        responseData.total_supply = new BigNumber(listPoolsNaviOnSite[i].totalSupplyAmount).dividedBy(1e9).toString();
-                                        responseData.total_borrow = new BigNumber(listPoolsNaviOnSite[i].borrowedAmount).dividedBy(1e9).toString();
-                                        responseData.base_supply_rate = new BigNumber(listPoolsNaviOnSite[i].currentSupplyRate).dividedBy(1e9).toString();
-                                        responseData.base_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].currentBorrowRate).dividedBy(1e9).toString();
-                                        responseData.boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[i].supplyIncentiveApyInfo.boostedApr).toString();
-                                        responseData.boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].borrowIncentiveApyInfo.boostedApr).toString();
-                                        responseData.base_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
-                                        responseData.total_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
-                                        responseData.protocol = "navi";
-                                    }
-                                }
-                               
+
+
+                    if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
+                        if (dataNavi.type === "0x2::sui::SUI") {
+                            dataNavi.typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                        } else {
+                            dataNavi.typeCoin = dataNavi.type;
+                        }
+                        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                            if (`0x${listPoolsNaviOnSite[j].coinType}` === dataNavi.typeCoin) {
+                                dataNavi.total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                                dataNavi.total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                                dataNavi.base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                                dataNavi.base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                                dataNavi.boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                                dataNavi.boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
+                                dataNavi.base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                dataNavi.total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                dataNavi.protocol = "navi";
                             }
                         }
-                        else {
-                            responseData = {};
-                        }
                     }
-                    try { 
+                    else {
+                        dataNavi = {};
+                    }
+
+                    try {
                         // if (_options.type !== "toggle_faster") {
                         //     let messageService = new MessageService()
                         //     await messageService.createMessage(
@@ -618,7 +581,7 @@ export const stake: Action = {
                             action: "STAKE_TOKEN",
                             result: {
                                 type: type_action === "stake" ? "stake_token" : "unstake_token",
-                                data: responseData,
+                                data: dataNavi,
                             },
                         });
                         return true;
@@ -776,58 +739,50 @@ export const stake: Action = {
                         content.pool_name = "Sui"
                     }
                     //Navi
-                    responseData = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
-                    if (responseData) {
-                        for (let key in pool) {
-                            if (responseData.name.toLowerCase() === key.toLowerCase() || responseData.symbol.toLowerCase() === key.toLowerCase()) {
-                                symbolOnPoolNavi = key;
-                            }
+                    dataNavi = await searchPoolInFileJson(content.pool_name ? content.pool_name : "Sui");
+                    if (dataNavi) {
+
+                        let resultNavi = await redis.hGet("STAKE_NAVI_POOLS", symbolOnPoolNavi);
+                        if (resultNavi && typeof resultNavi === "string" && resultNavi !== null) {
+                            callback({
+                                user: await runtime.character.name,
+                                text: "Please ensure all details are correct before proceeding with the swap to prevent any losses",
+                                action: "STAKE_TOKEN",
+                                result: {
+                                    type: type_action === "stake" ? "stake_token" : "unstake_token",
+                                    data: { ...JSON.parse(resultNavi), amount: content.amount, protocol: "navi" },
+                                },
+                            });
+                            return true;
                         }
-                        data = await redis.hGet("STAKE_POOLS", symbolOnPoolNavi);
-                        if (data && typeof data === "string" && data !== null) {
-                            data = { ...JSON.parse(data), amount: content.amount, protocol: "navi" }
+
+                        if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
+                            if (dataNavi.type === "0x2::sui::SUI") {
+                                dataNavi.typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                            } else {
+                                dataNavi.typeCoin = dataNavi.type;
+                            }
+                            for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                                if (`0x${listPoolsNaviOnSite[j].coinType}` === dataNavi.typeCoin) {
+                                    dataNavi.total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                                    dataNavi.total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                                    dataNavi.base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                                    dataNavi.base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                                    dataNavi.boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                                    dataNavi.boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
+                                    dataNavi.base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                    dataNavi.total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                                    dataNavi.protocol = "navi";
+                                }
+                            }
                         }
                         else {
-                            if (symbolOnPoolNavi) {
-                                poolInfo = await getPoolInfo({
-                                    symbol: symbolOnPoolNavi,
-                                    address: responseData.type,
-                                    decimal: responseData.decimal,
-                                });
-
-                                responseData.name = symbolOnPoolNavi;
-                                responseData.total_supply = poolInfo.total_supply;
-                                responseData.total_borrow = poolInfo.total_borrow;
-                                responseData.base_supply_rate = poolInfo.base_supply_rate;
-                                responseData.base_borrow_rate = poolInfo.base_borrow_rate;
-                                responseData.boosted_supply_rate = poolInfo.boosted_supply_rate;
-                                responseData.boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                                responseData.total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                                responseData.protocol = "navi";
-                                responseData.amount = content.amount;
-                                if (listPoolsNaviOnSite.length > 0 && listPoolsNaviOnSite) {
-                                    if (responseData.type === "0x2::sui::SUI") {
-                                        responseData.typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
-                                    } else {
-                                        responseData.typeCoin = responseData.type;
-                                    }
-                                    for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
-                                        if (`0x${listPoolsNaviOnSite[j].coinType}` === responseData.typeCoin) {
-                                            delete responseData.base_supply_rate;
-                                            delete responseData.total_supply_rate;
-                                            responseData.base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                                            responseData.total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                                        }
-                                    }
-                                    delete responseData.typeCoin;
-                                    data = responseData;
-                                }
-
-                            }
+                            dataNavi = {};
                         }
+
                     }
                     //Scallop 
-                    dataScallop = await redis.hGet("STAKE_POOLS", content.pool_name.toLowerCase());
+                    dataScallop = await redis.hGet("STAKE_POOLS_SCALLOP", content.pool_name.toLowerCase());
                     if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
                         dataScallop = { ...JSON.parse(dataScallop), amount: content.amount, protocol: "scallop" }
                     }
@@ -845,7 +800,7 @@ export const stake: Action = {
                         dataSuilend = poolSuilendInfo;
                     }
                     //Map
-                    const arrayMap = [data, dataScallop];
+                    const arrayMap = [dataNavi, dataScallop];
                     if (Array.isArray(dataSuilend)) {
                         arrayMap.push(...dataSuilend);
                     } else {

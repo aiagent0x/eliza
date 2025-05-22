@@ -1,13 +1,14 @@
 import { RedisClient } from "@elizaos/adapter-redis";
 import { CmsProvider } from "../services/CMS/cmsProvider";
-// import ScallopProvider from "../services/stakeService/stakeScallop";
+import ScallopProvider from "../services/stakeService/stakeScallop";
 import { listPoolsInFileJson, pool } from "../services/stakeService/searchPoolInFile";
 import { getPoolInfo, getPoolsInfo } from "navi-sdk";
 import {
     elizaLogger,
 } from "@elizaos/core";
-// import { listPool } from "../services/stakeService/fetchSuilend/listPools";
+import { listPool } from "../services/stakeService/fetchSuilend/listPools";
 import CetusProvider from "../services/liquidityService/liquidityCetus";
+import BigNumber from "bignumber.js";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL)
 const tagging = ["swap_1_sui_to_usdc", "send_1_sui_to_address", "trending_tokens", "stake_pools", "navi_pools", "scallop_pools", "suilend_pools", "liquidity_pools", "my_portfolio"]
@@ -17,13 +18,13 @@ export async function filterByTagging(tag: string, agentName: string) {
     const text = tagging.find(t => t.replace(/\s+/g, '_') === tag.replace(/\s+/g, '_'));
     let responseData;
     let data;
-    // let dataScallop;
-    // let dataSuilend;
+    let dataScallop;
+    let dataSuilend;
     let listPoolsNavi;
     let index;
-    // let listPoolsScallop;
-    // let listPoolSuilend;
-    // let scallopProvider = new ScallopProvider();
+    let listPoolsScallop;
+    let listPoolSuilend;
+    let scallopProvider = new ScallopProvider();
     let listPoolsNaviOnSite = await getPoolsInfo()
 
     if (!text) return null;
@@ -118,34 +119,33 @@ export async function filterByTagging(tag: string, agentName: string) {
             break;
         case "stake_pools":
             let parsedData: { [key: string]: string }[] = [];
-            // let poolsScallopData: { [key: string]: string }[] = [];
-            // let poolsSuilendData: { [key: string]: string }[] = [];
-            data = await redis.hGetAll("STAKE_POOLS");
-            // dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-            // dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+            let poolsScallopData: { [key: string]: string }[] = [];
+            let poolsSuilendData: { [key: string]: string }[] = [];
+            data = await redis.hGetAll("STAKE_NAVI_POOLS");
+            dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
             if (data && Object.keys(data).length > 0) {
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
             }
-            // if (dataScallop && Object.keys(dataScallop).length > 0) {
-            //     for (let key in dataScallop) {
-            //         poolsScallopData.push(JSON.parse(dataScallop[key]));
-            //     }
-            // }
-            // if (dataSuilend && Object.keys(dataSuilend).length > 0) {
-            //     for (let key in dataSuilend) {
-            //         poolsSuilendData.push(JSON.parse(dataSuilend[key]));
-            //     }
-            // }
-            // if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
-            //     parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-            if ((parsedData && parsedData.length > 0)) {
-                // parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
-                // parsedData.sort(
-                //     (a: any, b: any) =>
-                //         b.total_supply_rate - a.total_supply_rate
-                // );
+            if (dataScallop && Object.keys(dataScallop).length > 0) {
+                for (let key in dataScallop) {
+                    poolsScallopData.push(JSON.parse(dataScallop[key]));
+                }
+            }
+            if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+                for (let key in dataSuilend) {
+                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                }
+            }
+            if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
+                parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
+
+                parsedData.sort(
+                    (a: any, b: any) =>
+                        b.total_supply_rate - a.total_supply_rate
+                );
                 parsedData.sort((a: any, b: any) => {
                     if (a.name.toLowerCase() === "sui") return -1;
                     if (b.name.toLowerCase() === "sui") return 1;
@@ -162,68 +162,40 @@ export async function filterByTagging(tag: string, agentName: string) {
                 };
             }
             responseData = [];
-            // listPoolSuilend = await listPool()
-            // listPoolsScallop = await scallopProvider.listPools();
+            listPoolSuilend = await listPool()
+            listPoolsScallop = await scallopProvider.listPools();
             listPoolsNavi = await listPoolsInFileJson();
             if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
-                index = 0;
-                for (let key in pool) {
-                    if (pool.hasOwnProperty(key)) {
-                        let poolInfo;
-                        if (pool[key]) {
-                            poolInfo = await getPoolInfo({
-                                symbol: key,
-                                address: pool[key].type,
-                                decimal: listPoolsNavi[index].decimal,
-                            });
-                            listPoolsNavi[index].name = key;
-                            listPoolsNavi[index].total_supply = poolInfo.total_supply;
-                            listPoolsNavi[index].token_price = poolInfo.tokenPrice;
-                            listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
-                            listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
-                            listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                            listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                            listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                            listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                            listPoolsNavi[index].protocol = "navi";
-                        } else {
-                            elizaLogger.error(`Pool information for key ${key} is undefined.`);
-                        }
-                    }
-                    index++;
-                }
-
-                for (let i = 0; i < responseData.length; i++) {
+                for (let i = 0; i < listPoolsNavi.length; i++) {
                     if (listPoolsNavi[i].type === "0x2::sui::SUI") {
                         listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
                     } else {
                         listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
                     }
-
                     for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
                         if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                            delete listPoolsNavi[i].base_supply_rate;
-                            delete listPoolsNavi[i].total_supply_rate;
+                            listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                            listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                            listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                            listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                            listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                            listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
                             listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
                             listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                            listPoolsNavi[i].protocol = "navi";
                         }
                     }
                     delete listPoolsNavi[i].typeCoin;
                 }
-
             }
             else {
                 listPoolsNavi = [];
             }
-            // responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
-            // responseData = responseData.concat(listPoolsScallop, listPoolSuilend);
-            responseData = listPoolsNavi
-            responseData.sort((a: any, b: any) => {
-
-                if (a.name.toLowerCase() === "sui") return -1;
-                if (b.name.toLowerCase() === "sui") return 1;
-                return b.total_supply_rate - a.total_supply_rate;
-            });
+            responseData = responseData.concat(listPoolsScallop, listPoolSuilend, listPoolsNavi)
+            responseData.sort(
+                (a, b) =>
+                    b.total_supply_rate - a.total_supply_rate
+            );
             return {
                 user: agentName,
                 text: agentName === "BIRDS DEFAI Platfrom" ? "Here’s a lineup of Navi staking pools for you!" : "Below is a list of stake pools:",
@@ -235,16 +207,16 @@ export async function filterByTagging(tag: string, agentName: string) {
             };
             break;
         case "navi_pools":
-            data = await redis.hGetAll("STAKE_POOLS");
+            data = await redis.hGetAll("STAKE_NAVI_POOLS");
             if (data && Object.keys(data).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
                     parsedData.push(JSON.parse(data[key]));
                 }
-                // parsedData.sort(
-                //     (a: any, b: any) =>
-                //         b.total_supply_rate - a.total_supply_rate
-                // );
+                parsedData.sort(
+                    (a: any, b: any) =>
+                        b.total_supply_rate - a.total_supply_rate
+                );
                 parsedData.sort((a: any, b: any) => {
 
                     if (a.name.toLowerCase() === "sui") return -1;
@@ -263,60 +235,35 @@ export async function filterByTagging(tag: string, agentName: string) {
             }
             listPoolsNavi = await listPoolsInFileJson();
             if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
-                index = 0;
-                for (let key in pool) {
-                    if (pool.hasOwnProperty(key)) {
-                        let poolInfo;
-                        if (pool[key]) {
-                            poolInfo = await getPoolInfo({
-                                symbol: key,
-                                address: pool[key].type,
-                                decimal: listPoolsNavi[index].decimal,
-                            });
-                            listPoolsNavi[index].name = key;
-                            listPoolsNavi[index].total_supply = poolInfo.total_supply;
-                            listPoolsNavi[index].token_price = poolInfo.tokenPrice;
-                            listPoolsNavi[index].total_borrow = poolInfo.total_borrow;
-                            listPoolsNavi[index].base_supply_rate = poolInfo.base_supply_rate;
-                            listPoolsNavi[index].base_borrow_rate = poolInfo.base_borrow_rate;
-                            listPoolsNavi[index].boosted_supply_rate = poolInfo.boosted_supply_rate;
-                            listPoolsNavi[index].boosted_borrow_rate = poolInfo.boosted_borrow_rate;
-                            listPoolsNavi[index].total_supply_rate = parseFloat(poolInfo.base_supply_rate) + parseFloat(poolInfo.boosted_supply_rate);
-                            listPoolsNavi[index].protocol = "navi";
-                        } else {
-                            elizaLogger.error(`Pool information for key ${key} is undefined.`);
+                for (let i = 0; i < listPoolsNavi.length; i++) {
+                    if (listPoolsNavi[i].type === "0x2::sui::SUI") {
+                        listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
+                    } else {
+                        listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
+                    }
+                    for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
+                        if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
+                            listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                            listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                            listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                            listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                            listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                            listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
+                            listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                            listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                            listPoolsNavi[i].protocol = "navi";
                         }
                     }
-                    index++;
+                    delete listPoolsNavi[i].typeCoin;
                 }
-                if (listPoolsNaviOnSite) {
-                    for (let i = 0; i < listPoolsNavi.length; i++) {
-                        if (listPoolsNavi[i].type === "0x2::sui::SUI") {
-                            listPoolsNavi[i].typeCoin = "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI";
-                        } else {
-                            listPoolsNavi[i].typeCoin = listPoolsNavi[i].type;
-                        }
-                        for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
-                            if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                                delete listPoolsNavi[i].base_supply_rate;
-                                delete listPoolsNavi[i].total_supply_rate;
-                                listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                                listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
-                            }
-                        }
-                        delete listPoolsNavi[i].typeCoin;
-                    }
-
-                }
-            } else {
+            }
+            else {
                 listPoolsNavi = [];
             }
-            listPoolsNavi.sort((a: any, b: any) => {
-
-                if (a.name.toLowerCase() === "sui") return -1;
-                if (b.name.toLowerCase() === "sui") return 1;
-                return b.total_supply_rate - a.total_supply_rate;
-            });
+            listPoolsNavi.sort(
+                (a, b) =>
+                    b.total_supply_rate - a.total_supply_rate
+            );
             try {
                 return responseData = {
                     user: agentName,
@@ -332,90 +279,90 @@ export async function filterByTagging(tag: string, agentName: string) {
                 return false;
             }
             break;
-        // case "scallop_pools":
-        //     dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
-        //     if (dataScallop && Object.keys(dataScallop).length > 0) {
+        case "scallop_pools":
+            dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
+            if (dataScallop && Object.keys(dataScallop).length > 0) {
 
-        //         let poolsScallopData: { [key: string]: string }[] = [];
-        //         for (let key in dataScallop) {
-        //             poolsScallopData.push(JSON.parse(dataScallop[key]));
-        //         }
+                let poolsScallopData: { [key: string]: string }[] = [];
+                for (let key in dataScallop) {
+                    poolsScallopData.push(JSON.parse(dataScallop[key]));
+                }
 
-        //         poolsScallopData.sort(
-        //             (a: any, b: any) =>
-        //                 b.total_supply_rate - a.total_supply_rate
-        //         );
-        //         return responseData = {
-        //             user: agentName,
-        //             text: "Below is a list of Scallop staking pools:",
-        //             action: "STAKE_POOLS",
-        //             result: {
-        //                 type: "stake_pools",
-        //                 data: poolsScallopData.slice(0, 6),
-        //             },
-        //         };
-        //     }
-        //     listPoolsScallop = await scallopProvider.listPools();
-        //     listPoolsScallop.sort(
-        //         (a, b) =>
-        //             b.total_supply_rate - a.total_supply_rate
-        //     );
-        //     try {
-        //         return responseData = {
-        //             user: agentName,
-        //             text: "Below is a list of Scallop staking pools:",
-        //             action: "STAKE_POOLS",
-        //             result: {
-        //                 type: "stake_pools",
-        //                 data: listPoolsScallop.slice(0, 6),
-        //             },
-        //         };
-        //     } catch (error) {
-        //         console.error("Error during token swap:", error);
-        //         return false;
-        //     }
-        //     break;
-        // case "suilend_pools":
-        //     dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
-        //     if (dataSuilend && Object.keys(dataSuilend).length > 0) {
-        //         let poolsSuilendData: { [key: string]: string }[] = [];
-        //         for (let key in dataSuilend) {
-        //             poolsSuilendData.push(JSON.parse(dataSuilend[key]));
-        //         }
-        //         poolsSuilendData.sort(
-        //             (a: any, b: any) =>
-        //                 b.total_supply_rate - a.total_supply_rate
-        //         );
-        //         return responseData = {
-        //             user: agentName,
-        //             text: "Below is a list of Suilend staking pools:",
-        //             action: "STAKE_POOLS",
-        //             result: {
-        //                 type: "stake_pools",
-        //                 data: poolsSuilendData.slice(0, 6),
-        //             },
-        //         };
-        //     }
-        //     listPoolSuilend = await listPool();
-        //     listPoolSuilend.sort(
-        //         (a, b) =>
-        //             b.total_supply_rate - a.total_supply_rate
-        //     );
-        //     try {
-        //         return responseData = {
-        //             user: agentName,
-        //             text: "Below is a list of Suilend staking pools:",
-        //             action: "STAKE_POOLS",
-        //             result: {
-        //                 type: "stake_pools",
-        //                 data: listPoolSuilend.slice(0, 6),
-        //             },
-        //         };
-        //     } catch (error) {
-        //         console.error("Error during token swap:", error);
-        //         return false;
-        //     }
-        //     break;
+                poolsScallopData.sort(
+                    (a: any, b: any) =>
+                        b.total_supply_rate - a.total_supply_rate
+                );
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Scallop staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: poolsScallopData.slice(0, 6),
+                    },
+                };
+            }
+            listPoolsScallop = await scallopProvider.listPools();
+            listPoolsScallop.sort(
+                (a, b) =>
+                    b.total_supply_rate - a.total_supply_rate
+            );
+            try {
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Scallop staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: listPoolsScallop.slice(0, 6),
+                    },
+                };
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
+            break;
+        case "suilend_pools":
+            dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
+            if (dataSuilend && Object.keys(dataSuilend).length > 0) {
+                let poolsSuilendData: { [key: string]: string }[] = [];
+                for (let key in dataSuilend) {
+                    poolsSuilendData.push(JSON.parse(dataSuilend[key]));
+                }
+                poolsSuilendData.sort(
+                    (a: any, b: any) =>
+                        b.total_supply_rate - a.total_supply_rate
+                );
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Suilend staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: poolsSuilendData.slice(0, 6),
+                    },
+                };
+            }
+            listPoolSuilend = await listPool();
+            listPoolSuilend.sort(
+                (a, b) =>
+                    b.total_supply_rate - a.total_supply_rate
+            );
+            try {
+                return responseData = {
+                    user: agentName,
+                    text: "Below is a list of Suilend staking pools:",
+                    action: "STAKE_POOLS",
+                    result: {
+                        type: "stake_pools",
+                        data: listPoolSuilend.slice(0, 6),
+                    },
+                };
+            } catch (error) {
+                console.error("Error during token swap:", error);
+                return false;
+            }
+            break;
         case "liquidity_pools":
             let liquidityCetus: any = await redis.getValue({ key: "liquidity_pools" })
             if (liquidityCetus !== undefined) {

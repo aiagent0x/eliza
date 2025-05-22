@@ -17,7 +17,7 @@ export default async function listStakes(req: Request, res: Response) {
     let parsedData: { [key: string]: string }[] = [];
     let poolsScallopData: { [key: string]: string }[] = [];
     let poolsSuilendData: { [key: string]: string }[] = [];
-    let data = await redis.hGetAll("STAKE_POOLS");
+    let data = await redis.hGetAll("STAKE_NAVI_POOLS");
     let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
     let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND")
     if (data && Object.keys(data).length > 0) {
@@ -63,14 +63,14 @@ export default async function listStakes(req: Request, res: Response) {
             }
             for (let j = 0; j < listPoolsNaviOnSite.length; j++) {
                 if (`0x${listPoolsNaviOnSite[j].coinType}` === listPoolsNavi[i].typeCoin) {
-                    listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[i].totalSupplyAmount).dividedBy(1e9).toString();
-                    listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[i].borrowedAmount).dividedBy(1e9).toString();
-                    listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[i].currentSupplyRate).dividedBy(1e9).toString();
-                    listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].currentBorrowRate).dividedBy(1e9).toString();
-                    listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[i].supplyIncentiveApyInfo.boostedApr).toString();
-                    listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[i].borrowIncentiveApyInfo.boostedApr).toString();
-                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
-                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[i].supplyIncentiveApyInfo.apy;
+                    listPoolsNavi[i].total_supply = new BigNumber(listPoolsNaviOnSite[j].totalSupplyAmount).dividedBy(1e9).toString();
+                    listPoolsNavi[i].total_borrow = new BigNumber(listPoolsNaviOnSite[j].borrowedAmount).dividedBy(1e9).toString();
+                    listPoolsNavi[i].base_supply_rate = new BigNumber(listPoolsNaviOnSite[j].currentSupplyRate).dividedBy(1e9).toString();
+                    listPoolsNavi[i].base_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].currentBorrowRate).dividedBy(1e9).toString();
+                    listPoolsNavi[i].boosted_supply_rate = new BigNumber(listPoolsNaviOnSite[j].supplyIncentiveApyInfo.boostedApr).toString();
+                    listPoolsNavi[i].boosted_borrow_rate = new BigNumber(listPoolsNaviOnSite[j].borrowIncentiveApyInfo.boostedApr).toString();
+                    listPoolsNavi[i].base_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
+                    listPoolsNavi[i].total_supply_rate = listPoolsNaviOnSite[j].supplyIncentiveApyInfo.apy;
                     listPoolsNavi[i].protocol = "navi";
                 }
             }
