@@ -35,7 +35,7 @@ export const fetchNaviPool = async (job: any) => {
         listPoolsNavi = [];
     }
     for (let data of listPoolsNavi) {
-        const success = await redis.hSet("STAKE_POOLS", data.name.toLowerCase(), JSON.stringify(data), 300);
+        const success = await redis.hSet("STAKE_NAVI_POOLS", data.name.toLowerCase(), JSON.stringify(data), 300);
         if (!success) {
             elizaLogger.error(`Failed to set data for pool ${data.name} in Redis.`);
         }
