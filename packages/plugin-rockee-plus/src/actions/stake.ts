@@ -268,16 +268,16 @@ export const stake: Action = {
                             b.total_supply_rate - a.total_supply_rate
                     );
                     try {
-                        if (_options.type !== "toggle_faster") {
-                            let messageService = new MessageService()
-                            await messageService.createMessage(
-                                message.content.text,
-                                {
-                                    action: "STAKE_TOKEN",
-                                    data_extract: content
-                                })
+                        // if (_options.type !== "toggle_faster") {
+                        //     let messageService = new MessageService()
+                        //     await messageService.createMessage(
+                        //         message.content.text,
+                        //         {
+                        //             action: "STAKE_TOKEN",
+                        //             data_extract: content
+                        //         })
 
-                        }
+                        // }
                         callback({
                             user: await runtime.character.name,
                             text: "Below is a list of Scallop staking pools.:",
