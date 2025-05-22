@@ -96,7 +96,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 trendingCoins = await cmsProvider.getTokens("trending");
                 trendingCoins = trendingCoins.data;
             }
-            console.log("trendingCoins:", trendingCoins);
+           
             responseData = {
                 "user": agentName,
                 "text": "Below are trending tokens we have collected:",

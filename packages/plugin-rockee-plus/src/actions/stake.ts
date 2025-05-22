@@ -171,8 +171,6 @@ export const stake: Action = {
                         });
                         return true;
                     }
-
-
                     listPoolsNavi = await listPoolsInFileJson();
                     if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
                         for (let i = 0; i < listPoolsNavi.length; i++) {
