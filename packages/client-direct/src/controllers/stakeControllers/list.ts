@@ -17,7 +17,7 @@ export default async function listStakes(req: Request, res: Response) {
     let parsedData: { [key: string]: string }[] = [];
     let poolsScallopData: { [key: string]: string }[] = [];
     let poolsSuilendData: { [key: string]: string }[] = [];
-    let data = await redis.hGetAll("STAKE_POOLS");
+    let data = await redis.hGetAll("STAKE_NAVI_POOLS");
     let dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
     let dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND")
     if (data && Object.keys(data).length > 0) {

@@ -120,7 +120,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             let parsedData: { [key: string]: string }[] = [];
             let poolsScallopData: { [key: string]: string }[] = [];
             let poolsSuilendData: { [key: string]: string }[] = [];
-            data = await redis.hGetAll("STAKE_POOLS");
+            data = await redis.hGetAll("STAKE_NAVI_POOLS");
             dataScallop = await redis.hGetAll("STAKE_POOLS_SCALLOP");
             dataSuilend = await redis.hGetAll("STAKE_POOLS_SUILEND");
             if (data && Object.keys(data).length > 0) {
@@ -228,7 +228,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             };
             break;
         case "navi_pools":
-            data = await redis.hGetAll("STAKE_POOLS");
+            data = await redis.hGetAll("STAKE_NAVI_POOLS");
             if (data && Object.keys(data).length > 0) {
                 let parsedData: { [key: string]: string }[] = [];
                 for (let key in data) {
