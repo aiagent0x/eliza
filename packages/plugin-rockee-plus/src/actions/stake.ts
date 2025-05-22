@@ -765,7 +765,6 @@ export const stake: Action = {
                             });
                             return true;
                         }
-
                         if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
 
                             if (dataNavi.type === "0x2::sui::SUI") {
@@ -787,13 +786,14 @@ export const stake: Action = {
                                     dataNavi.protocol = "navi";
                                 }
                             }
-
-
                         }
                         else {
                             dataNavi = {};
                         }
                     }
+
+
+
                     //Scallop 
                     dataScallop = await redis.hGet("STAKE_POOLS_SCALLOP", content.pool_name.toLowerCase());
                     if (dataScallop && typeof dataScallop === "string" && dataScallop !== null) {
