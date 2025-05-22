@@ -29,7 +29,6 @@ export default async function listStakes(req: Request, res: Response) {
         for (let key in dataScallop) {
             poolsScallopData.push(JSON.parse(dataScallop[key]));
         }
-        console.log("poolsScallopData:", poolsScallopData)
     }
     if (dataSuilend && Object.keys(dataSuilend).length > 0) {
         for (let key in dataSuilend) {
