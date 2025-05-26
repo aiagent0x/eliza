@@ -15,7 +15,21 @@ export const noneAction: Action = {
         "REPLY",
         "DEFAULT",
     ],
-    validate: async (_runtime: IAgentRuntime, _message: Memory) => {
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        const recentMessagesData = await runtime.messageManager.getMemories({
+            roomId: message.roomId,
+            count: 2,
+            unique: false,
+        });
+        const ignoredKeywords = ["swap", "sell", "buy", "trade", "offer", "send", "stake", "unstake", "transfer", "withdraw", "project"];
+        const containsIgnoredKeyword = recentMessagesData.some((m: Memory) =>
+            ignoredKeywords.some((keyword) =>
+                m.content?.text?.toLowerCase().includes(keyword)
+            )
+        );
+        if (containsIgnoredKeyword) {
+            return false;
+        }
         return true;
     },
     description:
