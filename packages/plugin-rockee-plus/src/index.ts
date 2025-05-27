@@ -11,7 +11,7 @@ const rockeePlusPlugin: Plugin = {
   actions: [
     topToken,
     stake,
-    liquidityCetus,
+    // liquidityCetus,
     myPortfolio
   ],
   evaluators: [],
