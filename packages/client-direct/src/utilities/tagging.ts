@@ -353,45 +353,45 @@ export async function filterByTagging(tag: string, agentName: string) {
                 return false;
             }
             break;
-        case "liquidity_pools":
-            let liquidityCetus: any = await redis.getValue({ key: "liquidity_pools" })
-            if (liquidityCetus !== undefined) {
-                return responseData = {
-                    user: agentName,
-                    text: "Below is a list of liquidity pools:",
-                    action: "LIQUIDITY_POOLS",
-                    result: {
-                        type: "liquidity_pools",
-                        data: JSON.parse(liquidityCetus).slice(0, 6),
-                    },
-                };
-            }
-            let cetusProvider = new CetusProvider();
-            liquidityCetus = await cetusProvider.fetchLiquidityPools();
+        // case "liquidity_pools":
+        //     let liquidityCetus: any = await redis.getValue({ key: "liquidity_pools" })
+        //     if (liquidityCetus !== undefined) {
+        //         return responseData = {
+        //             user: agentName,
+        //             text: "Below is a list of liquidity pools:",
+        //             action: "LIQUIDITY_POOLS",
+        //             result: {
+        //                 type: "liquidity_pools",
+        //                 data: JSON.parse(liquidityCetus).slice(0, 6),
+        //             },
+        //         };
+        //     }
+        //     let cetusProvider = new CetusProvider();
+        //     liquidityCetus = await cetusProvider.fetchLiquidityPools();
 
-            liquidityCetus.data.lp_list.sort((a: any, b: any) => {
-                a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
-                b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
-                if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
-                if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
-                return 0;
-            });
-            try {
-                return responseData = {
-                    user: agentName,
-                    text: "Below is a list of liquidity pools:",
-                    action: "LIQUIDITY_POOLS",
-                    result: {
-                        type: "liquidity_pools",
-                        data: liquidityCetus.data.lp_list.slice(0, 6),
-                    },
-                };
+        //     liquidityCetus.data.lp_list.sort((a: any, b: any) => {
+        //         a.apr.fee_apr_24h = a.apr.fee_apr_24h.replace('%', '');
+        //         b.apr.fee_apr_24h = b.apr.fee_apr_24h.replace('%', '');
+        //         if (parseFloat(a.apr.fee_apr_24h) > parseFloat(b.apr.fee_apr_24h)) return -1;
+        //         if (parseFloat(a.apr.fee_apr_24h) < parseFloat(b.apr.fee_apr_24h)) return 1;
+        //         return 0;
+        //     });
+        //     try {
+        //         return responseData = {
+        //             user: agentName,
+        //             text: "Below is a list of liquidity pools:",
+        //             action: "LIQUIDITY_POOLS",
+        //             result: {
+        //                 type: "liquidity_pools",
+        //                 data: liquidityCetus.data.lp_list.slice(0, 6),
+        //             },
+        //         };
 
-            } catch (error) {
-                console.error("Error during token swap:", error);
-                return false;
-            }
-            break;
+        //     } catch (error) {
+        //         console.error("Error during token swap:", error);
+        //         return false;
+        //     }
+        //     break;
         default:
             responseData = null;
     }
