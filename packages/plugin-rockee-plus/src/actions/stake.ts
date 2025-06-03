@@ -945,5 +945,48 @@ export const stake: Action = {
                 },
             },
         ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Navi staking pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    action: "STAKE_TOKEN",
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Suilend staking pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    action: "STAKE_TOKEN",
+                },
+            },
+        ]
+        ,
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Scallop staking pools",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    action: "STAKE_TOKEN",
+                },
+            },
+        ]
     ] as ActionExample[][],
 } as Action;
