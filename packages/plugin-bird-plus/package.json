@@ -9,6 +9,7 @@
     "@elizaos/core": "workspace:*",
     "@elizaos/plugin-tee": "^0.1.7",
     "@mysten/sui.js": "^0.53.0",
+    "@mysten/sui": "1.29.1",
     "@scallop-io/sui-scallop-sdk": "^1.4.28",
     "@suilend/sdk": "1.1.55",
     "axios": "^1.7.9",
