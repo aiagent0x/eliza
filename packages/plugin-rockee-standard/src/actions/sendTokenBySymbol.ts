@@ -29,6 +29,10 @@ Example response:
     }
     \`\`\`
 
+    
+The following are token symbols within the Sui Network: SUI, NS, kSUI, WBNB, USDY, CAPO, SEND, USDT, DEEP, FLX, ALPHA, SPAM, FDUSD, AFSUI, WETH, SPT, SUIP, HOPI, CETUS, MOVE, wUSDC, WFTM, ARTFI, SOL, USDC, haSUI, PIGU, PRH, FUD, AXOL, SCB, KOTO, JWLSUI, BLUB, AUSD, TYPUS, ETH, SCA, vSUI, SSWP, sSUI, stSUI, SUIA, SCUBA, Chad, WMATIC, NAVX, BLUE, PDO, OINK, HSUI, TURBOS, BUCK, WBTC, WAVAX, APT, REAP, PSH, ROCK, Toilet, LBTC, SSUI, LOFI, TOILET, SUIRWAPIN, SUIAGENT, UP, ATTN, AIDA, PCHU, PUMPKIN, Uni, SUIMON, TARDI, ISG, SHRO, SOLA, JAI, OSIRI, NEONET, SAI, BOOM, CITY, BLUEY, NOTS, BOOST, MIU, NAMI, WET, E.D.A.S, OSHI. All token symbols are recognized regardless of case format.
+
+
 - Use "amount": 0 if the amount is not explicitly specified.
 - Set "tokenSymbol" to the token name found in the message (e.g., "CETUS").
 - Set "destinationAddress" to the wallet address if it's present and valid (starts with 0x and has 64+ hex characters).
