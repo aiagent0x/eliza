@@ -8,26 +8,24 @@ import {
     LENDING_MARKET_ID,
     LENDING_MARKET_TYPE,
     SuilendClient,
-
 } from "@suilend/sdk";
 import { SuiClient } from "@mysten/sui/client";
 import BigNumber from "bignumber.js";
 import SuilendProvider from "./suilendProvider";
-
 
 export enum Side {
     DEPOSIT = "deposit",
     BORROW = "borrow",
 }
 const suiClient = new SuiClient({
-    url: "https://fullnode.mainnet.sui.io"
+    url: "https://fullnode.mainnet.sui.io",
 });
 
 export async function getDetail(symbol: string) {
     const suilendClient = await SuilendClient.initialize(
         LENDING_MARKET_ID,
         LENDING_MARKET_TYPE,
-        suiClient,
+        suiClient
     );
 
     const {
@@ -39,17 +37,17 @@ export async function getDetail(symbol: string) {
 
     const { rewardPriceMap } = await initializeSuilendRewards(
         reserveMap,
-        activeRewardCoinTypes,
+        activeRewardCoinTypes
     );
 
     const rewardMap = formatRewards(
         reserveMap,
         rewardCoinMetadataMap,
-        rewardPriceMap,
+        rewardPriceMap
     );
 
     const suilendProvider = new SuilendProvider();
-    const lstAprPercent = await suilendProvider.listAprPercent()
+    const lstAprPercent = await suilendProvider.listAprPercent();
 
     const lstAprPercentMap = Object.fromEntries(
         Object.values(lstAprPercent).map(({ LIQUID_STAKING_INFO, apy }) => [
@@ -66,7 +64,11 @@ export async function getDetail(symbol: string) {
                 Side.DEPOSIT,
                 reserve.depositAprPercent,
                 getFilteredRewards(rewardMap[reserve.coinType].deposit),
-                getStakingYieldAprPercent(Side.DEPOSIT, reserve.coinType, lstAprPercentMap)
+                getStakingYieldAprPercent(
+                    Side.DEPOSIT,
+                    reserve.coinType,
+                    lstAprPercentMap
+                )
             );
             const totalBorrowAprPercent = getTotalAprPercent(
                 Side.BORROW,
@@ -84,15 +86,24 @@ export async function getDetail(symbol: string) {
                 total_deposit_apr_percent: totalDepositAprPercent.toString(),
                 borrow_apr_percent: reserve.borrowAprPercent.toString(),
                 total_borrow_apr_percent: totalBorrowAprPercent.toString(),
-                deposited_amount_usd: new BigNumber(reserve.depositedAmountUsd).toString(),
-                deposited_amount: new BigNumber(reserve.depositedAmount).toString(),
-                available_amount_usd: new BigNumber(reserve.availableAmountUsd).toString(),
-                borrowed_amount_usd: new BigNumber(reserve.borrowedAmountUsd).toString(),
-                total_supply_rate: parseFloat(totalDepositAprPercent.toString())
-            }
-            dataLendingMarket.push(obj)
+                deposited_amount_usd: new BigNumber(
+                    reserve.depositedAmountUsd
+                ).toString(),
+                deposited_amount: new BigNumber(
+                    reserve.depositedAmount
+                ).toString(),
+                available_amount_usd: new BigNumber(
+                    reserve.availableAmountUsd
+                ).toString(),
+                borrowed_amount_usd: new BigNumber(
+                    reserve.borrowedAmountUsd
+                ).toString(),
+                total_supply_rate: parseFloat(
+                    totalDepositAprPercent.toString()
+                ),
+            };
+            dataLendingMarket.push(obj);
         }
-
     }
     return dataLendingMarket;
 }
