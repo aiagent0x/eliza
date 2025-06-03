@@ -294,7 +294,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 );
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of Scallop staking pools:",
+                    text: "Here are the available Scallop staking pools",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",
@@ -310,7 +310,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             try {
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of Scallop staking pools:",
+                    text: "Here are the available Scallop staking pools",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",
@@ -335,7 +335,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 );
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of Suilend staking pools:",
+                    text: "Here are the available Suilend staking pools",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",
@@ -351,7 +351,7 @@ export async function filterByTagging(tag: string, agentName: string) {
             try {
                 return responseData = {
                     user: agentName,
-                    text: "Below is a list of Suilend staking pools:",
+                    text: "Here are the available Suilend staking pools",
                     action: "STAKE_POOLS",
                     result: {
                         type: "stake_pools",

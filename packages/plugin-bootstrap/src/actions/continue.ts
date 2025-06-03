@@ -81,7 +81,7 @@ export const continueAction: Action = {
                 }
             }
         }
-        const ignoredKeywords = ["swap", "sell", "buy", "trade", "offer", "send", "stake", "unstake", "transfer", "withdraw", "project"];
+        const ignoredKeywords = ["swap", "sell", "buy", "trade", "offer", "send", "stake", "unstake", "transfer", "withdraw", "project", "pools", "pool"];
         const containsIgnoredKeyword = recentMessagesData.some((m: Memory) =>
             ignoredKeywords.some((keyword) =>
                 m.content?.text?.toLowerCase().includes(keyword)
