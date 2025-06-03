@@ -327,7 +327,7 @@ export const stake: Action = {
                         });
                         return true;
                     }
-                    listPoolSuilend = await listPool(message.userId);
+                    listPoolSuilend = await listPool();
 
                     listPoolSuilend.sort(
                         (a, b) =>
@@ -416,7 +416,7 @@ export const stake: Action = {
                         return true;
                     }
 
-                    listPoolSuilend = await listPool(message.userId);
+                    listPoolSuilend = await listPool();
                     listPoolsScallop = await scallopProvider.listPools();
                     listPoolsNavi = await listPoolsInFileJson();
                     if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
