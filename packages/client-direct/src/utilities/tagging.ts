@@ -140,15 +140,20 @@ export async function filterByTagging(tag: string, agentName: string) {
                 }
             }
             if ((parsedData && parsedData.length > 0) || (poolsScallopData && poolsScallopData.length > 0) || (poolsSuilendData && poolsSuilendData.length > 0)) {
+
                 parsedData = parsedData.concat(poolsScallopData, poolsSuilendData);
 
                 parsedData.sort(
                     (a: any, b: any) =>
                         b.total_supply_rate - a.total_supply_rate
                 );
+                console.log("parsedData:",parsedData[0])
+                console.log("poolsScallopData:",poolsScallopData[0])
+                console.log("poolsSuilendData:",poolsSuilendData[0])
                 parsedData.sort((a: any, b: any) => {
-                    if (a.name.toLowerCase() === "sui") return -1;
-                    if (b.name.toLowerCase() === "sui") return 1;
+                    
+                    if (a.symbol.toLowerCase() === "sui") return -1;
+                    if (b.symbol.toLowerCase() === "sui") return 1;
                     return b.total_supply_rate - a.total_supply_rate;
                 });
                 return responseData = {
