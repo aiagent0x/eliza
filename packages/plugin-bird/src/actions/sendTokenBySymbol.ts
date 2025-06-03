@@ -15,11 +15,18 @@ import { hashUserMsg } from "../utils/format";
 import { isValidSuiAddress } from "@mysten/sui/utils";
 import MessageService from "../services/messageService";
 const sendTokenTemplate = `Please extract the following swap details for SUI network:
+
+\`\`\`
 {
     "amount": number | 0,               // Amount of tokens to transfer
     "tokenSymbol": string | SUI,          // Token symbol on the SUI network (e.g., "SUI", "UNI")
     "destinationAddress": string | null,    // Recipient's wallet address
 }
+\`\`\`
+
+
+The following are token symbols within the Sui Network: SUI, NS, kSUI, WBNB, USDY, CAPO, SEND, USDT, DEEP, FLX, ALPHA, SPAM, FDUSD, AFSUI, WETH, SPT, SUIP, HOPI, CETUS, MOVE, wUSDC, WFTM, ARTFI, SOL, USDC, haSUI, PIGU, PRH, FUD, AXOL, SCB, KOTO, JWLSUI, BLUB, AUSD, TYPUS, ETH, SCA, vSUI, SSWP, sSUI, stSUI, SUIA, SCUBA, Chad, WMATIC, NAVX, BLUE, PDO, OINK, HSUI, TURBOS, BUCK, WBTC, WAVAX, APT, REAP, PSH, ROCK, Toilet, LBTC, SSUI, LOFI, TOILET, SUIRWAPIN, SUIAGENT, UP, ATTN, AIDA, PCHU, PUMPKIN, Uni, SUIMON, TARDI, ISG, SHRO, SOLA, JAI, OSIRI, NEONET, SAI, BOOM, CITY, BLUEY, NOTS, BOOST, MIU, NAMI, WET, E.D.A.S, OSHI. All token symbols are recognized regardless of case format.
+
 Recent messages: {{recentMessages}}
 Extract the token transfer parameters from the conversation and wallet context above. Return only a JSON object with the specified fields. Use null for any values that cannot be determined.
 All property names must use double quotes
