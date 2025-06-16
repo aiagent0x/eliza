@@ -10890,5 +10890,16 @@
     "iconUrl": "https://api.movepump.com/uploads/4fa877d1_e15e_4725_bf83_af59ecf40afa_503e5cc707.jpeg",
     "verified": true,
     "coinGeckoId": "sui-trump"
+  },
+  {
+    "type": "0xf7fade57462e56e2eff1d7adef32e4fd285b21fd81f983f407bb7110ca766cda::zlp::ZLP",
+    "decimals": 6,
+    "symbol": "ZLP",
+    "name": "ZO Perpetuals LP Token",
+    "website": "https://zofai.io/",
+    "coingeckoUrl": "https://www.coingecko.com/en/coins/zo-perpetuals-lp-token",
+    "iconUrl": "https://strapi-dev.scand.app/uploads/ZO_logo_7261a15eb4.jpg",
+    "verified": true,
+    "coinGeckoId": "zo-perpetuals-lp-token"
   }
 ]

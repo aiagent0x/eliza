@@ -1697,5 +1697,65 @@
         "congecko_link": "https://www.coingecko.com/en/coins/sui-trump",
         "img_url": "https://api.movepump.com/uploads/4fa877d1_e15e_4725_bf83_af59ecf40afa_503e5cc707.jpeg",
         "slogan": "Suitrump is the self-declared President of Sui Chain — It’s all about WINNING"
+    },
+    {
+        "id": 148,
+        "name": "Full Sail",
+        "symbol": "",
+        "categories": ["DEX"],
+        "website": "https://www.fullsail.finance/",
+        "x_website": "https://x.com/FullSailFi",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://strapi-dev.scand.app/uploads/Full_Sail_logo_d5c4332cc9.jpg",
+        "slogan": "Building the most efficient DEX ever."
+    },
+    {
+        "id": 149,
+        "name": "Nexa",
+        "symbol": "",
+        "categories": ["Defi"],
+        "website": "https://nexa.xyz/",
+        "x_website": "https://x.com/nexaxyz",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://strapi-dev.scand.app/uploads/Nexa_logo_c269024eac.jpg",
+        "slogan": "The definitive platform for all. DeFi and analytics needs on Sui"
+    },
+    {
+        "id": 150,
+        "name": "ZO",
+        "symbol": "ZLP",
+        "categories": ["Defi"],
+        "website": "https://zofai.io/",
+        "x_website": "https://x.com/zofaiperps",
+        "verified": "Yes",
+        "congecko_link": "https://www.coingecko.com/en/coins/zo-perpetuals-lp-token",
+        "img_url": "https://strapi-dev.scand.app/uploads/ZO_logo_7261a15eb4.jpg",
+        "slogan": "The First Intelligent Perpetual Protocol by SuidoFinance on Sui network"
+    },
+    {
+        "id": 151,
+        "name": "METASTABLE",
+        "symbol": "",
+        "categories": ["Defi"],
+        "website": "https://mstable.io/",
+        "x_website": "https://x.com/MetaStables",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://strapi-dev.scand.app/uploads/METASTABLE_logo_db46a3621e.jpg",
+        "slogan": "The First Intelligent Perpetual Protocol by SuidoFinance on Sui network"
+    },
+    {
+        "id": 152,
+        "name": "Pawtato Finance",
+        "symbol": "",
+        "categories": ["DeFi"],
+        "website": "https://pawtato.finance/",
+        "x_website": "https://x.com/PawtatoFinance",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://strapi-dev.scand.app/uploads/Pawtato_Finance_logo_5f3522e1b0.jpg",
+        "slogan": "The leading DeFi dApp Aggregator and Wallet Manager on Sui — built to equip you with powerful tools to thrive."
     }
 ]
