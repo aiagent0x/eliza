@@ -1757,5 +1757,29 @@
         "congecko_link": "",
         "img_url": "https://strapi-dev.scand.app/uploads/Pawtato_Finance_logo_5f3522e1b0.jpg",
         "slogan": "The leading DeFi dApp Aggregator and Wallet Manager on Sui — built to equip you with powerful tools to thrive."
+    },
+    {
+        "id": 153,
+        "name": "Memez.GG",
+        "symbol": "",
+        "categories": ["Meme"],
+        "website": "https://www.memez.gg/",
+        "x_website": "https://x.com/memezdotgg",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://strapi-dev.scand.app/uploads/Memez_GG_logo_5339104ae5.jpg",
+        "slogan": "The leading DeFi dApp Aggregator and Wallet Manager on Sui — built to equip you with powerful tools to thrive."
+    },
+    {
+        "id": 154,
+        "name": "RECRD",
+        "symbol": "",
+        "categories": ["DeFi"],
+        "website": "https://www.recrd.com/",
+        "x_website": "https://x.com/RECRDapp",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://strapi-dev.scand.app/uploads/RECRD_Logo_900890c970.jpg",
+        "slogan": "something is cookingMonetize short videos with blockchain-powered RECRD, built on Sui Network. A fresh new SocialFi platform empowering creators."
     }
 ]
