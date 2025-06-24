@@ -1676,13 +1676,13 @@
     },
     {
         "id": 146,
-        "name": "DeLorean Labs",
+        "name": "DeLorean",
         "symbol": "DMC",
         "categories": ["DeFi"],
         "website": "https://deloreanlabs.com/",
         "x_website": "https://x.com/DeLoreanlabs",
         "verified": "Yes",
-        "congecko_link": "",
+        "congecko_link": "https://www.coingecko.com/en/coins/delorean",
         "img_url": "https://storage.googleapis.com/tokenimage.deloreanlabs.com/DMCTokenIcon.svg",
         "slogan": "The Official DeLorean Motor Company Web3 account. Driving the future with DMC building on Sui network"
     },
