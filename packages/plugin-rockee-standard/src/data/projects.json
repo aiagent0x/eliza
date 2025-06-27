@@ -1113,13 +1113,13 @@
     {
         "id": 97,
         "name": "XOCIETY",
-        "symbol": "",
+        "symbol": "XO",
         "categories": ["GameFi"],
         "website": "https://xociety.io/",
         "x_website": "https://x.com/xocietyofficial",
         "verified": "Yes",
-        "congecko_link": "https://www.coingecko.com/en/nft/xociety-frontier",
-        "img_url": "https://strapi-dev.scand.app/uploads/Xociety_Logo_50bef09f47.png",
+        "congecko_link": "https://www.coingecko.com/en/coins/xociety",
+        "img_url": "https://app.xociety.io/assets/xo/xo_token.png",
         "slogan": "XOCIETY is a POP Shooter with RPG progression."
     },
     {

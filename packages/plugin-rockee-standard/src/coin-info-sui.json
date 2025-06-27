@@ -10912,5 +10912,16 @@
     "iconUrl": "https://storage.googleapis.com/tokenimage.deloreanlabs.com/DMCTokenIcon.svg",
     "verified": true,
     "coinGeckoId": "delorean"
+  },
+  {
+    "type": "0x90f9eb95f62d31fbe2179313547e360db86d88d2399103a94286291b63f469ba::xo::XO",
+    "decimals": 9,
+    "symbol": "XO",
+    "name": "Xociety Token",
+    "website": "https://xociety.io/",
+    "coingeckoUrl": "https://www.coingecko.com/en/coins/xociety",
+    "iconUrl": "https://app.xociety.io/assets/xo/xo_token.png",
+    "verified": true,
+    "coinGeckoId": "xociety"
   }
 ]
