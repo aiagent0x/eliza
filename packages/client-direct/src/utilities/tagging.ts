@@ -6,7 +6,7 @@ import { getPoolInfo, getPoolsInfo } from "navi-sdk";
 import {
     elizaLogger,
 } from "@elizaos/core";
-import { listPool } from "../services/stakeService/fetchSuilend/listPools";
+import { listSuilendPool } from "../services/stakeService/fetchSuilend/listPools";
 import CetusProvider from "../services/liquidityService/liquidityCetus";
 import BigNumber from "bignumber.js";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
@@ -167,7 +167,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                 };
             }
             responseData = [];
-            listPoolSuilend = await listPool()
+            listPoolSuilend = await listSuilendPool()
             listPoolsScallop = await scallopProvider.listPools();
             listPoolsNavi = await listPoolsInFileJson();
             if (listPoolsNaviOnSite !== null && listPoolsNaviOnSite.length > 0) {
@@ -348,7 +348,7 @@ export async function filterByTagging(tag: string, agentName: string) {
                     },
                 };
             }
-            listPoolSuilend = await listPool();
+            listPoolSuilend = await listPoolSuilend();
             listPoolSuilend.sort(
                 (a, b) =>
                     b.total_supply_rate - a.total_supply_rate

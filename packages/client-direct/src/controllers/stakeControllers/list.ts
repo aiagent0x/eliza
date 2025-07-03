@@ -11,7 +11,7 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 let redis = new RedisClient(REDIS_URL);
 import { Request, Response } from "express";
 import ScallopProvider from "../../services/stakeService/stakeScallop";
-import { listPool } from "../../services/stakeService/fetchSuilend/listPools";
+import { listSuilendPool } from "../../services/stakeService/fetchSuilend/listPools";
 import BigNumber from "bignumber.js";
 export default async function listStakes(req: Request, res: Response) {
     let parsedData: { [key: string]: string }[] = [];
@@ -48,7 +48,7 @@ export default async function listStakes(req: Request, res: Response) {
         return
     }
     let responseData = [];
-    const listSuilendPools = await listPool()
+    const listSuilendPools = await listSuilendPool()
     const scallopProvider = new ScallopProvider();
     const listScallopPools = await scallopProvider.listPools();
     let listPoolsNaviOnSite = await getPoolsInfo();

@@ -25,7 +25,7 @@
         "@mysten/sui": "1.20.0",
         "@mysten/sui.js": "^0.53.0",
         "@scallop-io/sui-scallop-sdk": "^1.4.28",
-        "@suilend/sdk": "1.1.36",
+        "@suilend/sdk": "1.1.55",
         "@suilend/springsui-sdk": "1.0.19",
         "@types/body-parser": "1.19.5",
         "@types/cors": "2.8.17",
