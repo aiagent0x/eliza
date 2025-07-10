@@ -1913,5 +1913,41 @@
         "congecko_link": "",
         "img_url": "https://ipfs.io/ipfs/bafkreiccjwsymyne2pblamvxmroyfxinq4tg4nono3uw5eymc5yl5zhlpu",
         "slogan": "Built on $SUI. Backed by the swamp."
+    },
+    {
+        "id": 165,
+        "name": "Fartcoin on Sui",
+        "symbol": "Fartcoin",
+        "categories": ["Meme"],
+        "website": "https://fartcoinonsui.com/",
+        "x_website": "https://x.com/suifartcoin",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://ipfs.io/ipfs/QmQr3Fz4h1etNsF7oLGMRHiCzhB5y9a7GjyodnF7zLHK1g",
+        "slogan": ""
+    },
+    {
+        "id": 166,
+        "name": "Sui Name Service",
+        "symbol": "",
+        "categories": ["Infrastructure"],
+        "website": "https://suins.io/",
+        "x_website": "https://x.com/SuiNSdapp",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://token-image.suins.io/icon.svg",
+        "slogan": "Your web3 identity for all things Sui! Join us at http://discord.gg/suins"
+    },
+    {
+        "id": 167,
+        "name": "Superleague",
+        "symbol": "Spl",
+        "categories": ["GameFi"],
+        "website": "https://superleague.site/",
+        "x_website": "https://x.com/spl_sui_",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://token-image.suins.io/icon.svg",
+        "slogan": "Super League Token is more than just a game; it's a community-driven ecosystem where football enthusiasts can connect,compete, and celebrate the sport they love"
     }
 ]
