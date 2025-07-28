@@ -10005,5 +10005,27 @@
         "iconUrl": "https://r.turbos.finance/icon/1730461712606.png",
         "verified": true,
         "coinGeckoId": "zenfrogs"
+    },
+    {
+        "type": "0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS",
+        "decimals": 9,
+        "symbol": "PANS",
+        "name": "PandaSui Coin",
+        "website": "https://www.pandasui.com/",
+        "coingeckoUrl": "https://www.coingecko.com/en/coins/pandasui-coin",
+        "iconUrl": "https://ipfs.io/ipfs/bafybeibjxzgcww3454vovap3alohbyrp4am4cgy6tylc7hicdr4c33qsly?filename=Pans.png",
+        "verified": true,
+        "coinGeckoId": "pandasui-coin"
+    },
+    {
+        "type": "0xf33bdc280faf4bd0411cac82173b5744b7a40e4b9abc0ad6f51a495c060faf77::culo::CULO",
+        "decimals": 6,
+        "symbol": "CULO",
+        "name": "CULOSUI",
+        "website": "",
+        "coingeckoUrl": "https://www.coingecko.com/en/coins/culosui",
+        "iconUrl": "https://ipfs.io/ipfs/bafkreihw22w4ofapvynf3czp4qffviybcvvpwzj62jujrjjqurljtutq3m",
+        "verified": true,
+        "coinGeckoId": "culosui"
     }
 ]
