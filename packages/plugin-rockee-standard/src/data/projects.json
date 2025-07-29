@@ -806,7 +806,7 @@
         "website": "https://ika.xyz/",
         "x_website": "https://x.com/ikadotxyz",
         "verified": "Yes",
-        "congecko_link": "",
+        "congecko_link": "https://www.coingecko.com/en/coins/ika",
         "img_url": "https://strapi-dev.scand.app/uploads/Ika_1187a8ee05.png",
         "slogan": "Ika is an MPC (Multi-Party Computation) Network project that focuses on secure and private computations across multiple parties, often used for privacy-preserving applications in blockchain."
     },
