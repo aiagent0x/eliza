@@ -10014,5 +10014,27 @@
         "iconUrl": "https://ipfs.io/ipfs/bafkreihw22w4ofapvynf3czp4qffviybcvvpwzj62jujrjjqurljtutq3m",
         "verified": true,
         "coinGeckoId": "culosui"
+    },
+    {
+        "type": "0x1a8f4bc33f8ef7fbc851f156857aa65d397a6a6fd27a7ac2ca717b51f2fd9489::alkimi::ALKIMI",
+        "decimals": 9,
+        "symbol": "ALKIMI",
+        "name": "ALKIMI",
+        "website": "",
+        "coingeckoUrl": "https://www.coingecko.com/en/coins/alkimi",
+        "iconUrl": "https://www.alkimi.org/images/img1_circle.png",
+        "verified": true,
+        "coinGeckoId": "alkimi"
+    },
+    {
+        "type": "0xd976fda9a9786cda1a36dee360013d775a5e5f206f8e20f84fad3385e99eeb2d::aaa::AAA",
+        "decimals": 6,
+        "symbol": "aaa cat",
+        "name": "AAA",
+        "website": "",
+        "coingeckoUrl": "https://www.coingecko.com/en/coins/aaa-cat",
+        "iconUrl": "https://api.movepump.com/uploads/IMG_4995_cfd6177d03.jpeg",
+        "verified": true,
+        "coinGeckoId": "aaa-cat"
     }
 ]
