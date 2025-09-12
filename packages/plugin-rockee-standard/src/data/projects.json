@@ -227,12 +227,14 @@
     {
         "id": 21,
         "name": "SuiPlay",
-        "symbol": "N/A",
-        "categories": ["GAME"],
+        "symbol": "",
+        "categories": ["NFT"],
         "website": "https://www.suiplay0x1.com/",
-        "x_website": "https://x.com/suiplay",
-        "verified": "No",
-        "congecko_link": "x"
+        "x_website": "https://x.com/SuiPlay",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://strapi-dev.scand.app/uploads/Sui_Play_logo_5fb9a23ef0.jpg",
+        "slogan": "The SuiPlay0X1 is a first-of-its-kind handheld gaming console. It supports a wide range of PC games, as well as new AAA titles developed using Sui technology."
     },
     {
         "id": 22,
@@ -2153,17 +2155,5 @@
         "congecko_link": "",
         "img_url": "https://strapi-dev.scand.app/uploads/OVERTAKE_logo_957bc6fd4a.png",
         "slogan": "OVERTAKE is a peer-to-peer marketplace on @SuiNetwork for trading gaming assets securely via smart contract escrow."
-    },
-    {
-        "id": 183,
-        "name": "SuiPlay",
-        "symbol": "",
-        "categories": ["NFT"],
-        "website": "https://www.suiplay0x1.com/",
-        "x_website": "https://x.com/SuiPlay",
-        "verified": "Yes",
-        "congecko_link": "",
-        "img_url": "https://strapi-dev.scand.app/uploads/Sui_Play_logo_5fb9a23ef0.jpg",
-        "slogan": "The SuiPlay0X1 is a first-of-its-kind handheld gaming console. It supports a wide range of PC games, as well as new AAA titles developed using Sui technology."
     }
 ]
