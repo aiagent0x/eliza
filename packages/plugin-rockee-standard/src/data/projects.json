@@ -2129,5 +2129,29 @@
         "congecko_link": "",
         "img_url": "https://api.suiai.fun/uploads/photo_2025_07_17_20_11_26_38d2c984e7.jpg",
         "slogan": "Sui powered Ai, to bring banter, satire, and fun back onto the blockchain. https://t.me/Sui_Siren"
+    },
+    {
+        "id": 182,
+        "name": "SUI SIREN",
+        "symbol": "",
+        "categories": ["AI"],
+        "website": "",
+        "x_website": "https://x.com/SuiSiren_",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://api.suiai.fun/uploads/photo_2025_07_17_20_11_26_38d2c984e7.jpg",
+        "slogan": "Sui powered Ai, to bring banter, satire, and fun back onto the blockchain. https://t.me/Sui_Siren"
+    },
+    {
+        "id": 182,
+        "name": "OVERTAKE",
+        "symbol": "",
+        "categories": ["NFT"],
+        "website": "https://overtake.world/ , https://overtake.market/",
+        "x_website": "https://x.com/overtake_world",
+        "verified": "Yes",
+        "congecko_link": "",
+        "img_url": "https://strapi-dev.scand.app/uploads/OVERTAKE_logo_957bc6fd4a.png",
+        "slogan": "OVERTAKE is a peer-to-peer marketplace on @SuiNetwork for trading gaming assets securely via smart contract escrow."
     }
 ]
